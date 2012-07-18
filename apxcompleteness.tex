@@ -1,0 +1,114 @@
+\documentclass[]{article}
+
+% Package `hyperref` must come before package `complexity`.
+\usepackage[pdftitle={APX completeness}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{complexity}
+
+\theoremstyle{plain}
+%\newtheorem{conjecture}{Conjecture}
+%\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+%\newtheorem{todo}{TODO}
+
+%\theoremstyle{definition}
+%\newtheorem{definition}{Definition}
+%\newtheorem{openquestion}{Open question}
+
+\mathchardef\mhyphen="2D
+
+%\newenvironment{justification}{\begin{proof}[Justification]}{\end{proof}}
+
+%\newcommand{\definitionautorefname}{Definition}
+
+\newcommand{\APr}{\leq_{AP}^{P}}
+\newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+%\newcommand{\lb}{\left\{}
+%\newcommand{\pb}{\textsf{pb}}
+%\newcommand{\rb}{\right\}}
+%\newcommand{\st}{\,\middle|\,}
+
+\author{Jef{}frey Finkelstein}
+\date{\today}
+\title{\texorpdfstring{\textsc{Maximum 3-Satisfiability}}{Maximum 3-Satisfiability}}
+
+\begin{document}
+
+\maketitle
+
+\begin{theorem}[{\cite[Theorem~3.7]{book}}]
+  Let $Q$ be an \NP-complete decision problem and $P$ be a minimization problem in \NPO{} (so $P=(I, S, m, \min)$).
+  Suppose there exist two polynomial time computable functions $f\colon\Sigma^*\to I$ and $c\colon \Sigma^*\to\mathbb{N}$ and an $\epsilon\in\mathbb{R}^+$ with $\epsilon>0$ such that for any $x\in\Sigma^*$,
+  \begin{enumerate}
+  \item if $x \in Q$ then $m^*(f(x)) = c(x)$, and
+  \item if $x \notin Q$ then $m^*(f(x)) = (1 + \epsilon) \cdot c(x)$.
+  \end{enumerate}
+  Then for any $r < 1 + \epsilon$, no polynomial time $r$-approximation algorithm for $P$ exists unless $\P=\NP$.
+\end{theorem}
+\begin{proof}
+  In order to produce a contradiction, suppose that there exists a polynomial time $r$-approximator $A$ for $P$ with $r < 1 + \epsilon$.
+  Define algorithm $A'$ as follows: $A'(x)$ accepts if and only if $m(f(x), A(x)) < (1 + \epsilon) \cdot c(x)$, for all $x\in\Sigma^*$.
+  We will show that $A'$ is a polynomial time algorithm for the \NP-complete problem $Q$, and hence $\P=\NP$.
+
+  Since $f$, $A$, $c$, and basic arithmetic operations such as addition and multiplication are polynomial time computable functions, so is $A'$.
+  In order to show that $A'$ is correct we must consider two cases.
+  \begin{enumerate}
+  \item
+    Suppose $x \in Q$.
+    Since $A$ is an $r$-approximator and $r < 1 + \epsilon$, we have
+    \begin{displaymath}
+      \frac{m(f(x), A(f(x)))}{m^*(f(x))} \leq r < 1 + \epsilon.
+    \end{displaymath}
+    Since $m^*(f(x)) = c(x)$ by hypothesis, this implies
+    \begin{align*}
+      m(f(x), A(f(x))) & < (1 + \epsilon) \cdot m^*(f(x)) \\
+      & = (1 + \epsilon) \cdot c(x).
+    \end{align*}
+    Hence $A'$ will accept on input $x$.
+  \item
+    If $x \notin Q$ then $m^*(f(x)) = (1 + \epsilon) \cdot c(x)$ by hypothesis.
+    Since $P$ is a minimization problem, $m(f(x), A(f(x))) \geq m^*(f(x))$.
+    Combining the two inequalities, we find $m(f(x), A(f(x))) \geq (1 + \epsilon) \cdot c(x)$.
+    Hence, $A'$ will reject on input $x$.
+  \end{enumerate}
+  We have shown that $A'$ is a correct polynomial-time computable algorithm which decides the $Q$, and the conclusion follows.
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem~6.3]{book}}]
+  $\textsc{Maximum 3-Satisfiability} \notin \PTAS$ unless $\P=\NP$.
+\end{theorem}
+\begin{proof}
+  
+\end{proof}
+
+\begin{theorem}
+  \textsc{Maximum 3-Satisfiability} is complete for \APX{} under $\APr$ reductions.
+\end{theorem}
+
+We first present the idea behind this proof.
+Recall the Cook-Levin technique for transforming a Turing machine, whose running time is bounded by a polynomial in the length of its input, into a Boolean circuit such that for any input, the Turing machine accepts if and only if the Boolean circuit outputs 1.
+We use this technique to transform a Turing machine which decides an arbitrary language in \APX{} into a Boolean formula representing the Boolean circuit.
+
+\begin{proof}
+  We show a generic reduction from 
+\end{proof}
+
+\section*{About this work}
+
+Copyright 2012 Jef{}frey Finkelstein.
+
+This work is licensed under the Creative Commons Attribution-ShareAlike License 3.0.
+Visit \mbox{\url{https://creativecommons.org/licenses/by-sa/3.0/}} to view a copy of this license.
+
+The \LaTeX{} markup which generated this document is available on the World Wide Web at \mbox{\url{https://github.com/jfinkels/apxcompleteness}}.
+It is also licensed under the Creative Commons Attribution-ShareAlike License.
+
+The author can be contacted via email at \email{jeffreyf@bu.edu}.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
