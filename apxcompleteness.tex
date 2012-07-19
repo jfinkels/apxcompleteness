@@ -235,7 +235,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 %% \end{definition}
 
 \begin{lemma}\label{lem:opt}
-  There exists a polynomial time reduction of some kind (???) from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}, with preservation factor 1.
+  There exists a polynomial time reduction of some kind (???) from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}, with preservation factor $\alpha$ defined by $\alpha = 2^{k + 1} \cdot (k - 2) - 1$.
 \end{lemma}
 \begin{proof}
   Let $f_0$ be the reduction given in \autoref{lem:decision} from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
@@ -244,11 +244,12 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   Let $\alpha = 1$.
 
   If $(U, F)$ is satisfiable then $f((U, F))$ is also satisfiable, by the correctness of the reduction $f_0$.
-  Notice that the number of clauses in $f((U, F))$ is at most $M \cdot 2^k \cdot (k - 2)$, where $M = |F|$.
   Furthermore, if $\tau$ is a solution to $f((U, F))$, then $g((U, F), \tau)$ is satisfiable for the same reason.
+  Notice that if the number of functions in $F$ is $M$ then the number of clauses in $f((U, F))$ is at most $M \cdot 2^k \cdot (k - 2)$.
 
   \begin{todo}
-    Figure out what kind of reduction is required here and prove the necessary approximation preserving condition.
+    Figure out what kind of reduction is required here, the correct preservation ratio, and prove the necessary approximation preserving condition.
+    We need a reduction
   \end{todo}
 
   %% Finally, let $P$ represent \textsc{Maximum $k$-Function Satisfiability} and let $Q$ represent \textsc{Maximum 3-Satisfiability}.
@@ -275,8 +276,18 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ and there is a polynomial time reduction of some kind (???) with preservation factor $\alpha$ from $Q$ to $T$ then there is a gap-introducing reduction from $P$ to $T$ with gap parameter $\epsilon \cdot \alpha$.
 \end{lemma}
 \begin{proof}
+  For simplicity, we will assume that both $Q$ and $T$ are maximization problems.
+
+  Let $(f, c, \epsilon)$ be the gap-introducing reduction and $(f', g, \alpha)$ be the other reduction.
+  We will show that $(f' \circ f, c', \epsilon \cdot \alpha)$ is a gap-introducing reduction from $P$ to $T$, where $c'(x) = \gamma \cdot c(x)$ for some $\gamma$ which should come from the other reduction.
+
+  Suppose first that $x \in P$.
+  Since $m^*_Q(f(x)) = c(x)$ and $m^*_T(f'(y)) = \gamma \cdot m^*_Q(y)$, we find that $m^*_T(f'(f(x))) = \gamma \cdot c(x) = c'(x)$, which is what we needed to show.
+
+  Suppose now that $x \notin P$.
+
   \begin{todo}
-    Check the parameters in the hypothesis, and complete this proof.
+    Check the parameters in the hypothesis, figure out what properties we need from our reductions, and complete this proof.
   \end{todo}
 \end{proof}
 
