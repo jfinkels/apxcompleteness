@@ -10,12 +10,14 @@
 
 \theoremstyle{plain}
 %\newtheorem{conjecture}{Conjecture}
+\newtheorem{corollary}{Corollary}
 %\newtheorem{proposition}{Proposition}
 \newtheorem{theorem}{Theorem}
-%\newtheorem{todo}{TODO}
+\newtheorem{lemma}{Lemma}
+\newtheorem{todo}{TODO}
 
-%\theoremstyle{definition}
-%\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
 %\newtheorem{openquestion}{Open question}
 
 \mathchardef\mhyphen="2D
@@ -23,6 +25,7 @@
 %\newenvironment{justification}{\begin{proof}[Justification]}{\end{proof}}
 
 %\newcommand{\definitionautorefname}{Definition}
+\newcommand{\lemmaautorefname}{Lemma}
 
 \newcommand{\APr}{\leq_{AP}^{P}}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
@@ -39,32 +42,87 @@
 
 \maketitle
 
-\begin{theorem}[{\cite[Theorem~3.7]{book}}]
-  Let $Q$ be an \NP-complete decision problem and $P$ be a maximization problem in \NPO{} (so $P=(I, S, m, \max)$).
-  Suppose there exist two polynomial time computable functions $f\colon\Sigma^*\to I$ and $c\colon \Sigma^*\to\mathbb{N}$ and an $\epsilon\in\mathbb{Q}^+$ such that for any $x\in\Sigma^*$,
+Throughout this work, $\Sigma=\{0, 1\}$, and $\Sigma^*$ is the set of all finite binary strings.
+The length of a string $x \in \Sigma^*$ is denoted $|x|$.
+We denote the set of positive rational numbers by $\mathbb{Q}^*$ and the natural numbers (excluding 0) by $\mathbb{N}$.
+A decision problem is a subset of $\Sigma^*$.
+
+\section{Definitions}
+
+\subsection{Optimization problems}
+
+An optimization problem is given by $(I, S, m, t)$, where $I$ is called the \emph{instance set}, $S \subseteq I \times \Sigma^*$ and is called the \emph{solution relation}, $m \colon I \times \Sigma^* \to \mathbb{N}$ and is called the \emph{measure function}, and $t\in\{\max, \min\}$ and is called the \emph{type} of the optimization.
+The optimal measure for any $x \in I$ is denoted $m^*(x)$.
+Observe that for all $x \in I$ and all $y \in \Sigma^*$, if $t = \max$ then $m(x, y) \leq m^*(x)$ and if $t = \min$ then $m(x, y) \geq m^*(x)$.
+The \emph{performance ratio}, $R$, of a solution $y$ for $x$ is
+\begin{displaymath}
+  R(x, y) = \max{\left(\frac{m^*(x)}{m(x, y)}, \frac{m(x, y)}{m^*(x, y)}\right)}.
+\end{displaymath}
+A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^*$.
+If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \emph{$\delta$-approximator}.
+
+\subsection{Probabilistically checkable proofs}
+
+A \emph{$(\lg n, 1)$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $c$ random bits from $\rho$ and reads (with random access) at most $q$ bits from $\pi$, for some constants $c \in \mathbb{N}$ and $q \in \mathbb{N}$.
+Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checkable proofs} with $O(\lg n)$ random bits and $O(1)$ proof queries) as follows: a decision problem $L \in \PCP(\lg n, 1)$ if there exists a $(\lg n, 1)$-verifier $V$ and a polynomial $p$ such that
+\begin{enumerate}
+\item
+  if $x \in L$ then there exists a $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$ such that
+  \begin{displaymath}
+    \Pr_{\rho \in \Sigma^{p(|x|)}}\left[V(x, \pi; \rho) \textnormal{ accepts}\right] = 1,
+  \end{displaymath}
+  and
+\item
+  if $x \notin L$ then for all $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$, we have
+  \begin{displaymath}
+    \Pr_{\rho \in \Sigma^{p(|x|)}}\left[V(x, \pi; \rho) \textnormal{ accepts}\right] < \frac{1}{2}.
+  \end{displaymath}
+\end{enumerate}
+
+\begin{theorem}[PCP Theorem \cite{pcp}]\label{thm:pcp}
+  $\NP = \PCP(\lg n, 1)$.
+\end{theorem}
+
+\section{Hardness of approximation}
+
+\begin{definition}[{\cite[Section~29.1]{vazirani}}]
+  Let $P$ be a decision problem and $Q$ be maximization problem with $Q = (I, S, m, \max)$.
+  There is a \emph{gap-introducing reduction} from $P$ to $Q$ if there exist polynomial time computable functions $f \colon \Sigma^* \to I$ and $c \colon \Sigma^* \to \mathbb{N}$ and an $\epsilon \in \mathbb{Q}^+$ such that for any $x \in \Sigma^*$,
   \begin{enumerate}
-  \item if $x \in Q$ then $m^*(f(x)) = c(x)$, and
-  \item if $x \notin Q$ then $m^*(f(x)) = \frac{1}{1 + \epsilon} \cdot c(x)$.
+  \item if $x \in P$ then $m^*(f(x)) = c(x)$, and
+  \item if $x \notin P$ then $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$.
   \end{enumerate}
-  Then for any $r < 1 + \epsilon$, no polynomial time $r$-approximation algorithm for $P$ exists unless $\P=\NP$.
+  We call $\epsilon$ the \emph{gap parameter} of the reduction.
+
+  If $Q$ were a minimization problem, then the second condition would instead require that $m^*(f(x)) > (1 + \epsilon) \cdot c(x)$.
+\end{definition}
+
+Notice that as the value of $\epsilon$ increases, so does the ``gap'' between the optimal measures corresponding to strings in $P$ and strings not in $P$.
+
+\begin{theorem}[{\cite[Theorem~3.7]{book}}]\label{thm:gap}
+  Let $P$ be an \NP-complete decision problem and $Q$ be an optimization problem in \NPO.
+  If there is a gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no polynomial time $r$-approximator for $P$ unless $\P = \NP$.
 \end{theorem}
 \begin{proof}
-  In order to produce a contradiction, suppose that there exists a polynomial time $r$-approximator $A$ for $P$ with $r < 1 + \epsilon$.
-  Define algorithm $A'$ as follows: $A'(x)$ accepts if and only if $m(f(x), A(f(x))) > \frac{1}{1 + \epsilon} \cdot c(x)$, for all $x\in\Sigma^*$.
-  We will show that $A'$ is a polynomial time algorithm for the \NP-complete problem $Q$, and hence $\P=\NP$.
+  We will prove the theorem for the case in which $Q$ is a maximization problem; the proof for minimization problems is similar.
+
+  In order to produce a contradiction, suppose that there exists a polynomial time $r$-approximator $A$ for $Q$ with $r < 1 + \epsilon$.
+  Let $f$ and $c$ be the functions which define the gap-preserving reduction.
+  Define algorithm $A'$ as follows on input $x$: $A'(x)$ accepts if and only if $m(f(x), A(f(x))) > \frac{1}{1 + \epsilon} \cdot c(x)$, for all $x\in\Sigma^*$.
+  We will show that $A'$ is a polynomial time algorithm for the \NP-complete problem $P$, and hence $\P=\NP$.
 
   Since $f$, $A$, $c$, and basic arithmetic operations such as addition and multiplication are polynomial time computable functions, so is $A'$.
   In order to show that $A'$ is correct we must consider two cases.
   \begin{enumerate}
   \item
-    Suppose $x \in Q$.
-    Since $A$ is an $r$-approximator and $r < 1 + \epsilon$, we have
+    Suppose $x \in P$.
+    Since $A$ is an $r$-approximator for a maximization problem and $r < 1 + \epsilon$, we have
     \begin{displaymath}
-      \frac{m(f(x), A(f(x)))}{m^*(f(x))} \leq r < 1 + \epsilon,
+      \frac{m^*(f(x))}{m(f(x), A(f(x)))} \leq r < 1 + \epsilon,
     \end{displaymath}
     which implies
     \begin{displaymath}
-      \frac{m^*(f(x))}{m(f(x), A(f(x)))} \geq \frac{1}{r} > \frac{1}{1 + \epsilon}.
+      \frac{m(f(x), A(f(x)))}{m^*(f(x))} \geq \frac{1}{r} > \frac{1}{1 + \epsilon}.
     \end{displaymath}
     Since $m^*(f(x)) = c(x)$ by hypothesis, this implies
     \begin{align*}
@@ -73,20 +131,171 @@
     \end{align*}
     Hence $A'$ will accept on input $x$.
   \item
-    If $x \notin Q$ then $m^*(f(x)) \leq \frac{1}{1 + \epsilon} \cdot c(x)$ by hypothesis (specifically, it is an equality).
-    Since $P$ is a maximization problem, $m(f(x), A(f(x))) \leq m^*(f(x))$.
-    Combining the two inequalities, we find $m(f(x), A(f(x))) \leq \frac{1}{1 + \epsilon} \cdot c(x)$.
+    If $x \notin P$ then $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$ by hypothesis.
+    Since $Q$ is a maximization problem, $m(f(x), A(f(x))) \leq m^*(f(x))$.
+    Combining the two inequalities, we find $m(f(x), A(f(x))) < \frac{1}{1 + \epsilon} \cdot c(x)$.
     Hence, $A'$ will reject on input $x$.
   \end{enumerate}
-  We have shown that $A'$ is a correct polynomial-time computable algorithm which decides the $Q$, and the conclusion follows.
+  We have shown that $A'$ is a correct polynomial-time computable algorithm which decides the \NP-complete problem $P$, and the conclusion follows.
 \end{proof}
 
-\begin{theorem}[{\cite[Theorem~6.3]{book}}]
-  $\textsc{Maximum 3-Satisfiability} \notin \PTAS$ unless $\P=\NP$.
+\begin{definition}[\textsc{$k$-Function Satisfiability}]
+  \mbox{}
+  \begin{description}
+  \item[Input:] finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables.
+  \item[Question:] Does there exist a truth assignment $\tau$ such that all the functions are satisfied?
+  \end{description}
+\end{definition}
+
+\begin{definition}[\textsc{Maximum $k$-Function Satisfiability}]
+  \mbox{}
+  \begin{description}
+    %\setlength{\itemindent}{-10pt}
+  \item[Input:] finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables.
+  \item[Solution:] a truth assignment $\tau$ to the variables.
+  \item[Measure:] The number of satisfied functions.
+  \end{description}
+\end{definition}
+
+Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
+
+\begin{lemma}[{\cite[Lemma~29.10]{vazirani}}]\label{lem:intro}
+  There is a gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability} with gap parameter $1$, for some $k \in \mathbb{N}$.
+\end{lemma}
+\begin{proof}
+  By \autoref{thm:pcp}, there exists a $(\lg n, 1)$-verifier for \textsc{Satisfiability}.
+  Let $\phi$ be a Boolean formula of length $n$, which will be the input to the verifier.
+  Let $V$ be that verifier, let $c$ and $q$ be the constants such that $V$ uses at most $c \lg n$ random bits and at most $q$ bits of the proof.
+  For simplicity, let the length of the random string input to $V$ be exactly $c \lg n$.
+  When considering all possible random strings $\rho$ from which $V$ reads its random bits, $V$ reads a total of at most $q \cdot 2^{c \lg n}$ bits of the proof, which equals $q \cdot n^c$.
+  Let $B$ be the set of at most $q \cdot n^c$ Boolean variables representing the values of the bits of the proof at the queried locations.
+
+  We let $k = q$, and then for each string $\rho$ (of length $c \lg n$), we will define a function $g_\rho$ which is a function of at most $q$ of the Boolean variables from $B$.
+  Consider the Cook-Levin transformation of the operation of the verifier $V$ on input $(\phi, \tau; \rho)$, where $\phi$ is a Boolean formula (an instance of \textsc{Satisfiability}) and $\tau$ is a satisfying assignment to the variables of $\phi$.
+  Let $\psi$ be the Boolean formula over the variables $z_1, z_2, \ldots, z_{h(n)}$ produced by this transformation, where $h(n)$ is the polynomial bounding the size of the Boolean formula produced by the Cook-Levin transformation.
+  Some of these variables depend on the bits of $\phi$, some depend on $q$ bits of $\tau$, and some depend on the bits of $\rho$ (and these sets may intersect).
+  If we let $\phi$ and $\rho$ be fixed, however, we can define $g_\rho$ to be the restriction of the Boolean function $\psi$ to the $q$ variables of $\psi$ corresponding to the $q$ bits of $\tau$ read by the verifier on input $(\phi, \tau; \rho)$.
+
+  Let $G = \left\{g_\rho \,\middle|\, \rho \in \Sigma^* \textnormal{ and } |\rho| = c \lg n \right\}$.
+  Notice that $|G| = 2^{c \lg n} = n^c$.
+  Now we define the gap-introducing reduction by $c(\phi) = n^c$ for all Boolean formulae $\phi$ of length $n$, $f(\phi) = (B, G)$ for all Boolean formulae $\phi$, and $\epsilon = 1$.
+  The function $c$ is polynomial time computable because exponentiation of $n$ to a constant power is polynomial time computable.
+  The function $f$ is polynomial time computable because both the size of $B$ and the size of $G$ are polynomial in $n$, and the length of each of their elements is polynomial in $n$ as well.
+  If $\phi \in \textsc{Satisfiability}$ then there is a truth assignment $\tau$ such that $V$ accepts on input $(\phi, \tau; \rho)$ with probability 1 over the random strings $\rho$.
+  In this case, $m^*(f(\phi)) = m^*((B, G)) = n^c$, since all the functions $g_\rho$ in $G$ are satisfied.
+  If $\phi \notin \textsc{Satisfiability}$ then for every truth assignment, the verifier accepts with probability at most $\frac{1}{2}$.
+  In this case, every truth assignment satisfies less than half of all the $n^c$ functions in $G$.
+  Hence $m^*(f(\phi)) = m^*((B, G)) < \frac{1}{2} \cdot n^c = \frac{1}{1 + \epsilon} c(\phi)$.
+  Therefore we have constructed a gap-introducing reduction with gap parameter 1 from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}.
+\end{proof}
+
+\begin{lemma}[{\cite[Example~6.5]{book}}]\label{lem:three}
+  There is a polynomial time computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
+\end{lemma}
+
+\begin{lemma}[{\cite[Proof of Theorem~29.7]{vazirani}}]\label{lem:decision}
+  There is a polynomial time many-one reduction from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
+\end{lemma}
+\begin{proof}
+  Let $(\{x_1, x_2, \ldots, x_n\}, \{f_1, f_2, \ldots, f_m\})$ be an instance of \textsc{$k$-Function Satisfiability}.
+  Without loss of generality, each function $f_i$ of $k$ variables can be written as a Boolean formula containing at most $2^k$ clauses, in which each clause contains at most $k$ literals (why?).
+  Call this Boolean formula $\psi_i$, and let $\psi = \bigwedge_{i = 1}^m{\psi_i}$.
+  Observe that the given instance of \textsc{$k$-Function Satisfiability} is satisfiable if and only if $\psi$ is satisfiable.
+
+  Let $T$ be the polynomial time computable function from \autoref{lem:three}.
+  Now we can define the reduction $g$ by $g(\phi) = T(\psi)$ for all Boolean formulae $\phi$.
+  The total number of clauses in $\psi$ is at most $m \cdot 2 ^ k$, so the total number of clauses in $T(\psi)$ is at most $m \cdot 2^k \cdot (k - 2)$ (still a polynomial in the length of the input since $k$ is considered a fixed constant).
+  It is clear that $g$ is polynomial time computable, and $\phi$ is satisfiable if and only if $\psi$ is satisfiable if and only if $T(\psi)$ is satisfiable.
+\end{proof}
+
+%% \begin{definition}{{\cite[Definition~8.3]{book}}}
+%%   Let $P$ and $Q$ be optimization problems in \NPO, with $P=(I_P, S_P, m_p, t_P)$ and $Q=(I_Q, S_Q, m_Q, t_Q)$.
+%%   We say there is a polynomial time \emph{AP reduction from $P$ to $Q$} if there exist functions $f\colon\Sigma^*\to\Sigma^*$ and $g\colon\Sigma^*\to\Sigma^*$, and there exists a constant $\alpha\in\mathbb{R}$ such that:
+%%   \begin{enumerate}
+%%   \item For all $x\in I_P$ we have $f(x)\in I_Q$.
+%%   \item For all $x\in I_P$ and all $y\in S_Q(f(x))$ we have $g(x, y)\in S_P(x)$.
+%%   \item $f$ and $g$ are computable in polynomial time.
+%%   \item For all $x\in I_P$, all $r > 1$, and all $y\in S_Q(f(x))$, we have $R_Q(f(x), y) \leq r \implies R_P(x, g(x, y)) \leq 1 + \alpha(r - 1)$.
+%%   \end{enumerate}
+%%   The constant $\alpha$ is called the \emph{preservation factor}.
+%% \end{definition}
+
+%% \begin{definition}
+%%   Let $P$ and $Q$ be optimization problems.
+%%   We say there is an \emph{E reduction from $P$ to $Q$} if there exists a triple $(f, g, \alpha)$, where $f$ and $g$ are polynomial time computable functions and $\alpha \in \mathbb{N}$, such that for all $x \in P_\exists$ we have $f(x) \in Q_\exists$ and for all $y \in S_Q(f(x))$ we have $g(x, y) \in S_P(x)$ and finally $R_P(x, g(x, y)) - 1 \leq \alpha \cdot \left[R_Q(f(x), y) - 1\right]$.
+%% \end{definition}
+
+\begin{lemma}\label{lem:opt}
+  There exists a polynomial time reduction of some kind (???) from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}, with preservation factor 1.
+\end{lemma}
+\begin{proof}
+  Let $f_0$ be the reduction given in \autoref{lem:decision} from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
+  Define $f$ by $f((U, F)) = f_0((U, F))$ for all finite sets of Boolean variables $U$ and finite sets of Boolean functions $F$ of at most $k$ of the variables.
+  Also, define $g$ by $g((U, F), \tau) = \tau|_U$ for all satisfying assignments $\tau$, where $\tau|_U$ represents the restriction of the satisfying assignment $\tau$ to only the variables of $U$.
+  Let $\alpha = 1$.
+
+  If $(U, F)$ is satisfiable then $f((U, F))$ is also satisfiable, by the correctness of the reduction $f_0$.
+  Notice that the number of clauses in $f((U, F))$ is at most $M \cdot 2^k \cdot (k - 2)$, where $M = |F|$.
+  Furthermore, if $\tau$ is a solution to $f((U, F))$, then $g((U, F), \tau)$ is satisfiable for the same reason.
+
+  \begin{todo}
+    Figure out what kind of reduction is required here and prove the necessary approximation preserving condition.
+  \end{todo}
+
+  %% Finally, let $P$ represent \textsc{Maximum $k$-Function Satisfiability} and let $Q$ represent \textsc{Maximum 3-Satisfiability}.
+  %% Suppose $R_Q(f((U, F)), \tau) \leq r$.
+  %% Then
+  %% \begin{align*}
+  %%   & \phantom{\implies} \frac{m^*_Q(f((U, F)))}{m_Q(f((U, F)), \tau)} \leq r \\
+  %%   & \implies \frac{m^*_Q(f_0((U, F)))}{m_Q(f((U, F)), \tau)} \leq r \\
+  %% \end{align*}
+
+  %% Then we have
+  %% \begin{align*}
+  %%   MAGIC... \\
+  %%   \frac{M}{m((U, F), \tau|_U)} & \leq \frac{M \cdot 2^k \cdot (k - 2)}{m(f_0((U, F)), \tau)} \\
+  %%   \frac{M}{m((U, F), \tau|_U)} & \leq \frac{M \cdot 2^k \cdot (k - 2)}{m(f_0((U, F)), \tau)} \\
+  %%   \frac{M}{m((U, F), \tau|_U)} & \leq \frac{m^*(f_0((U, F)))}{m(f_0((U, F)), \tau)} \\
+  %%   \frac{m^*_P((U, F))}{m((U, F), g((U, F), \tau))} & \leq \frac{m^*(f((U, F)))}{m(f((U, F)), \tau)} \\
+  %%   R_P((U, F), g((U, F), \tau)) - 1 & \leq \alpha \cdot \left[R_Q(f((U, F)), \tau) - 1\right].
+  %% \end{align*}
+\end{proof}
+
+\begin{lemma}\label{lem:compose}
+  Let $P$ be a decision problem and $Q$ and $T$ be optimization problems.
+  If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ and there is a polynomial time reduction of some kind (???) with preservation factor $\alpha$ from $Q$ to $T$ then there is a gap-introducing reduction from $P$ to $T$ with gap parameter $\epsilon \cdot \alpha$.
+\end{lemma}
+\begin{proof}
+  \begin{todo}
+    Check the parameters in the hypothesis, and complete this proof.
+  \end{todo}
+\end{proof}
+
+\begin{lemma}
+  Let $P$ be an optimization problem in \NPO.
+  If there exists a constant $\epsilon$ such that for all $r < 1 + \epsilon$, no polynomial time $r$-approximator exists unless $\P = \NP$, then $P \notin \PTAS$ unless $\P = \NP$.
+\end{lemma}
+\begin{proof}
+  \begin{todo}
+    Fill me in (this is simple).
+  \end{todo}
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]
+  There is a constant $k$ such that no polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\P = \NP$, for all $r$ such that
+  \begin{displaymath}
+    r < 1 + \frac{1}{2^{k + 1} \cdot (k - 2) - 1}.
+  \end{displaymath}
 \end{theorem}
 \begin{proof}
-  
+  Use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
+  The gap parameter for the gap-introducing reduction produced by the composition is $\epsilon \cdot \alpha$, which equals ??? (should be $\frac{1}{2^{k  + 1} \cdot (k - 2) - 1}$).
+  Now apply \autoref{thm:gap} and the result follows.
 \end{proof}
+
+\begin{corollary}
+  $\textsc{Maximum 3-Satisfiability} \notin \PTAS$ unless $\P = \NP$.
+\end{corollary}
 
 \begin{theorem}
   \textsc{Maximum 3-Satisfiability} is complete for \APX{} under $\APr$ reductions.
