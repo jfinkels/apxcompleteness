@@ -271,17 +271,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   \end{todo}
 \end{proof}
 
-\begin{lemma}
-  Let $P$ be an optimization problem in \NPO.
-  If there exists a constant $\epsilon$ such that for all $r < 1 + \epsilon$, no polynomial time $r$-approximator exists unless $\P = \NP$, then $P \notin \PTAS$ unless $\P = \NP$.
-\end{lemma}
-\begin{proof}
-  \begin{todo}
-    Fill me in (this is simple).
-  \end{todo}
-\end{proof}
-
-\begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]
+\begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]\label{thm:hard}
   There is a constant $k$ such that no polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\P = \NP$, for all $r$ such that
   \begin{displaymath}
     r < 1 + \frac{1}{2^{k + 1} \cdot (k - 2) - 1}.
@@ -296,6 +286,14 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \begin{corollary}
   $\textsc{Maximum 3-Satisfiability} \notin \PTAS$ unless $\P = \NP$.
 \end{corollary}
+\begin{proof}
+  In order to produce a contradiction, suppose that there exists a polynomial time approximation scheme for \textsc{Maximum 3-Satisfiability}, so there exists a function $f$ such that on input $x$ and $N$, $f$ produces solutions for \textsc{Maximum 3-Satisfiability}, $f$ is computable in time polynomial in the length of $x$, and $R(x, f(x, N)) \leq 1 + \frac{1}{N}$ for all $x \in \Sigma^*$ and all $N \in \mathbb{N}$.
+  Specifically, if we choose $N > 2^{k + 1} \cdot (k - 2) - 1$, where $k$ is the constant from the statement of \autoref{thm:hard}, then $R(x, f(x, N)) \leq 1 + \frac{1}{N} < 1 + \frac{1}{2^{k + 1} \cdot (k - 2) - 1}$, for all $x \in \Sigma^*$.
+  Therefore, $f$ is in fact a polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability}, where $r$ meets the upper bound in the statement of \autoref{thm:hard}.
+  The conclusion follows.
+\end{proof}
+
+\section{\texorpdfstring{\APX}{APX}-completeness}
 
 \begin{theorem}
   \textsc{Maximum 3-Satisfiability} is complete for \APX{} under $\APr$ reductions.
