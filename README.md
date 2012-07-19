@@ -15,6 +15,23 @@ The author can be contacted via email at <jeffreyf@bu.edu>.
 
 [1]: https://creativecommons.org/licenses/by-sa/3.0/
 
+## Requirements ##
+
+Compiling this work requires the following LaTeX packages:
+
+* algorithm
+* algpseudocode
+* amsmath
+* amssymb
+* amsthm
+* complexity
+* hyperref
+
+The following command will install the necessary system packages on Ubuntu
+12.04:
+
+    sudo apt-get install  # fill me in...
+
 ## Getting and compiling this work ##
 
 To get a copy of the most recent version of this work:

@@ -3,6 +3,8 @@
 % Package `hyperref` must come before package `complexity`.
 \usepackage[pdftitle={APX completeness}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -22,16 +24,20 @@
 
 \mathchardef\mhyphen="2D
 
-%\newenvironment{justification}{\begin{proof}[Justification]}{\end{proof}}
 \newenvironment{instance}{\\Instance:}{}
 \newenvironment{measure}{\\Measure:}{}
+\newenvironment{proofidea}{\begin{proof}[Proof idea]}{\end{proof}}
 \newenvironment{solution}{\\Solution:}{}
 \newenvironment{question}{\\Question:}{}
 
 %\newcommand{\definitionautorefname}{Definition}
+\newcommand{\algorithmautorefname}{Algorithm}
 \newcommand{\lemmaautorefname}{Lemma}
 
+\algrenewcommand\algorithmicrequire{\textbf{Input:}}
+
 \newcommand{\APr}{\leq_{AP}^{P}}
+\newcommand{\ceil}[1]{\lceil{#1}\rceil}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 %\newcommand{\lb}{\left\{}
 %\newcommand{\pb}{\textsf{pb}}
@@ -146,7 +152,7 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
 \begin{definition}[\textsc{$k$-Function Satisfiability}]
   \mbox{}
   \begin{instance}
-    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables.
+    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables, where $k \geq 2$
   \end{instance}
   \begin{question}
     Does there exist a truth assignment $\tau$ such that all the functions are satisfied?
@@ -156,7 +162,7 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
 \begin{definition}[\textsc{Maximum $k$-Function Satisfiability}]
   \mbox{}
   \begin{instance}
-    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables
+    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables, where $k \geq 2$
   \end{instance}
   \begin{solution}
     a truth assignment $\tau$ to the variables
@@ -235,7 +241,8 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 %% \end{definition}
 
 \begin{lemma}\label{lem:opt}
-  There exists a polynomial time reduction of some kind (???) from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}, with preservation factor $\alpha$ defined by $\alpha = 2^{k + 1} \cdot (k - 2) - 1$.
+  There exists a polynomial time reduction of some kind (???) from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}, with preservation factor $\alpha$ defined by $\alpha = 2^{k + 1} - 1$.
+% which is greater than $\alpha = 2^{k + 1} \cdot (k - 2) - 1$.
 \end{lemma}
 \begin{proof}
   Let $f_0$ be the reduction given in \autoref{lem:decision} from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
@@ -274,6 +281,9 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \begin{lemma}\label{lem:compose}
   Let $P$ be a decision problem and $Q$ and $T$ be optimization problems.
   If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ and there is a polynomial time reduction of some kind (???) with preservation factor $\alpha$ from $Q$ to $T$ then there is a gap-introducing reduction from $P$ to $T$ with gap parameter $\epsilon \cdot \alpha$.
+  \begin{todo}
+    Is this the right gap parameter?
+  \end{todo}
 \end{lemma}
 \begin{proof}
   For simplicity, we will assume that both $Q$ and $T$ are maximization problems.
@@ -291,16 +301,26 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   \end{todo}
 \end{proof}
 
+\begin{lemma}\label{lem:gap3}
+  There is a gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability} with gap parameter $\epsilon$ defined by
+  \begin{displaymath}
+    \epsilon = \frac{1}{2^{k + 1} - 1},
+  \end{displaymath}
+  where $k$ is a constant coming from the intermediate reduction from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+\end{lemma}
+\begin{proof}
+  Use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
+  The gap parameter for the gap-introducing reduction produced by the composition is $\epsilon \cdot \alpha$ (or something), which equals ??? (should be at most $\frac{1}{2^{k + 1} - 1}$).
+\end{proof}
+
 \begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]\label{thm:hard}
   There is a constant $k$ such that no polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\P = \NP$, for all $r$ such that
   \begin{displaymath}
-    r < 1 + \frac{1}{2^{k + 1} \cdot (k - 2) - 1}.
+    r < 1 + \frac{1}{2^{k + 1} - 1}.
   \end{displaymath}
 \end{theorem}
 \begin{proof}
-  Use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
-  The gap parameter for the gap-introducing reduction produced by the composition is $\epsilon \cdot \alpha$, which equals ??? (should be $\frac{1}{2^{k  + 1} \cdot (k - 2) - 1}$).
-  Now apply \autoref{thm:gap} and the result follows.
+  Follows from \autoref{lem:gap3} and \autoref{thm:gap}.
 \end{proof}
 
 \begin{corollary}
@@ -308,23 +328,135 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \end{corollary}
 \begin{proof}
   In order to produce a contradiction, suppose that there exists a polynomial time approximation scheme for \textsc{Maximum 3-Satisfiability}, so there exists a function $f$ such that on input $x$ and $N$, $f$ produces solutions for \textsc{Maximum 3-Satisfiability}, $f$ is computable in time polynomial in the length of $x$, and $R(x, f(x, N)) \leq 1 + \frac{1}{N}$ for all $x \in \Sigma^*$ and all $N \in \mathbb{N}$.
-  Specifically, if we choose $N > 2^{k + 1} \cdot (k - 2) - 1$, where $k$ is the constant from the statement of \autoref{thm:hard}, then $R(x, f(x, N)) \leq 1 + \frac{1}{N} < 1 + \frac{1}{2^{k + 1} \cdot (k - 2) - 1}$, for all $x \in \Sigma^*$.
+  Specifically, if we choose $N > 2^{k + 1} - 1$, where $k$ is the constant from the statement of \autoref{thm:hard}, then $R(x, f(x, N)) \leq 1 + \frac{1}{N} < 1 + \frac{1}{2^{k + 1} - 1}$, for all $x \in \Sigma^*$.
   Therefore, $f$ is in fact a polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability}, where $r$ meets the upper bound in the statement of \autoref{thm:hard}.
   The conclusion follows.
 \end{proof}
 
 \section{\texorpdfstring{\APX}{APX}-completeness}
 
+To show that \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions we must show that it is in \APX{} and that there is an AP reduction from every optimization problem in \APX{} to it.
+
 \begin{theorem}
-  \textsc{Maximum 3-Satisfiability} is complete for \APX{} under $\APr$ reductions.
+  \textsc{Maximum 3-Satisfiability} is in \APX.
+\end{theorem}
+\begin{proof}
+  \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Satisfiability}, and there exists a polynomial time 2-approximator for \textsc{Satisfiability} (see \cite[Program~3.1]{book}).
+\end{proof}
+
+We first wish to show the following main theorem:
+
+\begin{theorem}[{\cite[Theorem~8.6]{book}}]\label{thm:maxcomplete}
+  \textsc{Maximum 3-Satisfiability} is complete for the class of maximization problems in \APX{} under $\APr$ reductions.
 \end{theorem}
 
-We first present the idea behind this proof.
-Recall the Cook-Levin technique for transforming a Turing machine, whose running time is bounded by a polynomial in the length of its input, into a Boolean circuit such that for any input, the Turing machine accepts if and only if the Boolean circuit outputs 1.
-We use this technique to transform a Turing machine which decides an arbitrary language in \APX{} into a Boolean formula representing the Boolean circuit.
+After proving this theorem, we will present a reduction from any minimization problem in \APX{} to a maximization problem in order to show that the full class \APX{} has a complete problem.
+We describe the idea of the proof before presenting the proof itself, since it is somewhat technical.
 
-\begin{proof}
-  We show a generic reduction from 
+\begin{proofidea}
+  First, with a slight modification of the results from the previous section (changing the gap-introducing reduction to require the existence of an inverse function mapping solutions in $Q$ to solutions in $P$, meeting a gap requirement), we can show that there exist a positive constant $\epsilon$ and functions $f_s$ and $g_s$ such that for any CNF formula $\phi$, if $\tau$ is a truth assignment satisfying at least $1 - \epsilon$ of the maximum number of satisfiable clauses of $f_s(\phi)$ then $g_x(\phi, \tau)$ is a satisfying assignment for $\phi$ if and only if $\phi$ is satisfiable.
+  Here $f_s$ is a mapping from CNF formulae to 3-CNF formulae.
+  \begin{todo}
+    I think in addition to the inverse mapping, this would require the gap-introducing reduction to have the condition $x \in P \implies m^*(f(x)) > \frac{1}{1 + \epsilon} \cdot c(x)$, or something similar.
+  \end{todo}
+
+  The reduction is a generic reduction from an arbitrary maximization problem in \APX{} to \textsc{Maximum 3-Satisfiability}, again using a Cook-Levin transformation so that the number of satisfiable clauses in the Boolean formula corresponds in some way to the measure of a solution in the original maximization problem.
+  In order to search for a ``good enough'' approximate solution for \textsc{Maximum 3-Satisfiability}, we will partition the interval in which we are certain the optimal solution lives (but which is too large) into a constant number of subintervals.
+  For each subinterval we will use the Cook-Levin transformation to construct a Boolean formula which is satisfiable if and only if there is an approximate solution in that subinterval, and which exposes the approximate solution.
+  Furthermore, we apply the function $f_s$ to each of those formulae in order to provide the gap guarantee discussed in the previous paragraph; this allows us to use \ldots.
+  Finally, we use $g_s$ on one of the formulae corresponding to a subinterval to produce a ``good enough'' approximate solution for the original maximization problem.
+\end{proofidea}
+\begin{proof}[Proof of \autoref{thm:maxcomplete}]
+  For the sake of brevity, we let the single letter $Q$ represent $\textsc{Maximum 3-Satisfiability}$.
+
+  Let $P$ be a maximization problem in \APX, so we have $P = (I, S, m, \max)$.
+  Let $A_P$ be the polynomial time computable $r_P$-approximator for $P$, where $r_P$ is some constant.
+  We need to define an AP reduction $(f, g, \alpha)$ from $P$ to $Q$.
+  We will delay the definition of the constant $\alpha$ until later in the proof, and until then we assume it has been fixed.
+  We now wish to define functions $f$ and $g$ for all $r > 1$.
+  Let $r_n = 1 + \alpha \cdot (r - 1)$; this is the desired upper bound of the performance ratio $R_P(x, g(x, \tau, r))$, as required by the AP condition when $R_Q(f(x, r), \tau) \leq r$.
+
+  In the case that $r_p \leq r_n$, defining $g(x, y, r) = A_P(x)$ for all $x$ and $y$ is sufficient, and no definition of $f$ is necessary, since $R(x, g(x, y, r)) = R(x, A_P(x)) \leq r_P \leq r_n$.
+  Suppose from here on that $r_p > r_n$.
+
+  For $f$ we intend to map an instance $x$ of $P$ to a 3-CNF Boolean formula, and for $g$ we intend to map a truth assignment which satisfies a constant factor of the satisfiable clauses of $f(x, r)$ to a solution $y$ for $P$.
+  In order to recover a solution $y$ for $P$ with $R_P(x, y) \leq r_n$, we need a solution whose measure is close to $m^*_P(x)$, the optimal measure of $x$.
+  If we let $a(x) = m_P(x, A_P(x))$, then
+  \begin{equation}\label{eq:bounds}
+    a(x) \leq m^*_P(x) \leq r_P \cdot a(x),
+  \end{equation}
+  since it $a(x)$ is the measure of a $r_P$-approximate solution to a maximization problem.
+  We can't just output any solution in this range, because the approximation guarantee would be only $r_P$; we need it to be $r_n$.
+  Hence we will subdivide this interval and derive a solution within a subinterval of size $r_n$.
+
+  Let us divide the interval $[a(x), r_P \cdot a(x)]$ into $k$ subintervals,
+  \begin{displaymath}
+    \left[a(x), r_n \cdot a(x)\right), \left[r_n \cdot a(x), {r_n}^2 \cdot a(x)\right), \ldots, \left[{r_n}^{k - 1} \cdot a(x), r_P \cdot a(x)\right],
+  \end{displaymath}
+  where $k = \ceil{\log_{r_n}{r_P}}$.
+  (Notice that the sizes of these subintervals are not necessarily equal; except the final subinterval, they are only non-decreasing.
+  This won't be a problem, as we only need a multiplicative constant approximation.)
+  By construction, we have ${r_n}^k = {r_n}^{\ceil{\log_{r_n}{r_P}}} \geq {r_n}^{\log_{r_n}{r_P}} = r_P$, and hence $r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$.
+  Combining this with \autoref{eq:bounds}, we have $a(x) \leq m^*_P(x) \leq r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$, so the optimal measure of $x$ must exist in one of these intervals.
+  Now we construct $f$ and $g$ in such a way that for any $x \in I$, we can recover an approximate solution $y$ that lies in the same interval in which $m_P^*(x)$ lies.
+  If we were to find a solution $y$ in, for example, interval $j$, then we would have
+  \begin{equation*}
+    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq {r_n}^{j + 1} \cdot a(x),
+  \end{equation*}
+  and hence
+  \begin{equation*}
+    R_P(x, y) = \frac{m_P^*(x)}{m_P(x, y)} \leq r_n.
+  \end{equation*}
+  So this is our goal when constructing $f$ and $g$.
+  \begin{todo}
+    How can we get that last inequality?
+  \end{todo}
+
+  To define $f$ we need some further definitions.
+  Define $B$ as in \autoref{alg:interval}, where $p$ is the polynomial which bounds the size of solutions in $S$.
+  Assume without loss of generality that immediately before $B$ returns \texttt{True}, it writes $y$.
+  \begin{algorithm}
+    \caption{Nondeterministic polynomial time algorithm that decides if there is an approximate solution for instance $x$ of problem $P$ in interval $i$%
+      \label{alg:interval}}
+    \begin{algorithmic}
+      \Require{$x \in I$, $i \geq 0$}
+      \Statex{}
+      \Function{$B$}{$x$, $i$}:
+        \State{\textbf{guess} $y$ with $|y| \leq p(|x|)$}
+        \State{$a \gets m_P(x, A_P(x))$}
+        \If{$y \in S_P(x)$ and ${r_n}^i \cdot a \leq m_P(x, y) < {r_n}^{i + 1} \cdot a$}
+          \Return{\texttt{True}}
+        \Else
+          { }\Return{\texttt{False}}
+        \EndIf
+      \EndFunction
+    \end{algorithmic}
+  \end{algorithm}
+  Let $f_s$ be the special gap-introducing function described in the preceding discussion.
+  Let $C$ be the Cook-Levin transformation from a description of non-deterministic Turing machine to an equivalent Boolean formula.
+  Now we can define $f$ by
+  \begin{displaymath}
+    f(x, r) = \bigwedge_{i = 0}^{k - 1}{f_s(C(B(x, i)))},
+  \end{displaymath}
+  for all $x \in I$.
+  Let us explain this function.
+  Since we assume $B$ writes a solution $y$ before it returns \texttt{True}, $C(B(x, i))$ will have some variables, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
+  Applying $f_s$ to this Boolean formula produces a 3-CNF formula which has a gap behavior which will be discussed later (since it depends on $g_s$).
+  Observe that $f(x, r)$ is still a 3-CNF formula.
+  We assume without loss of generality also that each formula $f_s(C(B(x, i)))$ has the same number of clauses, say $m$.
+
+  To define $g$, suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
+  Let $\phi_i = C(B(x, i))$, let $\psi_i = f_s(\phi_i)$, and let $\psi = f(x, r)$, so $\tau$ is a satisfying assignment to $\psi$.
+  Suppose $g_s$ is the special gap-extracting function described in the preceding discussion.
+  Now for any $\tau$ satisfying a $1 - \epsilon$ factor of the maximum number of satisfiable clauses of $\psi$ and for each $i \in \{0, 1, \dotsc, k - 1\}$, if $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
+  We will assume for now that $\tau$ satisfies $1 - \epsilon$ of the maximum number of satisfiable clauses, and show that it is true later.
+  There exists a maximum $i$ such that $\tau_i$ satisfies $\phi_i$; call it $j$.
+  This implies
+  \begin{equation*}
+    {r_n}^j \cdot a(x) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
+  \end{equation*}
+
+  Now we define $g$ as follows on input $x$, satisfying assignment $\tau$, and approximation factor $r$:
 \end{proof}
 
 \section*{About this work}
