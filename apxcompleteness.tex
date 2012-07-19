@@ -23,6 +23,10 @@
 \mathchardef\mhyphen="2D
 
 %\newenvironment{justification}{\begin{proof}[Justification]}{\end{proof}}
+\newenvironment{instance}{\\Instance:}{}
+\newenvironment{measure}{\\Measure:}{}
+\newenvironment{solution}{\\Solution:}{}
+\newenvironment{question}{\\Question:}{}
 
 %\newcommand{\definitionautorefname}{Definition}
 \newcommand{\lemmaautorefname}{Lemma}
@@ -141,20 +145,25 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
 
 \begin{definition}[\textsc{$k$-Function Satisfiability}]
   \mbox{}
-  \begin{description}
-  \item[Input:] finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables.
-  \item[Question:] Does there exist a truth assignment $\tau$ such that all the functions are satisfied?
-  \end{description}
+  \begin{instance}
+    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables.
+  \end{instance}
+  \begin{question}
+    Does there exist a truth assignment $\tau$ such that all the functions are satisfied?
+  \end{question}
 \end{definition}
 
 \begin{definition}[\textsc{Maximum $k$-Function Satisfiability}]
   \mbox{}
-  \begin{description}
-    %\setlength{\itemindent}{-10pt}
-  \item[Input:] finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables.
-  \item[Solution:] a truth assignment $\tau$ to the variables.
-  \item[Measure:] The number of satisfied functions.
-  \end{description}
+  \begin{instance}
+    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables
+  \end{instance}
+  \begin{solution}
+    a truth assignment $\tau$ to the variables
+  \end{solution}
+  \begin{measure}
+   the number of satisfied functions
+  \end{measure}
 \end{definition}
 
 Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
