@@ -362,7 +362,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
 
   The reduction is a generic reduction from an arbitrary maximization problem in \APX{} to \textsc{Maximum 3-Satisfiability}, again using a Cook-Levin transformation so that the number of satisfiable clauses in the Boolean formula corresponds in some way to the measure of a solution in the original maximization problem.
   In order to search for a ``good enough'' approximate solution for \textsc{Maximum 3-Satisfiability}, we will partition the interval in which we are certain the optimal solution lives (but which is too large) into a constant number of subintervals.
-  For each subinterval we will use the Cook-Levin transformation to construct a Boolean formula which is satisfiable if and only if there is an approximate solution in that subinterval, and which exposes the approximate solution.
+  For each subinterval we will use the Cook-Levin transformation to construct a Boolean formula which is satisfiable if and only if there is an approximate solution in that subinterval, and which exposes the approximate solution (by having Boolean variables $y_1, y_2, \dotsc, y_k$ whose truth values represent the values of the bits in the binary representation of $y$).
   Furthermore, we apply the function $f_s$ to each of those formulae in order to provide the gap guarantee discussed in the previous paragraph; this allows us to use \ldots.
   Finally, we use $g_s$ on one of the formulae corresponding to a subinterval to produce a ``good enough'' approximate solution for the original maximization problem.
 \end{proofidea}
@@ -400,13 +400,13 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Combining this with \autoref{eq:bounds}, we have $a(x) \leq m^*_P(x) \leq r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$, so the optimal measure of $x$ must exist in one of these intervals.
   Now we construct $f$ and $g$ in such a way that for any $x \in I$, we can recover an approximate solution $y$ that lies in the same interval in which $m_P^*(x)$ lies.
   If we were to find a solution $y$ in, for example, interval $j$, then we would have
-  \begin{equation*}
+  \begin{equation}\label{eq:subinterval}
     {r_n}^j \cdot a(x) \leq m_P(x, y) \leq {r_n}^{j + 1} \cdot a(x),
-  \end{equation*}
+  \end{equation}
   and hence
-  \begin{equation*}
+  \begin{equation}\label{eq:result}
     R_P(x, y) = \frac{m_P^*(x)}{m_P(x, y)} \leq r_n.
-  \end{equation*}
+  \end{equation}
   So this is our goal when constructing $f$ and $g$.
   \begin{todo}
     How can we get that last inequality?
@@ -443,20 +443,28 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Since we assume $B$ writes a solution $y$ before it returns \texttt{True}, $C(B(x, i))$ will have some variables, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
   Applying $f_s$ to this Boolean formula produces a 3-CNF formula which has a gap behavior which will be discussed later (since it depends on $g_s$).
   Observe that $f(x, r)$ is still a 3-CNF formula.
-  We assume without loss of generality also that each formula $f_s(C(B(x, i)))$ has the same number of clauses, say $m$.
+  We assume without loss of generality also that each formula $f_s(C(B(x, i)))$ has the same number of clauses, say $M$.
 
-  To define $g$, suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
-  Let $\phi_i = C(B(x, i))$, let $\psi_i = f_s(\phi_i)$, and let $\psi = f(x, r)$, so $\tau$ is a satisfying assignment to $\psi$.
+  To define $g$, first suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
+  For each $i$ with $0 \leq i \leq k - 1$, let $\phi_i = C(B(x, i))$ and $\psi_i = f_s(\phi_i)$.
+  Let $\psi = f(x, r)$, so $\tau$ is a truth assignment to $\psi$ which satisfies some of the clauses.
   Suppose $g_s$ is the special gap-extracting function described in the preceding discussion.
-  Now for any $\tau$ satisfying a $1 - \epsilon$ factor of the maximum number of satisfiable clauses of $\psi$ and for each $i \in \{0, 1, \dotsc, k - 1\}$, if $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
-  We will assume for now that $\tau$ satisfies $1 - \epsilon$ of the maximum number of satisfiable clauses, and show that it is true later.
-  There exists a maximum $i$ such that $\tau_i$ satisfies $\phi_i$; call it $j$.
+  For any $\tau$ that satisfies a $1 - \epsilon$ factor of the maximum number of satisfiable clauses in $\psi_i$ (note: this is $\psi_i$, not $\psi$), if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
+%%   We will assume for now that $\tau$ satisfies $1 - \epsilon$ of the maximum number of satisfiable clauses of $\psi_i$ for some $i$, and show that it is true later.
+  Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
+  Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$.
+
+  Note that there exists a maximum $i$ such that $\tau_i$ satisfies $\phi_i$; call it $j$.
   This implies
   \begin{equation*}
     {r_n}^j \cdot a(x) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
   \end{equation*}
+  which is exactly the statement of equation \autoref{eq:subinterval}, and hence \autoref{eq:result} follows.
+  Therefore, we define $g(x, \tau, r) = T(\phi_j, g_s(\phi_j, \tau))$.
 
-  Now we define $g$ as follows on input $x$, satisfying assignment $\tau$, and approximation factor $r$:
+  We now complete the tasks which we delayed above.
+  First, we must prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $1 - \epsilon$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq j$.
+  Let $\tau$ be a truth assignment to $\psi$ whose performance ratio is at most $r$
 \end{proof}
 
 \section*{About this work}
