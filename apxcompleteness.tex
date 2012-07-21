@@ -385,7 +385,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \begin{equation}\label{eq:bounds}
     a(x) \leq m^*_P(x) \leq r_P \cdot a(x),
   \end{equation}
-  since it $a(x)$ is the measure of a $r_P$-approximate solution to a maximization problem.
+  since $a(x)$ is the measure of a $r_P$-approximate solution to a maximization problem.
   We can't just output any solution in this range, because the approximation guarantee would be only $r_P$; we need it to be $r_n$.
   Hence we will subdivide this interval and derive a solution within a subinterval of size $r_n$.
 
@@ -394,23 +394,28 @@ We describe the idea of the proof before presenting the proof itself, since it i
     \left[a(x), r_n \cdot a(x)\right), \left[r_n \cdot a(x), {r_n}^2 \cdot a(x)\right), \ldots, \left[{r_n}^{k - 1} \cdot a(x), r_P \cdot a(x)\right],
   \end{displaymath}
   where $k = \ceil{\log_{r_n}{r_P}}$.
-  (Notice that the sizes of these subintervals are not necessarily equal; except the final subinterval, they are only non-decreasing.
+  (Notice that the sizes of these subintervals are not necessarily equal; except that of the final subinterval, the sizes are only non-decreasing.
   This won't be a problem, as we only need a multiplicative constant approximation.)
   By construction, we have ${r_n}^k = {r_n}^{\ceil{\log_{r_n}{r_P}}} \geq {r_n}^{\log_{r_n}{r_P}} = r_P$, and hence $r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$.
   Combining this with \autoref{eq:bounds}, we have $a(x) \leq m^*_P(x) \leq r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$, so the optimal measure of $x$ must exist in one of these intervals.
   Now we construct $f$ and $g$ in such a way that for any $x \in I$, we can recover an approximate solution $y$ that lies in the same interval in which $m_P^*(x)$ lies.
   If we were to find a solution $y$ in, for example, interval $j$, then we would have
   \begin{equation}\label{eq:subinterval}
-    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq {r_n}^{j + 1} \cdot a(x),
+    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq {r_n}^{j + 1} \cdot a(x).
   \end{equation}
-  and hence
+  Then, since
+  \begin{equation*}
+    \frac{m^*(x)}{a(x)} \leq {r_n}^{j + 1}
+  \end{equation*}
+  and
+  \begin{equation*}
+    {r_n}^j \leq \frac{m_P(x, y)}{a(x)}
+  \end{equation*}
+  we find that
   \begin{equation}\label{eq:result}
-    R_P(x, y) = \frac{m_P^*(x)}{m_P(x, y)} \leq r_n.
+    R_P(x, y) = \frac{m_P^*(x)}{m_P(x, y)} = \frac{\frac{m^*_P(x)}{a(x)}}{\frac{m_P(x, y)}{a(x)}} \leq \frac{{r_n}^{j + 1}}{{r_n}^j} = r_n.
   \end{equation}
   So this is our goal when constructing $f$ and $g$.
-  \begin{todo}
-    How can we get that last inequality?
-  \end{todo}
 
   To define $f$ we need some further definitions.
   Define $B$ as in \autoref{alg:interval}, where $p$ is the polynomial which bounds the size of solutions in $S$.
