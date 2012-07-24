@@ -383,7 +383,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Let $r_n = 1 + \alpha \cdot (r - 1)$; this is the desired upper bound of the performance ratio $R_P(x, g(x, \tau, r))$, as required by the AP condition when $R_Q(f(x, r), \tau) \leq r$.
 
   In the case that $r_p \leq r_n$, defining $g(x, y, r) = A_P(x)$ for all $x$ and $y$ is sufficient, and no definition of $f$ is necessary, since $R(x, g(x, y, r)) = R(x, A_P(x)) \leq r_P \leq r_n$.
-  Suppose from here on that $r_p > r_n$.
+  Suppose from here on that $r_P > r_n$.
 
   For $f$ we intend to map an instance $x$ of $P$ to a 3-CNF Boolean formula, and for $g$ we intend to map a truth assignment which satisfies a constant factor of the satisfiable clauses of $f(x, r)$ to a solution $y$ for $P$.
   In order to recover a solution $y$ for $P$ with $R_P(x, y) \leq r_n$, we need a solution whose measure is close to $m^*_P(x)$, the optimal measure of $x$.
@@ -411,11 +411,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \end{equation}
   Then, since
   \begin{equation*}
-    \frac{m^*(x)}{a(x)} \leq {r_n}^{j + 1}
-  \end{equation*}
-  and
-  \begin{equation*}
-    {r_n}^j \leq \frac{m_P(x, y)}{a(x)}
+    \frac{m^*_P(x)}{a(x)} \leq {r_n}^{j + 1} \qquad \text{and} \qquad {r_n}^j \leq \frac{m_P(x, y)}{a(x)}
   \end{equation*}
   we find that
   \begin{equation}\label{eq:result}
@@ -492,17 +488,13 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Now let $r_i$ be the performance ratio of $\tau$ with respect to $\psi_i$.
   Since
   \begin{equation*}
-    m_Q^*(\psi) = \sum_{i = 0}^{k - 1}{m_Q^*(\psi_i)}
-  \end{equation*}
-  and
-  \begin{equation*}
-    m_Q(\psi, \tau) = \sum_{i = 0}^{k - 1}{m_Q(\psi_i, \tau)},
+    m_Q^*(\psi) = \sum_{i = 0}^{k - 1}{m_Q^*(\psi_i)} \qquad \text{and} \qquad m_Q(\psi, \tau) = \sum_{i = 0}^{k - 1}{m_Q(\psi_i, \tau)},
   \end{equation*}
   we have
   \begin{align*}
     m^*_Q(\psi) - m_Q(\psi, \tau) & = \sum_{j = 0}^{k - 1}{m_Q^*(\psi_j)} - \sum_{j = 0}^{k - 1}{m_Q(\psi_j, \tau)} \\
     & = \sum_{j = 0}^{k - 1}{\left(m_Q^*(\psi_j) - m_Q(\psi_j, \tau)\right)} \\
-    & = m_Q^*(\psi_j) - m_Q(\psi_j, \tau) \\
+    & \geq m_Q^*(\psi_i) - m_Q(\psi_i, \tau) \\
     & = m_Q^*(\psi_i) \left(\frac{r_i - 1}{r_i}\right) \\
     & \geq \frac{M}{2} \cdot \frac{r_i - 1}{r_i},
   \end{align*}
