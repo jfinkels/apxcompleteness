@@ -93,6 +93,16 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
   $\NP = \PCP(\lg n, 1)$.
 \end{theorem}
 
+\subsection{Basic facts about Boolean formulae}
+
+\begin{lemma}\label{lem:half}
+ At least half of the clauses of any Boolean formula in conjunctive normal form are always satisfiable.
+\end{lemma}
+
+\begin{lemma}[{\cite[Example~6.5]{book}}]\label{lem:three}
+  There is a polynomial time computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
+\end{lemma}
+
 \section{Hardness of approximation}
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]
@@ -203,10 +213,6 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   Hence $m^*(f(\phi)) = m^*((B, G)) < \frac{1}{2} \cdot n^c = \frac{1}{1 + \epsilon} c(\phi)$.
   Therefore we have constructed a gap-introducing reduction with gap parameter 1 from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}.
 \end{proof}
-
-\begin{lemma}[{\cite[Example~6.5]{book}}]\label{lem:three}
-  There is a polynomial time computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
-\end{lemma}
 
 \begin{lemma}[{\cite[Proof of Theorem~29.7]{vazirani}}]\label{lem:decision}
   There is a polynomial time many-one reduction from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
@@ -399,9 +405,9 @@ We describe the idea of the proof before presenting the proof itself, since it i
   By construction, we have ${r_n}^k = {r_n}^{\ceil{\log_{r_n}{r_P}}} \geq {r_n}^{\log_{r_n}{r_P}} = r_P$, and hence $r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$.
   Combining this with \autoref{eq:bounds}, we have $a(x) \leq m^*_P(x) \leq r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$, so the optimal measure of $x$ must exist in one of these intervals.
   Now we construct $f$ and $g$ in such a way that for any $x \in I$, we can recover an approximate solution $y$ that lies in the same interval in which $m_P^*(x)$ lies.
-  If we were to find a solution $y$ in, for example, interval $j$, then we would have
+  If we were to find a solution $y$ in the same interval in which the optimal measure lies, say, interval $j$, then we would have
   \begin{equation}\label{eq:subinterval}
-    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq {r_n}^{j + 1} \cdot a(x).
+    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x).
   \end{equation}
   Then, since
   \begin{equation*}
@@ -460,16 +466,97 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$.
 
   Note that there exists a maximum $i$ such that $\tau_i$ satisfies $\phi_i$; call it $j$.
-  This implies
+  This implies that there is a $y$ in interval $j$ with
   \begin{equation*}
-    {r_n}^j \cdot a(x) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
+    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
   \end{equation*}
-  which is exactly the statement of equation \autoref{eq:subinterval}, and hence \autoref{eq:result} follows.
+  which is exactly the statement of \autoref{eq:subinterval}, and hence \autoref{eq:result} follows.
   Therefore, we define $g(x, \tau, r) = T(\phi_j, g_s(\phi_j, \tau))$.
 
   We now complete the tasks which we delayed above.
   First, we must prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $1 - \epsilon$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq j$.
-  Let $\tau$ be a truth assignment to $\psi$ whose performance ratio is at most $r$
+  Let $\tau$ be a truth assignment to $\psi$ whose performance ratio is at most $r$.
+  Then
+  \begin{align*}
+    & \phantom{\implies} R_Q(\psi, \tau) = \frac{m^*_Q(\psi)}{m_Q(\psi, \tau)} \leq r \\
+    & \implies m_Q(\psi, \tau) \geq \frac{m^*_Q(\psi)}{r}. \\
+  \end{align*}
+  From this, we have
+  \begin{align*}
+    m^*_Q(\psi) - m_Q(\psi, \tau) & \leq m^*_Q(\psi) - \frac{m^*_Q(\psi)}{r} \\
+    & = m^*_Q(\psi) \left(1 - \frac{1}{r}\right) \\
+    & = m^*_Q(\psi) \left(\frac{r - 1}{r}\right)\\
+    & \leq kM \left(\frac{r - 1}{r}\right),
+  \end{align*}
+  where the final inequality is true because there are at most $M$ satisfiable clauses in each of the $k$ formulas $\phi_0, \phi_1, \dotsc, \phi_{k - 1}$.
+  Now let $r_i$ be the performance ratio of $\tau$ with respect to $\psi_i$.
+  Since
+  \begin{equation*}
+    m_Q^*(\psi) = \sum_{i = 0}^{k - 1}{m_Q^*(\psi_i)}
+  \end{equation*}
+  and
+  \begin{equation*}
+    m_Q(\psi, \tau) = \sum_{i = 0}^{k - 1}{m_Q(\psi_i, \tau)},
+  \end{equation*}
+  we have
+  \begin{align*}
+    m^*_Q(\psi) - m_Q(\psi, \tau) & = \sum_{j = 0}^{k - 1}{m_Q^*(\psi_j)} - \sum_{j = 0}^{k - 1}{m_Q(\psi_j, \tau)} \\
+    & = \sum_{j = 0}^{k - 1}{\left(m_Q^*(\psi_j) - m_Q(\psi_j, \tau)\right)} \\
+    & = m_Q^*(\psi_j) - m_Q(\psi_j, \tau) \\
+    & = m_Q^*(\psi_i) \left(\frac{r_i - 1}{r_i}\right) \\
+    & \geq \frac{M}{2} \cdot \frac{r_i - 1}{r_i},
+  \end{align*}
+  where the last inequality follows from \autoref{lem:half}.
+  Combining the upper and lower bounds, we have
+  \begin{equation*}
+    \frac{M}{2} \cdot \frac{r_i - 1}{r_i} \leq kM \left(\frac{r - 1}{r}\right),
+  \end{equation*}
+  from which we find
+  \begin{equation*}
+    1 - \frac{1}{r_i} \leq 2k\left(\frac{r - 1}{r}\right),
+  \end{equation*}
+  and hence
+  \begin{equation*}
+    1 - 2k\left(\frac{r - 1}{r}\right) \leq \frac{1}{r_i}.
+  \end{equation*}
+  Now we can upper bound $r_i$ as follows:
+  \begin{align*}
+    r_i & \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)} \\
+    & = \frac{1}{\frac{r - 2kr + 2k}{r}} \\
+    & = \frac{r}{r \cdot (1 - 2k) + 2k} \\
+  \end{align*}
+  If we require that
+  \begin{equation*}
+    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+  \end{equation*}
+  then we have $r_i \leq 1 + \epsilon$, by some magic.
+  \begin{todo}
+    Figure out what this magic is; the book suggests it is ``simple algebraic manipulations''.
+  \end{todo}
+
+  In order to achieve the upper bound on $r$, we recall that $r = 1 + \frac{r_n - 1}{\alpha}$ and notice that we must choose $\alpha$ such that
+  \begin{equation*}
+    r = 1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+  \end{equation*}
+  or
+  \begin{equation*}
+    \alpha > \frac{2k(1 + \epsilon)(r_n - 1)}{\epsilon}
+  \end{equation*}
+  We must choose $\alpha$ to be a constant that does not depend on the value of $r$, but we may choose it so that it depends on $r_P$.
+  Since $k$ is defined to equal $\ceil{\log_{r_n}{r_P}}$, we have
+  \begin{align*}
+    k & \leq 1 + \frac{\log{r_P}}{\log{r_n}} \\
+    & \leq 1 + \frac{r_n \log{r_P}}{\log{r_n}} \\
+    & \leq 1 + \frac{r_n \log{r_P}}{r_n - 1} \\
+    & = \frac{r_n \log{r_P} + r_n - 1}{r_n - 1} \\
+    & < \frac{r_P \log{r_P} + r_P - 1}{r_n - 1},
+  \end{align*}
+  where the last inequality is true because we have assumed $r_n < r_P$.
+  It follows that we need only choose $\alpha$ such that
+  \begin{equation*}
+    \alpha \geq \frac{2(r_P \log{r_P} + r_P - 1)(1 + \epsilon)}{\epsilon}.
+  \end{equation*}
+  We choose $\alpha$ to equal that value, and this is a constant since $r_P$ is a constant (defined by the approximation algorithm $A_P$) and $\epsilon$ is a constant (defined in a previous theorem).
 \end{proof}
 
 \section*{About this work}
