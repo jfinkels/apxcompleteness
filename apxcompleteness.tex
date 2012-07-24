@@ -549,6 +549,13 @@ We describe the idea of the proof before presenting the proof itself, since it i
     \alpha \geq \frac{2(r_P \log{r_P} + r_P - 1)(1 + \epsilon)}{\epsilon}.
   \end{equation*}
   We choose $\alpha$ to equal that value, and this is a constant since $r_P$ is a constant (defined by the approximation algorithm $A_P$) and $\epsilon$ is a constant (defined in a previous theorem).
+
+  In summary, we define our reduction $(f, g, \alpha)$ as follows for all $x \in I$, $r > 1$, and $\tau \in S_Q(f(x, r))$:
+  \begin{align*}
+    f(x, r) & = \bigwedge_{i = 0}^{k - 1}{f_s(C(B, (x, i)))} \\
+    g(x, \tau, r) & = T(\phi_j, g_s(\phi_j, \tau)) \\
+    \alpha & = 2(r_P \log{r_P} + r_P - 1)\frac{1 + \epsilon}{\epsilon}
+  \end{align*}
 \end{proof}
 
 \section*{About this work}
