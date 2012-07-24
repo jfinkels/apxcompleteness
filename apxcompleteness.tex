@@ -127,7 +127,7 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
   We will prove the theorem for the case in which $Q$ is a maximization problem; the proof for minimization problems is similar.
 
   In order to produce a contradiction, suppose that there exists a polynomial time $r$-approximator $A$ for $Q$ with $r < 1 + \epsilon$.
-  Let $f$ and $c$ be the functions which define the gap-preserving reduction.
+  Let $f$ and $c$ be the functions which define the gap-introducing reduction.
   Define algorithm $A'$ as follows on input $x$: $A'(x)$ accepts if and only if $m(f(x), A(f(x))) > \frac{1}{1 + \epsilon} \cdot c(x)$, for all $x\in\Sigma^*$.
   We will show that $A'$ is a polynomial time algorithm for the \NP-complete problem $P$, and hence $\P=\NP$.
 
