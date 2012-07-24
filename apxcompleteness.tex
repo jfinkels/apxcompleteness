@@ -119,6 +119,18 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
 
 Notice that as the value of $\epsilon$ increases, so does the ``gap'' between the optimal measures corresponding to strings in $P$ and strings not in $P$.
 
+\begin{lemma}
+  If there is a gap-introducing reduction from $P$ to $Q$, where $Q = (I, S, m, t)$ given by $(f, c, \epsilon)$, then for all $x \in I$ and all $y \in \Sigma^*$ with $y \in S(f(x))$,
+  \begin{enumerate}
+  \item if $t = \max$ and $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$, and
+  \item if $t = \min$ and $m(f(x), y) \leq (1 + \epsilon) \cdot c(x)$ then $x \in P$.
+  \end{enumerate}
+\end{lemma}
+\begin{proof}
+  In the case that $t = \max$, since $m^*(f(x) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
+  The case in which $t = \min$ is similar.
+\end{proof}
+
 \begin{theorem}[{\cite[Theorem~3.7]{book}}]\label{thm:gap}
   Let $P$ be an \NP-complete decision problem and $Q$ be an optimization problem in \NPO.
   If there is a gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no polynomial time $r$-approximator for $P$ unless $\P = \NP$.
