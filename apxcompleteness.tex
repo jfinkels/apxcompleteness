@@ -360,7 +360,7 @@ After proving this theorem, we will present a reduction from any minimization pr
 We describe the idea of the proof before presenting the proof itself, since it is somewhat technical.
 
 \begin{proofidea}
-  First, with a slight modification of the results from the previous section (changing the gap-introducing reduction to require the existence of an inverse function mapping solutions in $Q$ to solutions in $P$, meeting a gap requirement), we can show that there exist a positive constant $\epsilon$ and functions $f_s$ and $g_s$ such that for any CNF formula $\phi$, if $\tau$ is a truth assignment satisfying at least $1 - \epsilon$ of the maximum number of satisfiable clauses of $f_s(\phi)$ then $g_x(\phi, \tau)$ is a satisfying assignment for $\phi$ if and only if $\phi$ is satisfiable.
+  First, with a slight modification of the results from the previous section (changing the gap-introducing reduction to require the existence of an inverse function mapping solutions in $Q$ to solutions in $P$, meeting a gap requirement), we can show that there exist a positive constant $\epsilon$ and functions $f_s$ and $g_s$ such that for any CNF formula $\phi$, if $\tau$ is a truth assignment satisfying at least $1 - \epsilon$ of the maximum number of satisfiable clauses of $f_s(\phi)$ then $g_s(\phi, \tau)$ is a satisfying assignment for $\phi$ if and only if $\phi$ is satisfiable.
   Here $f_s$ is a mapping from CNF formulae to 3-CNF formulae.
   \begin{todo}
     I think in addition to the inverse mapping, this would require the gap-introducing reduction to have the condition $x \in P \implies m^*(f(x)) > \frac{1}{1 + \epsilon} \cdot c(x)$, or something similar.
