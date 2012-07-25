@@ -30,9 +30,9 @@
 \newenvironment{solution}{\\Solution:}{}
 \newenvironment{question}{\\Question:}{}
 
-%\newcommand{\definitionautorefname}{Definition}
 \newcommand{\algorithmautorefname}{Algorithm}
 \newcommand{\corollaryautorefname}{Corollary}
+\newcommand{\definitionautorefname}{Definition}
 \newcommand{\lemmaautorefname}{Lemma}
 
 \algrenewcommand\algorithmicrequire{\textbf{Input:}}
@@ -78,6 +78,8 @@ The \emph{performance ratio}, $R$, of a solution $y$ for $x$ is
 A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^*$.
 If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \emph{$\delta$-approximator}.
 
+For the sake of simplicity, in \autoref{ssc:gaps} and \autoref{sec:hardness} (the sections dealing with hardness of approximation) we will consider \emph{only} maximization problems, although the definitions and results also hold for minimization problems, with the appropriate (slight) changes to the definitions (for example, in \autoref{def:intro} we would require that $m^*(f(x)) > (1 + \epsilon) \cdot c(x)$ instead of $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$).
+
 \subsection{Probabilistically checkable proofs}
 
 A \emph{$(\lg n, 1)$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $c$ random bits from $\rho$ and reads (with random access) at most $q$ bits from $\pi$, for some constants $c \in \mathbb{N}$ and $q \in \mathbb{N}$.
@@ -110,9 +112,9 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
   There is a polynomial time computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
 \end{lemma}
 
-\subsection{Gap-introducing and gap-preserving reductions}
+\subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
 
-\begin{definition}[{\cite[Section~29.1]{vazirani}}]
+\begin{definition}[{\cite[Section~29.1]{vazirani}}]\label{def:intro}
   Let $P$ be a decision problem and $Q$ be maximization problem with $Q = (I, S, m, \max)$.
   There is a \emph{gap-introducing reduction} from $P$ to $Q$ if there exist polynomial time computable functions $f \colon \Sigma^* \to I$ and $c \colon \Sigma^* \to \mathbb{N}$ and an $\epsilon \in \mathbb{Q}^+$ such that for any $x \in \Sigma^*$,
   \begin{enumerate}
@@ -120,17 +122,15 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
   \item if $x \notin P$ then $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$.
   \end{enumerate}
   We call $\epsilon$ the \emph{gap parameter} of the reduction.
-
-  If $Q$ were a minimization problem, then the second condition would instead require that $m^*(f(x)) > (1 + \epsilon) \cdot c(x)$.
 \end{definition}
 
 Notice that as the value of $\epsilon$ increases, so does the ``gap'' between the optimal measures corresponding to strings in $P$ and strings not in $P$.
 
 \begin{definition}
-  Let $P\in\NP$ and $Q\in\NPO$, with $Q = (I, S, m, t)$.
+  Let $P\in\NP$ and $Q$ be a maximization problem in \NPO, with $Q = (I, S, m, \max)$.
   Let $R_P$ be the \NP-relation induced by $P$.
   Suppose there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$.
-  The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I \times \Sigma^* \to \Sigma^*$ such that for all $x \in I$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ if $t = \max$ or $m(f(x), y) \leq (1 + \epsilon) \cdot c(x)$ if $t = \min$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
+  The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I \times \Sigma^* \to \Sigma^*$ such that for all $x \in I$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
 \end{definition}
 
 An enhanced gap-introducing reduction is a gap-introducing reduction by definition.
@@ -138,27 +138,20 @@ Notice that from \autoref{lem:xinp} it is vacuously true that $\left(x, g(x, y)\
 The interesting case is the converse, because it requires that $g$ produce a witness that $x$ is in $P$ even though it may only have an approximate solution $y$.
 
 \begin{lemma}\label{lem:xinp}
-  If there is a gap-introducing reduction from $P$ to $Q$, where $Q = (I, S, m, t)$ given by $(f, c, \epsilon)$, then for all $x \in I$ and all $y \in \Sigma^*$ with $y \in S(f(x))$,
-  \begin{enumerate}
-  \item if $t = \max$ and $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$, and
-  \item if $t = \min$ and $m(f(x), y) \leq (1 + \epsilon) \cdot c(x)$ then $x \in P$.
-  \end{enumerate}
+  If there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$, then for all $x \in I_P$ and all $y \in S_Q(f(x))$, if $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$.
 \end{lemma}
 \begin{proof}
-  In the case that $t = \max$, since $m^*(f(x) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
-  The case in which $t = \min$ is similar.
+  Since $m^*(f(x) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
 \end{proof}
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]
-  Let $P$ and $Q$ be maximization problems.
-  There is a gap-preserving reduction from $P$ to $Q$ if there exist a function $f \colon I_P \to I_Q$, functions $c_P, c_Q \colon \mathbb{N} \to \mathbb{N}$, and functions $\alpha, \beta \colon \mathbb{N} \to \mathbb{Q}^*$, with $\alpha(n) \geq 0$ and $\beta(n) \geq 0$ for all $n \in \mathbb{N}$, all polynomial time computable, such that
+  Let $P$ and $Q$ be maximization problems, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
+  There is a \emph{gap-preserving reduction} from $P$ to $Q$ if there exist a function $f \colon I_P \to I_Q$, functions $c_P, c_Q \colon \mathbb{N} \to \mathbb{N}$, and functions $\alpha, \beta \colon \mathbb{N} \to \mathbb{Q}^*$, with $\alpha(n) \geq 0$ and $\beta(n) \geq 0$ for all $n \in \mathbb{N}$, all polynomial time computable, such that
   \begin{itemize}
   \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \geq c_Q(f(x))$, and
   \item if $m^*_P(x) < \frac{1}{1 + \alpha(|x|)} \cdot c_P(x)$ then $m^*_Q(f(x)) < \frac{1}{1 + \beta(|f(x)|)} \cdot c_Q(f(x))$.
   \end{itemize}
   We identify such a reduction with the five-tuple $(f, c_P, c_Q, \alpha, \beta)$.
-
-  If either $P$ or $Q$ is a minimization problem, the definition changes in a straightforward way.
 \end{definition}
 
 Like the enhanced gap-introducing reduction, there is also an enhanced gap-preserving reduction.
@@ -168,12 +161,10 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
   Suppose that there exists a gap-preserving reduction given by $(f, c_P, c_Q, \alpha, \beta)$ from $P$ to $Q$.
   The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$, we have $g'(x, y) \in S_P(x)$ and $m_P(x, g'(x, y)) \geq \frac{1}{1 + \alpha(|x|)} \cdot c_P(x)$.
   We identify such a reduction with the six-tuple $(f, g, c_P, c_Q, \alpha, \beta)$.
-
-  If either $P$ or $Q$ is a minimization problem, the definition changes in a straightforward way.
 \end{definition}
 
 \begin{lemma}\label{lem:compose}
-  Let $P$ be a decision problem and $Q$ and $T$ be optimization problems.
+  Let $P$ be a decision problem and $Q$ and $T$ be maximization problems.
   Suppose there is a polynomial time enhanced gap-introducing reduction $(f, g, c, \epsilon)$ from $P$ to $Q$ and a polynomial time enhanced gap-preserving reduction $(f', g', c_Q, c_T, \alpha, \beta)$ from $Q$ to $T$.
   If $c(x) \geq c_Q(f(x))$ and $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha(|f(x)|)} \cdot c_Q(f(x))$ then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction, where
   \begin{align*}
@@ -184,8 +175,6 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
   \end{align*}
 \end{lemma}
 \begin{proof}
-  For simplicity, we will assume that both $Q$ and $T$ are maximization problems.
-
   Suppose first that $x \in P$.
   Our goal is to show that $m^*_T(f'(f(x))) = \tilde{c}(x)$.
   Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(x) = c(x)$.
@@ -208,7 +197,7 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
   Since we have proven the three conditions required for an enhanced gap-introducing reduction, we finally conclude that $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $T$.
 \end{proof}
 
-\section{Hardness of approximation}
+\section{Hardness of approximation}\label{sec:hardness}
 
 In this section we use the PCP theorem to prove \textsc{Maximum 3-Satisfiability} is hard to approximate (specifically, that for certain constant factors, no approximation can exist unless $\P = \NP$).
 We do this by reducing \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}, and then reducing that to \textsc{Maximum 3-Satisfiability}, ensuring that the reductions compose.
@@ -216,12 +205,10 @@ We do this by reducing \textsc{Satisfiability} to \textsc{Maximum $k$-Function S
 The main tool of this section is the following theorem, which provides sufficient conditions for an optimization problem in \NPO{} to be hard to approximate.
 
 \begin{theorem}[{\cite[Theorem~3.7]{book}}]\label{thm:gap}
-  Let $P$ be an \NP-complete decision problem and $Q$ be an optimization problem in \NPO.
+  Let $P$ be an \NP-complete decision problem and $Q$ be a maximization problem in \NPO.
   If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no polynomial time $r$-approximator for $P$ unless $\P = \NP$.
 \end{theorem}
 \begin{proof}
-  We will prove the theorem for the case in which $Q$ is a maximization problem; the proof for minimization problems is similar.
-
   In order to produce a contradiction, suppose that there exists a polynomial time $r$-approximator $A$ for $Q$ with $r < 1 + \epsilon$.
   Let $f$ and $c$ be the functions which define the gap-introducing reduction.
   Define algorithm $A'$ as follows on input $x$: $A'(x)$ accepts if and only if $m(f(x), A(f(x))) > \frac{1}{1 + \epsilon} \cdot c(x)$, for all $x\in\Sigma^*$.
@@ -256,7 +243,7 @@ The main tool of this section is the following theorem, which provides sufficien
 \end{proof}
 
 \begin{corollary}\label{cor:notinptas}
-  Let $P$ be an \NP-complete decision problem and $Q$ be an optimization problem in \NPO.
+  Let $P$ be an \NP-complete decision problem and $Q$ be a maximization problem in \NPO.
   If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ then $Q \notin \PTAS$ unless $\P = \NP$.
 \end{corollary}
 \begin{proof}
@@ -265,6 +252,8 @@ The main tool of this section is the following theorem, which provides sufficien
   Therefore, $f$ is in fact a polynomial time $r$-approximator for $Q$, where $r < 1 + \epsilon$.
   The conclusion follows from \autoref{thm:hard}.
 \end{proof}
+
+In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, we will show a reduction to it from \textsc{Satisfiability} using an intermediate maximization problem, \textsc{Maximum $k$-Function Satisfiability}.
 
 \begin{definition}[\textsc{$k$-Function Satisfiability}]
   \mbox{}
