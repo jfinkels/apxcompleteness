@@ -66,20 +66,6 @@ The length of a string $x \in \Sigma^*$ is denoted $|x|$.
 We denote the set of positive rational numbers by $\mathbb{Q}^*$ and the natural numbers (excluding 0) by $\mathbb{N}$.
 A decision problem is a subset of $\Sigma^*$.
 
-\subsection{Optimization problems}
-
-An optimization problem is given by $(I, S, m, t)$, where $I$ is called the \emph{instance set}, $S \subseteq I \times \Sigma^*$ and is called the \emph{solution relation}, $m \colon I \times \Sigma^* \to \mathbb{N}$ and is called the \emph{measure function}, and $t\in\{\max, \min\}$ and is called the \emph{type} of the optimization.
-The optimal measure for any $x \in I$ is denoted $m^*(x)$.
-Observe that for all $x \in I$ and all $y \in \Sigma^*$, if $t = \max$ then $m(x, y) \leq m^*(x)$ and if $t = \min$ then $m(x, y) \geq m^*(x)$.
-The \emph{performance ratio}, $R$, of a solution $y$ for $x$ is
-\begin{displaymath}
-  R(x, y) = \max{\left(\frac{m^*(x)}{m(x, y)}, \frac{m(x, y)}{m^*(x, y)}\right)}.
-\end{displaymath}
-A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^*$.
-If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \emph{$\delta$-approximator}.
-
-For the sake of simplicity, in \autoref{ssc:gaps} and \autoref{sec:hardness} (the sections dealing with hardness of approximation) we will consider \emph{only} maximization problems, although the definitions and results also hold for minimization problems, with the appropriate (slight) changes to the definitions (for example, in \autoref{def:intro} we would require that $m^*(f(x)) > (1 + \epsilon) \cdot c(x)$ instead of $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$).
-
 \subsection{Probabilistically checkable proofs}
 
 A \emph{$(\lg n, 1)$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $c$ random bits from $\rho$ and reads (with random access) at most $q$ bits from $\pi$, for some constants $c \in \mathbb{N}$ and $q \in \mathbb{N}$.
@@ -101,6 +87,44 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
 \begin{theorem}[PCP Theorem \cite{pcp}]\label{thm:pcp}
   $\NP = \PCP(\lg n, 1)$.
 \end{theorem}
+
+\subsection{Optimization problems}
+
+An optimization problem is given by $(I, S, m, t)$, where $I$ is called the \emph{instance set}, $S \subseteq I \times \Sigma^*$ and is called the \emph{solution relation}, $m \colon I \times \Sigma^* \to \mathbb{N}$ and is called the \emph{measure function}, and $t\in\{\max, \min\}$ and is called the \emph{type} of the optimization.
+The set of solutions corresponding to an instance $x \in I$ is denoted $S_P(x)$.
+The \emph{optimal measure} for any $x \in I$ is denoted $m^*(x)$.
+Observe that for all $x \in I$ and all $y \in \Sigma^*$, if $t = \max$ then $m(x, y) \leq m^*(x)$ and if $t = \min$ then $m(x, y) \geq m^*(x)$.
+The \emph{performance ratio}, $R$, of a solution $y$ for $x$ is
+\begin{displaymath}
+  R(x, y) = \max{\left(\frac{m^*(x)}{m(x, y)}, \frac{m(x, y)}{m^*(x, y)}\right)}.
+\end{displaymath}
+A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^*$.
+If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \emph{$\delta$-approximator}.
+
+For the sake of simplicity, in \autoref{ssc:gaps} and \autoref{sec:hardness} (the sections dealing with hardness of approximation) we will consider \emph{only} maximization problems, although the definitions and results also hold for minimization problems, with the appropriate (slight) changes to the definitions (for example, in \autoref{def:intro} we would require that $m^*(f(x)) > (1 + \epsilon) \cdot c(x)$ instead of $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$).
+
+\begin{definition}[{\cite[Definition~8.3]{book}}]
+  Let $P$ and $Q$ be optimization problems, so $P = (I_P, S_P, m_P, t_P)$ and $Q = (I_Q, S_Q, m_Q, t_Q)$.
+  There is an \emph{AP reduction from $P$ to $Q$}, denoted $P \APr Q$, if there exist functions $f \colon I_P \times \mathbb{Q}^+ \to I_Q$ and $g \colon I_P \times \Sigma^* \times \mathbb{Q}^+ \to \Sigma^*$ and constant $\alpha \in \mathbb{Q}^+$ with $\alpha \geq 1$ such that:
+  \begin{enumerate}
+  \item For all $x \in I_P$ and all $r \in \mathbb{Q}^+$ with $r > 1$, we have $f(x, r) \in I_P$.
+  \item For all $x \in I_P$ and all $r \in \mathbb{Q}^+$ with $r > 1$, if $S_P(x) \neq \emptyset$ then $S_Q(f(x, r)) \neq \emptyset$.
+  \item For all $x \in I_P$, all $r \in \mathbb{Q}^+$ with $r > 1$, and all $y \in S_Q(f(x, r))$, we have $g(x, y, r) \in S_P(x)$.
+  \item $f$ is computable in polynomial time with respect to $x$ and $g$ is computable in polynomial time with respect to $x$ and $y$.
+  \item For all $x \in I_P$, all $r \in \mathbb{Q}^+$ with $r > 1$, and all $y \in S_Q(f(x, r))$, we have
+    \begin{equation*}
+      R_Q(f(x, r), y) \leq r \text{ implies } R_P(x, g(x, y, r)) \leq 1 + \alpha \cdot (r - 1).
+    \end{equation*}
+  \end{enumerate}
+  We identify such a reduction with the triple $(f, g, \alpha)$.
+\end{definition}
+
+Although the definition of AP reduction allows $f$ and $g$ access to $r$, the quality of the approximation, in most known natural reductions, this access is not necessary.
+Therefore, in some cases, we will write $f(x)$ and $g(x, y)$ instead of $f(x, r)$ and $g(x, y, r)$.
+
+There are a wealth of other kinds of reductions among optimization problems designed to capture the notion that a good approximate solution for problem $Q$ implies a good approximate solution for problem $P$.
+Some experts suggest that the AP reduction is the correct reduction to use to show, for example, completeness in \APX.
+For a survey of other approximation preserving reductions, see \cite{crescenzi97}.
 
 \subsection{Boolean formulae}
 
@@ -181,7 +205,7 @@ The interesting case is the converse, because it requires that $g$ produce a wit
   If there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$, then for all $x \in I_P$ and all $y \in S_Q(f(x))$, if $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$.
 \end{lemma}
 \begin{proof}
-  Since $m^*(f(x) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
+  Since $m^*(f(x)) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
 \end{proof}
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]
