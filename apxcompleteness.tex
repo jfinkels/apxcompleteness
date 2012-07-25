@@ -752,19 +752,53 @@ We describe the idea of the proof before presenting the proof itself, since it i
   For every minimization problem $P \in \APX$, where $P = (I, S, m_P, \min)$, there exists a maximization problem $Q \in \APX$ such that $P \APr Q$.
 \end{theorem}
 \begin{proof}
-  Since $P \in \APX$, there exists an $r$-approximator, call it $A$, for $P$.
-  For all $x \in I$, let $a(x) = m_P(x, A(x))$.
-  This implies $\frac{a(x)}{m^*_P(x)} \leq r$ and hence $a(x) \leq r \cdot m^*_P(x)$.
-  Define $Q$ by $Q = (I, S, m_Q, \max)$, where $m_Q$ is defined by
-  \begin{equation*}
-    m_Q(x, y)
-  \end{equation*}
-  for all $x$ and $y$
-
-  \begin{todo}
-    Complete this proof.
-  \end{todo}
+  Proof omitted; see \cite{book} for the proof.
 \end{proof}
+%% \begin{proof}
+%%   Since $P \in \APX$, there exists an $r$-approximator, call it $A$, for $P$.
+%%   For all $x \in I$, let $a(x) = m_P(x, A(x))$.
+%%   This implies $\frac{a(x)}{m^*_P(x)} \leq r$ and hence $a(x) \leq r \cdot m^*_P(x)$.
+%%   Define $Q$ by $Q = (I, S, m_Q, \max)$, where $m_Q$ is defined by
+%%   \begin{equation*}
+%%     m_Q(x, y) =
+%%     \begin{cases}
+%%       (k + 1) \cdot a(x) - k \cdot m_P(x, y) & \text{if } m_P(x, y) \leq a(x) \\
+%%       t(x) & \text{otherwise,}
+%%     \end{cases}
+%%   \end{equation*}
+%%   for all $x$ and $y$, where $k = \ceil{r}$.
+%%   Following from the definition, we have $a(x) \leq m^*_Q(x) \leq (k + 1) \cdot a(x)$.
+%%   This implies that $A$ is a $(k + 1)$-approximator for $Q$, and hence $Q \in \APX$.
+
+%%   Define the AP reduction $(f, g, \alpha)$ from $P$ to $Q$ as follows.
+%%   Let $f$ be the identity function and $\alpha = k + 1$.
+%%   Define $g$ by
+%%   \begin{equation*}
+%%     g(x, y) =
+%%     \begin{cases}
+%%       y & \text{if } m_P(x, y) \leq a(x) \\
+%%       A(x) & \text{otherwise,}
+%%     \end{cases}
+%%   \end{equation*}
+%%   for all $x \in I$ and all $y \in S(f(x))$.
+
+%%   To show that $(f, g, \alpha)$ is an AP reduction from $P$ to $Q$, suppose $y \in S(f(x))$ with $R_Q(x, y) \leq r'$ for any $r' > 1$.
+%%   Our goal is to show that $R_P(x, g(x, y)) \leq 1 + \alpha \cdot (r' - 1)$.
+%%   There are two cases.
+%%   \begin{enumerate}
+%%   \item $m_P(x, y) > a(x)$.
+%%     In this case,
+%%     \begin{equation*}
+%%       R_P(x, g(x, y)) = R_P(x, A(x)) = R_Q(x, y) \leq r' \leq 1 + \alpha \cdot (r' - 1),
+%%     \end{equation*}
+%%     where the last inequality holds because $\alpha \geq 1$.
+%%   \item $m_P(x, y) \leq a(x)$.
+%%     In this case,
+%%   \end{enumerate}
+%%   \begin{todo}
+%%     Complete this proof.
+%%   \end{todo}
+%% \end{proof}
 
 \begin{corollary}
   \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
