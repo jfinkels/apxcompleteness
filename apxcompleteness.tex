@@ -195,7 +195,7 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
   Let $P$ be a decision problem and $Q$ be maximization problem with $Q = (I, S, m, \max)$.
   There is a \emph{gap-introducing reduction} from $P$ to $Q$ if there exist polynomial time computable functions $f \colon \Sigma^* \to I$ and $c \colon \Sigma^* \to \mathbb{N}$ and an $\epsilon \in \mathbb{Q}^+$ such that for any $x \in \Sigma^*$,
   \begin{enumerate}
-  \item if $x \in P$ then $m^*(f(x)) = c(x)$, and
+  \item if $x \in P$ then $m^*(f(x)) \geq c(x)$, and
   \item if $x \notin P$ then $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$.
   \end{enumerate}
   We call $\epsilon$ the \emph{gap parameter} of the reduction.
@@ -253,8 +253,8 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
 \end{lemma}
 \begin{proof}
   Suppose first that $x \in P$.
-  Our goal is to show that $m^*_T(f'(f(x))) = \tilde{c}(x)$.
-  Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(x) = c(x)$.
+  Our goal is to show that $m^*_T(f'(f(x))) \geq \tilde{c}(x)$.
+  Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(x) \geq c(x)$.
   Since we have a gap-preserving reduction from $Q$ to $T$, we know that if $m^*_Q(f(x)) \geq c_Q(f(x))$ then $m^*_T(f'(f(x))) \geq c_T(f'(f(x)))$.
   Since $c(x) \geq c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) \geq c_T(f'(f(x))) = \tilde{c}(x)$.
 
@@ -304,10 +304,10 @@ The main tool of this section is the following theorem, which provides sufficien
     \begin{displaymath}
       \frac{m(f(x), A(f(x)))}{m^*(f(x))} \geq \frac{1}{r} > \frac{1}{1 + \epsilon}.
     \end{displaymath}
-    Since $m^*(f(x)) = c(x)$ by hypothesis, this implies
+    Since $m^*(f(x)) \geq c(x)$ by hypothesis, this implies
     \begin{align*}
       m(f(x), A(f(x))) & > \frac{1}{1 + \epsilon} \cdot m^*(f(x)) \\
-      & = \frac{1}{1 + \epsilon} \cdot c(x).
+      & \geq \frac{1}{1 + \epsilon} \cdot c(x).
     \end{align*}
     Hence $A'$ will accept on input $x$.
   \item
