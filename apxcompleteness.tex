@@ -1,7 +1,7 @@
 \documentclass[]{article}
 
 % Package `hyperref` must come before package `complexity`.
-\usepackage[pdftitle={APX completeness}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
+\usepackage[pdftitle={Revisiting the hardness of approximation of Maximum 3-Satisfiability}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
 
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
@@ -40,24 +40,30 @@
 \newcommand{\ceil}[1]{\lceil{#1}\rceil}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 %\newcommand{\lb}{\left\{}
+\newcommand{\pair}[2]{{\left\langle{#1}{#2}\right\rangle}}
 %\newcommand{\pb}{\textsf{pb}}
 %\newcommand{\rb}{\right\}}
 %\newcommand{\st}{\,\middle|\,}
 
 \author{Jef{}frey Finkelstein}
 \date{\today}
-\title{\texorpdfstring{\textsc{Maximum 3-Satisfiability}}{Maximum 3-Satisfiability}}
+\title{Revisiting the hardness of approximation of \texorpdfstring{\textsc{Maximum 3-Satisfiability}}{Maximum 3-Satisfiability}}
 
 \begin{document}
 
 \maketitle
 
+\section{Introduction}
+
+In this work, we attempt to clarify the existing proofs that \textsc{Maximum 3-Satisfiability} is both hard to approximate and complete for the class \APX{} under an appropriate type of reduction.
+By doing this, we hope to provide not only a better understanding of the original proofs, but also a platform on which to base similar proofs.
+
+\section{Preliminaries}
+
 Throughout this work, $\Sigma=\{0, 1\}$, and $\Sigma^*$ is the set of all finite binary strings.
 The length of a string $x \in \Sigma^*$ is denoted $|x|$.
 We denote the set of positive rational numbers by $\mathbb{Q}^*$ and the natural numbers (excluding 0) by $\mathbb{N}$.
 A decision problem is a subset of $\Sigma^*$.
-
-\section{Definitions}
 
 \subsection{Optimization problems}
 
@@ -103,7 +109,7 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
   There is a polynomial time computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
 \end{lemma}
 
-\section{Hardness of approximation}
+\subsection{Gap-introducing and gap-preserving reductions}
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]
   Let $P$ be a decision problem and $Q$ be maximization problem with $Q = (I, S, m, \max)$.
@@ -119,7 +125,18 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
 
 Notice that as the value of $\epsilon$ increases, so does the ``gap'' between the optimal measures corresponding to strings in $P$ and strings not in $P$.
 
-\begin{lemma}
+\begin{definition}
+  Let $P\in\NP$ and $Q\in\NPO$, with $Q = (I, S, m, t)$.
+  Let $R_P$ be the \NP-relation induced by $P$.
+  Suppose there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$.
+  The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I \times \Sigma^* \to \Sigma^*$ such that for all $x \in I$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ if $t = \max$ or $m(f(x), y) \leq (1 + \epsilon) \cdot c(x)$ if $t = \min$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
+\end{definition}
+
+An enhanced gap-introducing reduction is a gap-introducing reduction by definition.
+Notice that from \autoref{lem:xinp} it is vacuously true that $\left(x, g(x, y)\right) \in R_P$ implies $x \in P$, since the conclusion is always true.
+The interesting case is the converse, because it requires that $g$ produce a witness that $x$ is in $P$ even though it may only have an approximate solution $y$.
+
+\begin{lemma}\label{lem:xinp}
   If there is a gap-introducing reduction from $P$ to $Q$, where $Q = (I, S, m, t)$ given by $(f, c, \epsilon)$, then for all $x \in I$ and all $y \in \Sigma^*$ with $y \in S(f(x))$,
   \begin{enumerate}
   \item if $t = \max$ and $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$, and
@@ -130,6 +147,72 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
   In the case that $t = \max$, since $m^*(f(x) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
   The case in which $t = \min$ is similar.
 \end{proof}
+
+\begin{definition}[{\cite[Section~29.1]{vazirani}}]
+  Let $P$ and $Q$ be maximization problems.
+  There is a gap-preserving reduction from $P$ to $Q$ if there exist a function $f \colon I_P \to I_Q$, functions $c_P, c_Q \colon \mathbb{N} \to \mathbb{N}$, and functions $\alpha, \beta \colon \mathbb{N} \to \mathbb{Q}^*$, with $\alpha(n) \leq 1$ and $\beta(n) \leq 1$ for all $n \in \mathbb{N}$, all polynomial time computable, such that
+  \begin{itemize}
+  \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \geq c_Q(f(x))$, and
+  \item if $m^*_P(x) < \alpha(|x|) \cdot c_P(x)$ then $m^*_Q(f(x)) < \beta(|f(x)|) \cdot c_Q(f(x))$.
+  \end{itemize}
+  We identify such a reduction with the five-tuple $(f, c_P, c_Q, \alpha, \beta)$.
+
+  If either $P$ or $Q$ is a minimization problem, the definition changes in a straightforward way.
+\end{definition}
+
+Like the enhanced gap-introducing reduction, there is also an enhanced gap-preserving reduction.
+
+\begin{definition}
+  Let $P$ and $Q$ be two maximization problems, defined by $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
+  Suppose that there exists a gap-preserving reduction given by $(f, c_P, c_Q, \alpha, \beta)$ from $P$ to $Q$.
+  The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$, we have $g'(x, y) \in S_P(x)$ and $m_P(x, g'(x, y)) \geq \alpha(|x|) \cdot c_P(x)$.
+  We identify such a reduction with the six-tuple $(f, g, c_P, c_Q, \alpha, \beta)$.
+
+  If either $P$ or $Q$ is a minimization problem, the definition changes in a straightforward way.
+\end{definition}
+
+\begin{lemma}\label{lem:compose}
+  Let $P$ be a decision problem and $Q$ and $T$ be optimization problems.
+  Suppose there is a polynomial time enhanced gap-introducing reduction $(f, g, c, \epsilon)$ from $P$ to $Q$ and a polynomial time enhanced gap-preserving reduction $(f', g', c_Q, c_T, \alpha, \beta)$ from $Q$ to $T$.
+  If $c(x) \geq c_Q(f(x))$ and $\frac{1}{1 + \epsilon} \cdot c(x) \leq \alpha(|f(x)|) \cdot c_Q(f(x))$ then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction, where
+  \begin{align*}
+    \tilde{f}(x) & = f'(f(x)), \\
+    \tilde{g}(x, y) & = g(x, g'(f(x), y)), \\
+    \tilde{c}(x) & = c_T(f'(f(x))), \text{ and} \\
+    \tilde{\epsilon} & = \frac{1}{\beta(|f'(f(x))|)} - 1.
+  \end{align*}
+\end{lemma}
+\begin{proof}
+  For simplicity, we will assume that both $Q$ and $T$ are maximization problems.
+
+  Suppose first that $x \in P$.
+  Our goal is to show that $m^*_T(f'(f(x))) = \tilde{c}(x)$.
+  Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(x) = c(x)$.
+  Since we have a gap-preserving reduction from $Q$ to $T$, we know that if $m^*_Q(f(x)) \geq c_Q(f(x))$ then $m^*_T(f'(f(x))) \geq c_T(f'(f(x)))$.
+  Since $c(x) \geq c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) \geq c_T(f'(f(x))) = \tilde{c}(x)$.
+
+  Suppose now that $x \notin P$.
+  Our goal is to show that $M^*_T(f'(f(x))) < \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
+  Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$.
+  Since we have a gap-preserving reduction from $Q$ to $T$, we know that if $m^*_Q(f(x)) < \alpha(|f(x)|) \cdot c_Q(f(x))$ then $m^*_T(f'(f(x))) < \beta(|f'(f(x))|) \cdot c_T(f'(f(x)))$.
+  Since $\frac{1}{1 + \epsilon} \cdot c(x) \leq \alpha(|f(x)|) \cdot c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) < \beta(|f'(f(x))|) \cdot c_T(f'(f(x))) = \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
+
+  We have now shown that the stated reduction is gap-introducing; it remains to show that it is also enhanced.
+  Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
+  Our goal is to show that $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $x \in P$.
+  Since we have an enhanced gap-preserving reduction from $Q$ to $T$, we know that $g'(f(x), y_T) \in S_Q(f(x))$ and $m_Q(f(x), g'(f(x), y_T)) \geq \alpha(|f(x)|) \cdot c_Q(f(x))$.
+  Since we have an enhanced gap-introducing reduction from $P$ to $Q$ and $\alpha(|f(x)|) \cdot c_Q(f(x)) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ by hypothesis, we know that $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
+  Hence $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
+
+  Since we have proven the three conditions required for an enhanced gap-introducing reduction, we finally conclude that $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $T$.
+\end{proof}
+
+\section{Hardness of approximation}
+
+In this section we use the PCP theorem to prove \textsc{Maximum 3-Satisfiability} is hard to approximate (specifically, that for certain constant factors, no approximation can exist unless $\P = \NP$).
+We do this by reducing \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}, and then reducing that to \textsc{Maximum 3-Satisfiability}, ensuring that the reductions compose.
+
+The main tool of this section is the following theorem, which provides sufficient conditions for an optimization problem in \NPO{} to be hard to approximate.
 
 \begin{theorem}[{\cite[Theorem~3.7]{book}}]\label{thm:gap}
   Let $P$ be an \NP-complete decision problem and $Q$ be an optimization problem in \NPO.
@@ -197,10 +280,12 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
 Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 
 \begin{lemma}[{\cite[Lemma~29.10]{vazirani}}]\label{lem:intro}
-  There is a gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability} with gap parameter $1$, for some $k \in \mathbb{N}$.
+  There is an enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability} with gap parameter $1$, for some $k \in \mathbb{N}$.
 \end{lemma}
 \begin{proof}
-  By \autoref{thm:pcp}, there exists a $(\lg n, 1)$-verifier for \textsc{Satisfiability}.
+  For the sake of brevity, we will let $P = \textsc{Satisfiability}$ and $Q = \textsc{Maximum \textit{k}-Function Satisfiability}$.
+
+  By \autoref{thm:pcp}, there exists a $(\lg n, 1)$-verifier for $P$.
   Let $\phi$ be a Boolean formula of length $n$, which will be the input to the verifier.
   Let $V$ be that verifier, let $c$ and $q$ be the constants such that $V$ uses at most $c \lg n$ random bits and at most $q$ bits of the proof.
   For simplicity, let the length of the random string input to $V$ be exactly $c \lg n$.
@@ -208,22 +293,41 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   Let $B$ be the set of at most $q \cdot n^c$ Boolean variables representing the values of the bits of the proof at the queried locations.
 
   We let $k = q$, and then for each string $\rho$ (of length $c \lg n$), we will define a function $g_\rho$ which is a function of at most $q$ of the Boolean variables from $B$.
-  Consider the Cook-Levin transformation of the operation of the verifier $V$ on input $(\phi, \tau; \rho)$, where $\phi$ is a Boolean formula (an instance of \textsc{Satisfiability}) and $\tau$ is a satisfying assignment to the variables of $\phi$.
+  Consider the Cook-Levin transformation of the operation of the verifier $V$ on input $(\phi, \tau; \rho)$, where $\phi$ is a Boolean formula (an instance of $P$) and $\tau$ is a satisfying assignment to the variables of $\phi$.
   Let $\psi$ be the Boolean formula over the variables $z_1, z_2, \ldots, z_{h(n)}$ produced by this transformation, where $h(n)$ is the polynomial bounding the size of the Boolean formula produced by the Cook-Levin transformation.
   Some of these variables depend on the bits of $\phi$, some depend on $q$ bits of $\tau$, and some depend on the bits of $\rho$ (and these sets may intersect).
   If we let $\phi$ and $\rho$ be fixed, however, we can define $g_\rho$ to be the restriction of the Boolean function $\psi$ to the $q$ variables of $\psi$ corresponding to the $q$ bits of $\tau$ read by the verifier on input $(\phi, \tau; \rho)$.
 
   Let $G = \left\{g_\rho \,\middle|\, \rho \in \Sigma^* \textnormal{ and } |\rho| = c \lg n \right\}$.
   Notice that $|G| = 2^{c \lg n} = n^c$.
-  Now we define the gap-introducing reduction by $c(\phi) = n^c$ for all Boolean formulae $\phi$ of length $n$, $f(\phi) = (B, G)$ for all Boolean formulae $\phi$, and $\epsilon = 1$.
+  Now we define the enhanced gap-introducing reduction as follows for all Boolean formulae $\phi$ of length $n$, and all truth assignments $\tau$ to the variables in $B$ (\emph{not} the variables of $\phi$):
+  \begin{align*}
+    f(\phi) & = (B, G) \\
+    c(\phi) & = n^c \\
+    \epsilon & = 1 \\
+    g(\phi, \tau) & = \tau^+
+  \end{align*}
+  where $\tau^+$ is the extension of $\tau$ in which any variables in $\phi$ not in $B$ are assigned an arbitrary binary value (say 0).
   The function $c$ is polynomial time computable because exponentiation of $n$ to a constant power is polynomial time computable.
   The function $f$ is polynomial time computable because both the size of $B$ and the size of $G$ are polynomial in $n$, and the length of each of their elements is polynomial in $n$ as well.
-  If $\phi \in \textsc{Satisfiability}$ then there is a truth assignment $\tau$ such that $V$ accepts on input $(\phi, \tau; \rho)$ with probability 1 over the random strings $\rho$.
+  The function $g$ is polynomial time computable because it simply copies $\tau$ to its output along with a polynomial number of extra bits.
+
+  If $\phi \in P$ then there is a truth assignment $\tau$ such that $V$ accepts on input $(\phi, \tau; \rho)$ with probability 1 over the random strings $\rho$.
   In this case, $m^*(f(\phi)) = m^*((B, G)) = n^c$, since all the functions $g_\rho$ in $G$ are satisfied.
-  If $\phi \notin \textsc{Satisfiability}$ then for every truth assignment, the verifier accepts with probability at most $\frac{1}{2}$.
+  If $\phi \notin P$ then for every truth assignment, the verifier accepts with probability at most $\frac{1}{2}$.
   In this case, every truth assignment satisfies less than half of all the $n^c$ functions in $G$.
   Hence $m^*(f(\phi)) = m^*((B, G)) < \frac{1}{2} \cdot n^c = \frac{1}{1 + \epsilon} c(\phi)$.
-  Therefore we have constructed a gap-introducing reduction with gap parameter 1 from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}.
+  
+  To show that this gap-introducing reduction is enhanced, we suppose $\tau$ is a satisfying assignment for $f(\phi)$ which satisfies at least $\frac{1}{2} \cdot n^c$ of the functions in $f(\phi)$.
+  Let $R_P$ be the \NP-relation corresponding to $P$.
+  Our goal is to show that $(\phi, g(\phi, \tau)) \in R_P$ if and only if $\phi \in P$.
+  By \autoref{lem:xinp}, it suffices to show that $\phi \in P$ implies $(\phi, g(\phi, \tau)) \in R_P$.
+  If $\phi$ is satisfiable, then all its clauses are satisfiable.
+  Subsequently, all the functions in $f(\phi)$ are satisfiable.
+  Then $g(\phi, \tau)$, which equals $\tau^+$, is a truth assignment on which the verifier $V$ will accept with probability 1 (it ignores the bits of $\tau^+$ not in $\tau$).
+  Hence $(\phi, g(\phi, \tau)) \in R_P$.
+
+  Therefore we have constructed a polynomial time enhanced gap-introducing reduction with gap parameter 1 from $P$ to $Q$ (that is, from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}).
 \end{proof}
 
 \begin{lemma}[{\cite[Proof of Theorem~29.7]{vazirani}}]\label{lem:decision}
@@ -241,85 +345,51 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   It is clear that $g$ is polynomial time computable, and $\phi$ is satisfiable if and only if $\psi$ is satisfiable if and only if $T(\psi)$ is satisfiable.
 \end{proof}
 
-%% \begin{definition}{{\cite[Definition~8.3]{book}}}
-%%   Let $P$ and $Q$ be optimization problems in \NPO, with $P=(I_P, S_P, m_p, t_P)$ and $Q=(I_Q, S_Q, m_Q, t_Q)$.
-%%   We say there is a polynomial time \emph{AP reduction from $P$ to $Q$} if there exist functions $f\colon\Sigma^*\to\Sigma^*$ and $g\colon\Sigma^*\to\Sigma^*$, and there exists a constant $\alpha\in\mathbb{R}$ such that:
-%%   \begin{enumerate}
-%%   \item For all $x\in I_P$ we have $f(x)\in I_Q$.
-%%   \item For all $x\in I_P$ and all $y\in S_Q(f(x))$ we have $g(x, y)\in S_P(x)$.
-%%   \item $f$ and $g$ are computable in polynomial time.
-%%   \item For all $x\in I_P$, all $r > 1$, and all $y\in S_Q(f(x))$, we have $R_Q(f(x), y) \leq r \implies R_P(x, g(x, y)) \leq 1 + \alpha(r - 1)$.
-%%   \end{enumerate}
-%%   The constant $\alpha$ is called the \emph{preservation factor}.
-%% \end{definition}
-
-%% \begin{definition}
-%%   Let $P$ and $Q$ be optimization problems.
-%%   We say there is an \emph{E reduction from $P$ to $Q$} if there exists a triple $(f, g, \alpha)$, where $f$ and $g$ are polynomial time computable functions and $\alpha \in \mathbb{N}$, such that for all $x \in P_\exists$ we have $f(x) \in Q_\exists$ and for all $y \in S_Q(f(x))$ we have $g(x, y) \in S_P(x)$ and finally $R_P(x, g(x, y)) - 1 \leq \alpha \cdot \left[R_Q(f(x), y) - 1\right]$.
-%% \end{definition}
-
 \begin{lemma}\label{lem:opt}
-  There exists a polynomial time reduction of some kind (???) from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}, with preservation factor $\alpha$ defined by $\alpha = 2^{k + 1} - 1$.
-% which is greater than $\alpha = 2^{k + 1} \cdot (k - 2) - 1$.
+  There exists a polynomial time enhanced gap-preserving reduction from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+  %, with preservation factor $\alpha$ defined by $\alpha = 2^{k + 1} - 1$.
+  % which is greater than $\alpha = 2^{k + 1} \cdot (k - 2) - 1$.
 \end{lemma}
 \begin{proof}
+  For brevity, we let $P = \textsc{Maximum \textit{k}-Function Satisfiability}$ and $Q = \textsc{Maximum 3-Satisfiability}$.
+
+  We assume $k$ is a fixed constant.
   Let $f_0$ be the reduction given in \autoref{lem:decision} from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
-  Define $f$ by $f((U, F)) = f_0((U, F))$ for all finite sets of Boolean variables $U$ and finite sets of Boolean functions $F$ of at most $k$ of the variables.
-  Also, define $g$ by $g((U, F), \tau) = \tau|_U$ for all satisfying assignments $\tau$, where $\tau|_U$ represents the restriction of the satisfying assignment $\tau$ to only the variables of $U$.
-  Let $\alpha = 1$.
-
-  If $(U, F)$ is satisfiable then $f((U, F))$ is also satisfiable, by the correctness of the reduction $f_0$.
-  Furthermore, if $\tau$ is a solution to $f((U, F))$, then $g((U, F), \tau)$ is satisfiable for the same reason.
-  Notice that if the number of functions in $F$ is $M$ then the number of clauses in $f((U, F))$ is at most $M \cdot 2^k \cdot (k - 2)$.
-
+  Define the six functions as follows for all finite sets of Boolean variables $U$, all finite sets of Boolean functions $F$ of at most $k$ of the variables in $U$, and all truth assignments $\tau$ to 3-CNF Boolean formulae:
+  \begin{align*}
+    f(\pair{U}{F}) & = f_0(\pair{U}{F}) \\
+    g(\pair{U}{F}, \tau) & = \tau|_U \\
+    c_P(\pair{U}{F}) & = M \\
+    c_Q(\phi) & = M \cdot 2^k \cdot (k - 2) \\
+    %% TODO change the definition of gap-preserving reduction to use 1 / 1 +
+    %% \alpha and 1 / 1 + beta instead of just alpha and beta so that it better
+    %% matches the definition of gap-introducing reduction
+    \alpha(n + M) & = \frac{1}{2} \\
+    \beta(n + M) & = ???
+  \end{align*}
+  where $n = |U|$, $M = |F|$, and $\tau|_U$ represents the restriction of the satisfying truth assignment $\tau$ to only the variables of $U$.
+  Intuitively, the definitions of $c_P$ and $c_Q$ suggest that if all functions in $F$ are satisfiable then all clauses in $f(\pair{U}{F})$ will be satisfiable (there are at most $M \cdot 2^k \cdot (k - 2)$ of them, from the proof of \autoref{lem:decision}), and the definitions of $\alpha$ and $\beta$ suggest ...
   \begin{todo}
-    Figure out what kind of reduction is required here, the correct preservation ratio, and prove the necessary approximation preserving condition.
-    We need a reduction
+    The number of clauses in $f(\pair{U}{F})$ is \emph{at most} $M \cdot 2^k \cdot (k - 2)$.
+    Isn't this a problem?
   \end{todo}
 
-  %% Finally, let $P$ represent \textsc{Maximum $k$-Function Satisfiability} and let $Q$ represent \textsc{Maximum 3-Satisfiability}.
-  %% Suppose $R_Q(f((U, F)), \tau) \leq r$.
-  %% Then
-  %% \begin{align*}
-  %%   & \phantom{\implies} \frac{m^*_Q(f((U, F)))}{m_Q(f((U, F)), \tau)} \leq r \\
-  %%   & \implies \frac{m^*_Q(f_0((U, F)))}{m_Q(f((U, F)), \tau)} \leq r \\
-  %% \end{align*}
-
-  %% Then we have
-  %% \begin{align*}
-  %%   MAGIC... \\
-  %%   \frac{M}{m((U, F), \tau|_U)} & \leq \frac{M \cdot 2^k \cdot (k - 2)}{m(f_0((U, F)), \tau)} \\
-  %%   \frac{M}{m((U, F), \tau|_U)} & \leq \frac{M \cdot 2^k \cdot (k - 2)}{m(f_0((U, F)), \tau)} \\
-  %%   \frac{M}{m((U, F), \tau|_U)} & \leq \frac{m^*(f_0((U, F)))}{m(f_0((U, F)), \tau)} \\
-  %%   \frac{m^*_P((U, F))}{m((U, F), g((U, F), \tau))} & \leq \frac{m^*(f((U, F)))}{m(f((U, F)), \tau)} \\
-  %%   R_P((U, F), g((U, F), \tau)) - 1 & \leq \alpha \cdot \left[R_Q(f((U, F)), \tau) - 1\right].
-  %% \end{align*}
-\end{proof}
-
-\begin{lemma}\label{lem:compose}
-  Let $P$ be a decision problem and $Q$ and $T$ be optimization problems.
-  If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ and there is a polynomial time reduction of some kind (???) with preservation factor $\alpha$ from $Q$ to $T$ then there is a gap-introducing reduction from $P$ to $T$ with gap parameter $\epsilon \cdot \alpha$.
+  Suppose $m^*_P(\pair{U}{F}) \geq c_P(x) = M$.
+  Then $m^*_Q(f(\pair{U}{F})) = m^*_Q(f_0(\pair{U}{F})) = M \cdot 2^k \cdot (k - 2) = c_Q(f_0(\pair{U}{F}))$.
   \begin{todo}
-    Is this the right gap parameter?
+    Same problem as above; requires $f_0(\pair{U}{F})$ to have exactly $M \cdot 2^k \cdot (k - 2)$ clauses.
   \end{todo}
-\end{lemma}
-\begin{proof}
-  For simplicity, we will assume that both $Q$ and $T$ are maximization problems.
 
-  Let $(f, c, \epsilon)$ be the gap-introducing reduction and $(f', g, \alpha)$ be the other reduction.
-  We will show that $(f' \circ f, c', \epsilon \cdot \alpha)$ is a gap-introducing reduction from $P$ to $T$, where $c'(x) = \gamma \cdot c(x)$ for some $\gamma$ which should come from the other reduction.
-
-  Suppose first that $x \in P$.
-  Since $m^*_Q(f(x)) = c(x)$ and $m^*_T(f'(y)) = \gamma \cdot m^*_Q(y)$, we find that $m^*_T(f'(f(x))) = \gamma \cdot c(x) = c'(x)$, which is what we needed to show.
-
-  Suppose now that $x \notin P$.
-
+  Suppose $m^*_P(\pair{U}{F}) < \frac{1}{2} \cdot M$.
   \begin{todo}
-    Check the parameters in the hypothesis, figure out what properties we need from our reductions, and complete this proof.
+    The number of clauses satisfiable in the transformed 3-SAT instance may not have anything to do with the number of clauses satisfiable in the original functions.
   \end{todo}
 \end{proof}
 
 \begin{lemma}\label{lem:gap3}
+  \begin{todo}
+    Update this to have the parameters from the enhanced reductions.
+  \end{todo}
   There is a gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability} with gap parameter $\epsilon$ defined by
   \begin{displaymath}
     \epsilon = \frac{1}{2^{k + 1} - 1},

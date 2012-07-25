@@ -1,8 +1,9 @@
-Proof of APX-completeness of MAX 3-SAT
-======================================
+Revisiting the hardness of approximation of Maximum 3-Satisfiability
+====================================================================
 
 This work contains a proof that Maximum 3-Satisfiability is complete for the
-class APX under AP reductions.
+class APX under AP reductions, as well as a proof that it is hard to
+approximate.
 
 Copyright 2012 Jeffrey Finkelstein.
 
