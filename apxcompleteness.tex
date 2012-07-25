@@ -32,6 +32,7 @@
 
 %\newcommand{\definitionautorefname}{Definition}
 \newcommand{\algorithmautorefname}{Algorithm}
+\newcommand{\corollaryautorefname}{Corollary}
 \newcommand{\lemmaautorefname}{Lemma}
 
 \algrenewcommand\algorithmicrequire{\textbf{Input:}}
@@ -160,6 +161,10 @@ The interesting case is the converse, because it requires that $g$ produce a wit
   If either $P$ or $Q$ is a minimization problem, the definition changes in a straightforward way.
 \end{definition}
 
+\begin{todo}
+  Change the definition of gap-preserving reduction to use $\frac{1}{1 +\alpha}$ and $\frac{1}{1 + \beta}$ instead of just $\alpha$ and $\beta$ so that it better matches the definition of gap-introducing reduction.
+\end{todo}
+
 Like the enhanced gap-introducing reduction, there is also an enhanced gap-preserving reduction.
 
 \begin{definition}
@@ -216,7 +221,7 @@ The main tool of this section is the following theorem, which provides sufficien
 
 \begin{theorem}[{\cite[Theorem~3.7]{book}}]\label{thm:gap}
   Let $P$ be an \NP-complete decision problem and $Q$ be an optimization problem in \NPO.
-  If there is a gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no polynomial time $r$-approximator for $P$ unless $\P = \NP$.
+  If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no polynomial time $r$-approximator for $P$ unless $\P = \NP$.
 \end{theorem}
 \begin{proof}
   We will prove the theorem for the case in which $Q$ is a maximization problem; the proof for minimization problems is similar.
@@ -252,6 +257,17 @@ The main tool of this section is the following theorem, which provides sufficien
     Hence, $A'$ will reject on input $x$.
   \end{enumerate}
   We have shown that $A'$ is a correct polynomial-time computable algorithm which decides the \NP-complete problem $P$, and the conclusion follows.
+\end{proof}
+
+\begin{corollary}\label{cor:notinptas}
+  Let $P$ be an \NP-complete decision problem and $Q$ be an optimization problem in \NPO.
+  If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ then $Q \notin \PTAS$ unless $\P = \NP$.
+\end{corollary}
+\begin{proof}
+  In order to produce a contradiction, suppose that there exists a polynomial time approximation scheme for $Q$, so there exists a function $f$ such that on input $x$ and $N$, $f$ produces solutions for $Q$, $f$ is computable in time polynomial in the length of $x$, and $R(x, f(x, N)) \leq 1 + \frac{1}{N}$ for all $x \in \Sigma^*$ and all $N \in \mathbb{N}$.
+  Specifically, if we choose $N > \frac{1}{\epsilon}$ then $R(x, f(x, N)) \leq 1 + \frac{1}{N} < 1 + \epsilon$, for all $x \in \Sigma^*$.
+  Therefore, $f$ is in fact a polynomial time $r$-approximator for $Q$, where $r < 1 + \epsilon$.
+  The conclusion follows from \autoref{thm:hard}.
 \end{proof}
 
 \begin{definition}[\textsc{$k$-Function Satisfiability}]
@@ -361,9 +377,6 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
     g(\pair{U}{F}, \tau) & = \tau|_U \\
     c_P(\pair{U}{F}) & = M \\
     c_Q(\phi) & = M \cdot 2^k \cdot (k - 2) \\
-    %% TODO change the definition of gap-preserving reduction to use 1 / 1 +
-    %% \alpha and 1 / 1 + beta instead of just alpha and beta so that it better
-    %% matches the definition of gap-introducing reduction
     \alpha(n + M) & = \frac{1}{2} \\
     \beta(n + M) & = ???
   \end{align*}
@@ -415,10 +428,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   $\textsc{Maximum 3-Satisfiability} \notin \PTAS$ unless $\P = \NP$.
 \end{corollary}
 \begin{proof}
-  In order to produce a contradiction, suppose that there exists a polynomial time approximation scheme for \textsc{Maximum 3-Satisfiability}, so there exists a function $f$ such that on input $x$ and $N$, $f$ produces solutions for \textsc{Maximum 3-Satisfiability}, $f$ is computable in time polynomial in the length of $x$, and $R(x, f(x, N)) \leq 1 + \frac{1}{N}$ for all $x \in \Sigma^*$ and all $N \in \mathbb{N}$.
-  Specifically, if we choose $N > 2^{k + 1} - 1$, where $k$ is the constant from the statement of \autoref{thm:hard}, then $R(x, f(x, N)) \leq 1 + \frac{1}{N} < 1 + \frac{1}{2^{k + 1} - 1}$, for all $x \in \Sigma^*$.
-  Therefore, $f$ is in fact a polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability}, where $r$ meets the upper bound in the statement of \autoref{thm:hard}.
-  The conclusion follows.
+  Follows from \autoref{thm:hard} and \autoref{cor:notinptas}.
 \end{proof}
 
 \section{\texorpdfstring{\APX}{APX}-completeness}
