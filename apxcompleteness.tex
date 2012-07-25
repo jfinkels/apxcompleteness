@@ -490,26 +490,30 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \section{\texorpdfstring{\APX}{APX}-completeness}
 
 To show that \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions we must show that it is in \APX{} and that there is an AP reduction from every optimization problem in \APX{} to it.
+We will do this in three steps.
+First, we will show that it is in \APX.
+Second, we will show that it is complete under AP reductions for the class of maximization problems in \APX.
+Finally, we will show that there is an AP reductions from every minimization problem to some maximization problem in \APX.
 
-\begin{theorem}
+\begin{theorem}\label{thm:inapx}
   \textsc{Maximum 3-Satisfiability} is in \APX.
 \end{theorem}
 \begin{proof}
   \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Satisfiability}, and there exists a polynomial time 2-approximator for \textsc{Satisfiability} (see \cite[Program~3.1]{book}).
 \end{proof}
 
-We first wish to show the following main theorem:
-
 \begin{theorem}[{\cite[Theorem~8.6]{book}}]\label{thm:maxcomplete}
   \textsc{Maximum 3-Satisfiability} is complete for the class of maximization problems in \APX{} under $\APr$ reductions.
 \end{theorem}
 
-After proving this theorem, we will present a reduction from any minimization problem in \APX{} to a maximization problem in order to show that the full class \APX{} has a complete problem.
 We describe the idea of the proof before presenting the proof itself, since it is somewhat technical.
 
 \begin{proofidea}
   First, with a slight modification of the results from the previous section (changing the gap-introducing reduction to require the existence of an inverse function mapping solutions in $Q$ to solutions in $P$, meeting a gap requirement), we can show that there exist a positive constant $\epsilon$ and functions $f_s$ and $g_s$ such that for any CNF formula $\phi$, if $\tau$ is a truth assignment satisfying at least $1 - \epsilon$ of the maximum number of satisfiable clauses of $f_s(\phi)$ then $g_s(\phi, \tau)$ is a satisfying assignment for $\phi$ if and only if $\phi$ is satisfiable.
   Here $f_s$ is a mapping from CNF formulae to 3-CNF formulae.
+  \begin{todo}
+    Change $1 - \epsilon$ to $\frac{1}{1 + \epsilon}$ form for the sake of uniformity.
+  \end{todo}
   \begin{todo}
     I think in addition to the inverse mapping, this would require the gap-introducing reduction to have the condition $x \in P \implies m^*(f(x)) > \frac{1}{1 + \epsilon} \cdot c(x)$, or something similar.
   \end{todo}
@@ -704,6 +708,27 @@ We describe the idea of the proof before presenting the proof itself, since it i
     g(x, \tau, r) & = T(\phi_j, g_s(\phi_j, \tau)) \\
     \alpha & = 2(r_P \log{r_P} + r_P - 1)\frac{1 + \epsilon}{\epsilon}
   \end{align*}
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem~8.7]{book}}]\label{thm:minmax}
+  For every minimization problem $P \in \APX$, where $P = (I, S, m_P, \min)$, there exists a maximization problem $Q \in \APX$ such that $P \APr Q$.
+\end{theorem}
+\begin{proof}
+  Since $P \in \APX$, there exists an $r$-approximator, call it $A$, for $P$.
+  For all $x \in I$, let $a(x) = m_P(x, A(x))$.
+  This implies $\frac{a(x)}{m^*_P(x)} \leq r$ and hence $a(x) \leq r \cdot m^*_P(x)$.
+  Define $Q$ by $Q = (I, S, m_Q, \max)$, where $m_Q$ is defined by
+  \begin{equation*}
+    m_Q(x, y)
+  \end{equation*}
+  for all $x$ and $y$
+\end{proof}
+
+\begin{corollary}
+  \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
+\end{corollary}
+\begin{proof}
+  Follows from \autoref{thm:inapx}, \autoref{thm:maxcomplete}, and \autoref{thm:minmax}.
 \end{proof}
 
 \section*{About this work}
