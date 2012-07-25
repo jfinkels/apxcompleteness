@@ -103,6 +103,19 @@ If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \em
 
 For the sake of simplicity, in \autoref{ssc:gaps} and \autoref{sec:hardness} (the sections dealing with hardness of approximation) we will consider \emph{only} maximization problems, although the definitions and results also hold for minimization problems, with the appropriate (slight) changes to the definitions (for example, in \autoref{def:intro} we would require that $m^*(f(x)) > (1 + \epsilon) \cdot c(x)$ instead of $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$).
 
+\subsubsection{Classes of optimization problems}
+
+The complexity class \NPO{} is the class of all optimization problems $(I, S, m, t)$ such that the following conditions hold.
+\begin{enumerate}
+\item The instance set $I$ is decidable by a deterministic polynomial time Turing machine.
+\item The solution relation $S$ is decidable by a deterministic polynomial time Turing machine and is polynomially bounded (that is, the length of $y$ is bounded by a polynomial in the length of $x$ for all $(x, y)\in S$).
+\item The measure function $m$ is computable by a deterministic polynomial time Turing machine.
+\end{enumerate}
+
+The complexity class \APX{} is the subclass of \NPO in which for each optimization problem $P$ there exists a polynomial time computable $r$-approximator for $P$, where $r(n) \in O(1)$ for all $n \in \mathbb{N}$.
+
+\subsubsection{Reductions among optimization problems}
+
 \begin{definition}[{\cite[Definition~8.3]{book}}]
   Let $P$ and $Q$ be optimization problems, so $P = (I_P, S_P, m_P, t_P)$ and $Q = (I_Q, S_Q, m_Q, t_Q)$.
   There is an \emph{AP reduction from $P$ to $Q$}, denoted $P \APr Q$, if there exist functions $f \colon I_P \times \mathbb{Q}^+ \to I_Q$ and $g \colon I_P \times \Sigma^* \times \mathbb{Q}^+ \to \Sigma^*$ and constant $\alpha \in \mathbb{Q}^+$ with $\alpha \geq 1$ such that:
