@@ -375,20 +375,20 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   \begin{align*}
     f(\pair{U}{F}) & = f_0(\pair{U}{F}) \\
     g(\pair{U}{F}, \tau) & = \tau|_U \\
-    c_P(\pair{U}{F}) & = M \\
-    c_Q(\phi) & = M \cdot 2^k \cdot (k - 2) \\
+    c_P(\pair{U}{F}) & = |F| \\
+    c_Q(\phi) & = |\phi| \\
     \alpha(n + M) & = \frac{1}{2} \\
     \beta(n + M) & = ???
   \end{align*}
-  where $n = |U|$, $M = |F|$, and $\tau|_U$ represents the restriction of the satisfying truth assignment $\tau$ to only the variables of $U$.
+  where $\tau|_U$ represents the restriction of the satisfying truth assignment $\tau$ to only the variables of $U$.
   Intuitively, the definitions of $c_P$ and $c_Q$ suggest that if all functions in $F$ are satisfiable then all clauses in $f(\pair{U}{F})$ will be satisfiable (there are at most $M \cdot 2^k \cdot (k - 2)$ of them, from the proof of \autoref{lem:decision}), and the definitions of $\alpha$ and $\beta$ suggest ...
   \begin{todo}
     The number of clauses in $f(\pair{U}{F})$ is \emph{at most} $M \cdot 2^k \cdot (k - 2)$.
     Isn't this a problem?
   \end{todo}
 
-  Suppose $m^*_P(\pair{U}{F}) \geq c_P(x) = M$.
-  Then $m^*_Q(f(\pair{U}{F})) = m^*_Q(f_0(\pair{U}{F})) = M \cdot 2^k \cdot (k - 2) = c_Q(f_0(\pair{U}{F}))$.
+  Suppose $m^*_P(\pair{U}{F}) \geq c_P(x) = |F|$.
+  We know that $m^*_Q(f(\pair{U}{F})) = m^*_Q(f_0(\pair{U}{F})) = |F| \cdot 2^k \cdot (k - 2) = c_Q(f_0(\pair{U}{F}))$.
   \begin{todo}
     Same problem as above; requires $f_0(\pair{U}{F})$ to have exactly $M \cdot 2^k \cdot (k - 2)$ clauses.
   \end{todo}
@@ -400,18 +400,52 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \end{proof}
 
 \begin{lemma}\label{lem:gap3}
-  \begin{todo}
-    Update this to have the parameters from the enhanced reductions.
-  \end{todo}
-  There is a gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability} with gap parameter $\epsilon$ defined by
-  \begin{displaymath}
-    \epsilon = \frac{1}{2^{k + 1} - 1},
-  \end{displaymath}
-  where $k$ is a constant coming from the intermediate reduction from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+  There is an enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+  %% with gap parameter $\epsilon$ defined by
+  %% \begin{displaymath}
+  %%   \epsilon = \frac{1}{2^{k + 1} - 1},
+  %% \end{displaymath}
+  %% where $k$ is a constant coming from the intermediate reduction from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}.
 \end{lemma}
 \begin{proof}
-  Use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
-  The gap parameter for the gap-introducing reduction produced by the composition is $\epsilon \cdot \alpha$ (or something), which equals ??? (should be at most $\frac{1}{2^{k + 1} - 1}$).
+  We will use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
+
+  We will let $(f, g, c, \epsilon)$ be the enhanced gap-introducing reduction and let $(f', g', c_Q, c_T, \alpha, \beta)$ be the enhanced gap-preserving reduction.
+  The enhanced gap-introducing reduction of \autoref{lem:intro} has
+  \begin{align*}
+    c(\phi) & = n^{c_0}, \text{ and} \\
+    \epsilon & = 1,
+  \end{align*}
+  where $n = |\phi|$ and $c_0$ is a constant which comes from the proof of \autoref{lem:intro} (when bounding the number of random bits read by the verifier).
+  The enhanced gap-preserving reduction of \autoref{lem:opt} has
+  \begin{align*}
+    c_Q(\pair{U}{F}) & = M, \\
+    c_T(\phi) & = M \cdot 2^k \cdot (k - 2), \\
+    \alpha(n + M) & = \frac{1}{2}, \text{ and} \\
+    \beta(n + M) & = ???.
+  \end{align*}
+
+  To meet the hypothesis of \autoref{lem:compose}, we need $c(\phi) \geq c_Q(f(\phi))$ and $\frac{1}{1 + \epsilon} \cdot c(\phi) \leq \alpha(|f(\phi)|) \cdot c_Q(f(\phi))$.
+  Since $c(\phi) = n^{c_0}$ and $c_Q(f(\phi)) = c_Q(\pair{B}{G}) = n^{c_0} \cdot 2^k \cdot (k - 2)$, the first inequality is satisfied (for $k \geq 3$).
+  Since $\frac{1}{1 + \epsilon} \cdot c(\phi) = \frac{1}{2} \cdot n^{c_0}$ and $\alpha(|f(\phi)|) \cdot c_Q(f(\phi)) = \frac{1}{2} \cdot c_q(\pair{B}{G}) = \frac{1}{2} \cdot n^{c_0} \cdot 2^k \cdot (k - 2)$, the second inequality is satisfied (again for $k \geq 3$).
+
+  Therefore we can conclude that there is an enhanced gap-introducing reduction $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}, where
+  \begin{align*}
+    \tilde{f}(\phi) & = f'(f(\phi)) \\
+    & = f'(\pair{B}{G}) \\
+    & = f_0(\pair{B}{G}), \\
+    \tilde{g}(\phi, \tau) & = g(\phi, g'(f(\phi), \tau)) \\
+    & = g(\phi, g'(\pair{B}{G}, \tau)) \\
+    & = g(\phi, \tau|_B) \\
+    & = {\tau|_B}^+, \\
+    \tilde{c}(\phi) & = c_T(f'(f(x))) \\
+    & = c_T(f'(\pair{B}{G})) \\
+    & = c_T(f_0(\pair{B}{G})) \\
+    & = |f_0(\pair{B}{G})| \\
+    & = |G| \cdot 2^k \cdot (k - 2), \text{ and} \\
+    \tilde{\epsilon} & = \frac{1}{\beta(|f'(f(x))|)} - 1 \\
+    & = \frac{1}{???} - 1. \qedhere
+  \end{align*}
 \end{proof}
 
 \begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]\label{thm:hard}
