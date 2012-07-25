@@ -68,7 +68,7 @@ A decision problem is a subset of $\Sigma^*$.
 
 \subsection{Probabilistically checkable proofs}
 
-A \emph{$(\lg n, 1)$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $c$ random bits from $\rho$ and reads (with random access) at most $q$ bits from $\pi$, for some constants $c \in \mathbb{N}$ and $q \in \mathbb{N}$.
+A \emph{$(\lg n, 1)$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $|x| = n$, $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $c \lg n$ random bits from $\rho$ and reads (with random access) at most $q$ bits from $\pi$, for some constants $c \in \mathbb{N}$ and $q \in \mathbb{N}$.
 Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checkable proofs} with $O(\lg n)$ random bits and $O(1)$ proof queries) as follows: a decision problem $L \in \PCP(\lg n, 1)$ if there exists a $(\lg n, 1)$-verifier $V$ and a polynomial $p$ such that
 \begin{enumerate}
 \item
