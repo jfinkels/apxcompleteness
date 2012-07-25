@@ -102,7 +102,47 @@ Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checka
   $\NP = \PCP(\lg n, 1)$.
 \end{theorem}
 
-\subsection{Basic facts about Boolean formulae}
+\subsection{Boolean formulae}
+
+A \emph{literal} is a variable or its negation.
+A Boolean formula is in \emph{conjunctive normal form (CNF)} if it is a conjunction of clauses, each of which is a disjunction of literals.
+A Boolean formula is called \emph{$k$-CNF} if it is in conjunctive normal form and each of the clauses has at most $k$ literals.
+The set of variables which appear in a Boolean formula is $Var(\phi)$.
+A \emph{truth assignment} to a Boolean formula $\phi$ is a function $\tau \colon Var(\phi) \to \{0, 1\}$.
+A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the variables in $\phi$ with their corresponding truth assignments yields a true formula.
+
+\begin{definition}[\textsc{Satisfiability}]
+  \mbox{}
+  \begin{instance}
+    a Boolean formula $\phi$
+  \end{instance}
+  \begin{question}
+    Is there a truth assignment $\tau$ to $\phi$ such that $\tau$ satisfies $\phi$?
+  \end{question}
+\end{definition}
+
+\begin{definition}[\textsc{3-Satisfiability}]
+  \mbox{}
+  \begin{instance}
+    a 3-CNF Boolean formula $\phi$
+  \end{instance}
+  \begin{question}
+    Is there a truth assignment $\tau$ to $\phi$ such that $\tau$ satisfies $\phi$?
+  \end{question}
+\end{definition}
+
+\begin{definition}[\textsc{Maximum 3-Satisfiability}]
+  \mbox{}
+  \begin{instance}
+    a 3-CNF Boolean formula $\phi$
+  \end{instance}
+  \begin{solution}
+    a truth assignment $\tau$ to $\phi$
+  \end{solution}
+  \begin{measure}
+    the number of satisfied clauses in $\phi$
+  \end{measure}
+\end{definition}
 
 \begin{lemma}\label{lem:half}
  At least half of the clauses of any Boolean formula in conjunctive normal form are always satisfiable.
