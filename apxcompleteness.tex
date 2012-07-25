@@ -549,16 +549,10 @@ Finally, we will show that there is an AP reduction from every minimization prob
 We describe the idea of the proof before presenting the proof itself, since it is somewhat technical.
 
 \begin{proofidea}
-  First, with a slight modification of the results from the previous section (changing the gap-introducing reduction to require the existence of an inverse function mapping solutions in $Q$ to solutions in $P$, meeting a gap requirement), we can show that there exist a positive constant $\epsilon$ and functions $f_s$ and $g_s$ such that for any CNF formula $\phi$, if $\tau$ is a truth assignment satisfying at least $1 - \epsilon$ of the maximum number of satisfiable clauses of $f_s(\phi)$ then $g_s(\phi, \tau)$ is a satisfying assignment for $\phi$ if and only if $\phi$ is satisfiable.
+  First, we recall the enhanced gap-introducing reduction $(f_s, g_s, \epsilon)$ from \autoref{lem:gap3}, which shows that there exist a positive constant $\epsilon$ and functions $f_s$ and $g_s$ such that for any CNF formula $\phi$, if $\tau$ is a truth assignment satisfying at least $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses of $f_s(\phi)$ then $g_s(\phi, \tau)$ is a satisfying assignment for $\phi$ if and only if $\phi$ is satisfiable.
   Here $f_s$ is a mapping from CNF formulae to 3-CNF formulae.
-  \begin{todo}
-    Change $1 - \epsilon$ to $\frac{1}{1 + \epsilon}$ form for the sake of uniformity.
-  \end{todo}
-  \begin{todo}
-    I think in addition to the inverse mapping, this would require the gap-introducing reduction to have the condition $x \in P \implies m^*(f(x)) > \frac{1}{1 + \epsilon} \cdot c(x)$, or something similar.
-  \end{todo}
 
-  The reduction is a generic reduction from an arbitrary maximization problem in \APX{} to \textsc{Maximum 3-Satisfiability}, again using a Cook-Levin transformation so that the number of satisfiable clauses in the Boolean formula corresponds in some way to the measure of a solution in the original maximization problem.
+  The reduction we present is a generic reduction from an arbitrary maximization problem in \APX{} to \textsc{Maximum 3-Satisfiability}, again using a Cook-Levin transformation so that the number of satisfiable clauses in the Boolean formula corresponds in some way to the measure of a solution in the original maximization problem.
   In order to search for a ``good enough'' approximate solution for \textsc{Maximum 3-Satisfiability}, we will partition the interval in which we are certain the optimal solution lives (but which is too large) into a constant number of subintervals.
   For each subinterval we will use the Cook-Levin transformation to construct a Boolean formula which is satisfiable if and only if there is an approximate solution in that subinterval, and which exposes the approximate solution (by having Boolean variables $y_1, y_2, \dotsc, y_k$ whose truth values represent the values of the bits in the binary representation of $y$).
   Furthermore, we apply the function $f_s$ to each of those formulae in order to provide the gap guarantee discussed in the previous paragraph; this allows us to use \ldots.
@@ -644,25 +638,28 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Observe that $f(x, r)$ is still a 3-CNF formula.
   We assume without loss of generality also that each formula $f_s(C(B(x, i)))$ has the same number of clauses, say $M$.
 
-  To define $g$, first suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
+  Now, to determine how to define $g$, first suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
   For each $i$ with $0 \leq i \leq k - 1$, let $\phi_i = C(B(x, i))$ and $\psi_i = f_s(\phi_i)$.
   Let $\psi = f(x, r)$, so $\tau$ is a truth assignment to $\psi$ which satisfies some of the clauses.
-  Suppose $g_s$ is the special gap-extracting function described in the preceding discussion.
-  For any $\tau$ that satisfies a $1 - \epsilon$ factor of the maximum number of satisfiable clauses in $\psi_i$ (note: this is $\psi_i$, not $\psi$), if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
-%%   We will assume for now that $\tau$ satisfies $1 - \epsilon$ of the maximum number of satisfiable clauses of $\psi_i$ for some $i$, and show that it is true later.
+  Suppose $g_s$ is the function from the enhanced gap-introducing reduction which produces solutions for $P$, as described in the preceding discussion.
+  For any $\tau$ that satisfies a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses in $\psi_i$ for all $i \leq k - 1$, if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
+  We will assume for now that $\tau$ does indeed satisfy a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses of $\psi_i$ for all $i$, and delay the proof of this fact until later.
   Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
   Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$.
 
-  Note that there exists a maximum $i$ such that $\tau_i$ satisfies $\phi_i$; call it $j$.
+  Let $j$ be the maximum $i$ such that $\tau_i$ satisfies $\phi_i$ (such a $j$ exists because $m^*_P(x)$ is in some interval, and for all intervals beyond that one, $\phi_i$ must not be satisfiable).
   This implies that there is a $y$ in interval $j$ with
   \begin{equation*}
     {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
   \end{equation*}
   which is exactly the statement of \autoref{eq:subinterval}, and hence \autoref{eq:result} follows.
   Therefore, we define $g(x, \tau, r) = T(\phi_j, g_s(\phi_j, \tau))$.
+  \begin{todo}
+    Do we need to include that $g$ must search for the appropriate $j$?
+  \end{todo}
 
   We now complete the tasks which we delayed above.
-  First, we must prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $1 - \epsilon$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq j$.
+  First, we must prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$.
   Let $\tau$ be a truth assignment to $\psi$ whose performance ratio is at most $r$.
   Then
   \begin{align*}
@@ -710,21 +707,22 @@ We describe the idea of the proof before presenting the proof itself, since it i
     & = \frac{r}{r \cdot (1 - 2k) + 2k} \\
   \end{align*}
   If we require that
-  \begin{equation*}
-    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
-  \end{equation*}
+  \begin{equation}\label{eq:rupper}
+    r < 1 + \frac{\epsilon}{2k(1 + 2\epsilon)},
+  \end{equation}
   then we have $r_i \leq 1 + \epsilon$, by some magic.
   \begin{todo}
     Figure out what this magic is; the book suggests it is ``simple algebraic manipulations''.
   \end{todo}
+  In other words, $m_Q(\psi_i, \tau) \geq \frac{1}{1 + \epsilon} \cdot m^*_Q(\psi_i)$, which is what we intended to show.
 
-  In order to achieve the upper bound on $r$, we recall that $r = 1 + \frac{r_n - 1}{\alpha}$ and notice that we must choose $\alpha$ such that
+  In order to achieve the upper bound on $r$ specified by \autoref{eq:rupper}, we recall that $r = 1 + \frac{r_n - 1}{\alpha}$ and notice that we must choose $\alpha$ such that
   \begin{equation*}
-    r = 1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+    r = 1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + 2\epsilon)},
   \end{equation*}
   or
   \begin{equation*}
-    \alpha > \frac{2k(1 + \epsilon)(r_n - 1)}{\epsilon}
+    \alpha > \frac{2k(1 + 2\epsilon)(r_n - 1)}{\epsilon}
   \end{equation*}
   We must choose $\alpha$ to be a constant that does not depend on the value of $r$, but we may choose it so that it depends on $r_P$.
   Since $k$ is defined to equal $\ceil{\log_{r_n}{r_P}}$, we have
@@ -738,7 +736,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   where the last inequality is true because we have assumed $r_n < r_P$.
   It follows that we need only choose $\alpha$ such that
   \begin{equation*}
-    \alpha \geq \frac{2(r_P \log{r_P} + r_P - 1)(1 + \epsilon)}{\epsilon}.
+    \alpha \geq \frac{2(r_P \log{r_P} + r_P - 1)(1 + 2\epsilon)}{\epsilon}.
   \end{equation*}
   We choose $\alpha$ to equal that value, and this is a constant since $r_P$ is a constant (defined by the approximation algorithm $A_P$) and $\epsilon$ is a constant (defined in a previous theorem).
 
@@ -762,6 +760,10 @@ We describe the idea of the proof before presenting the proof itself, since it i
     m_Q(x, y)
   \end{equation*}
   for all $x$ and $y$
+
+  \begin{todo}
+    Complete this proof.
+  \end{todo}
 \end{proof}
 
 \begin{corollary}
