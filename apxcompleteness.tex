@@ -645,14 +645,14 @@ We describe the idea of the proof before presenting the proof itself, since it i
     \end{algorithmic}
   \end{algorithm}
   Let $f_s$ be the special gap-introducing function described in the preceding discussion.
-  Let $C$ be the Cook-Levin transformation from a description of non-deterministic Turing machine to an equivalent Boolean formula.
+  Let $C$ be the Cook-Levin transformation from a description of non-deterministic Turing machine (along with its deterministic inputs) to an equivalent Boolean formula.
   Now we can define $f$ by
   \begin{displaymath}
-    f(x, r) = \bigwedge_{i = 0}^{k - 1}{f_s(C(B(x, i)))},
+    f(x, r) = \bigwedge_{i = 0}^{k - 1}{f_s(C(B, (x, i)))},
   \end{displaymath}
   for all $x \in I$.
   Let us explain this function.
-  Since we assume $B$ writes a solution $y$ before it returns \texttt{True}, $C(B(x, i))$ will have some variables, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
+  Since we assume $B$ writes a solution $y$ before it returns \texttt{True}, $C(B, (x, i))$ will have some variables, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
   Applying $f_s$ to this Boolean formula produces a 3-CNF formula which has a gap behavior which will be discussed later (since it depends on $g_s$).
   Observe that $f(x, r)$ is still a 3-CNF formula.
   We assume without loss of generality also that each formula $f_s(C(B(x, i)))$ has the same number of clauses, say $M$.
