@@ -542,6 +542,20 @@ Finally, we will show that there is an AP reduction from every minimization prob
   \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Satisfiability}, and there exists a polynomial time 2-approximator for \textsc{Satisfiability} (see \cite[Program~3.1]{book}).
 \end{proof}
 
+\begin{lemma}\label{lem:magic}
+  Let $r, r_i, k, \epsilon \in \mathbb{R}^+$ with $r > 1$, $r_i > 1$, $k > 1$, and $\epsilon > 0$.
+  If
+  \begin{equation*}
+    r_i \leq \frac{1}{1 - 2k(\frac{r - 1}{r} - 1)} \qquad \text{and} \qquad r < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+  \end{equation*}
+  then $r_i < 1 + \epsilon$.
+\end{lemma}
+\begin{proof}
+  \begin{todo}
+    Figure out what this magic is; the book suggests it is ``simple algebraic manipulations'', but I can't figure it out.
+  \end{todo}
+\end{proof}
+
 \begin{theorem}[{\cite[Theorem~8.6]{book}}]\label{thm:maxcomplete}
   \textsc{Maximum 3-Satisfiability} is complete for the class of maximization problems in \APX{} under $\APr$ reductions.
 \end{theorem}
@@ -653,10 +667,24 @@ We describe the idea of the proof before presenting the proof itself, since it i
     {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
   \end{equation*}
   which is exactly the statement of \autoref{eq:subinterval}, and hence \autoref{eq:result} follows.
-  Therefore, we define $g(x, \tau, r) = T(\phi_j, g_s(\phi_j, \tau))$.
-  \begin{todo}
-    Do we need to include that $g$ must search for the appropriate $j$?
-  \end{todo}
+  Therefore, we define $g(x, \tau, r)$ as in \autoref{alg:g}.
+  Observe that $g$ is polynomial time computable since $k$, the number of intervals to search, is a constant, and all other functions are polynomial time computable.
+  \begin{algorithm}
+    \caption{Deterministic polynomial time algorithm that computes a $r_n$-approximate solution for $x$%
+      \label{alg:g}}
+    \begin{algorithmic}
+      \Require{$x \in I$, a truth assignment $\tau$, $r > 1$}
+      \Statex{}
+      \Function{$g$}{$x$, $\tau$, $r$}:
+        \For{$i \in \{0, 1, \dotsc, k - 1\}$}
+          \State{$\phi_i = C(B, (x, i))$}
+          \State{$\tau_i = g_s(\phi_i, \tau)$}
+        \EndFor
+        \State{$j \gets \max_{i = 0}^{k - 1}{\left\{i\,\middle|\, \tau_i \text{ satisfies } \phi_i\right\}}$} \\
+        \hspace{1.5em}\Return{$T(\phi_j, g_s(\phi_j, \tau))$}
+      \EndFunction
+    \end{algorithmic}
+  \end{algorithm}
 
   We now complete the tasks which we delayed above.
   First, we must prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$.
@@ -701,28 +729,23 @@ We describe the idea of the proof before presenting the proof itself, since it i
     1 - 2k\left(\frac{r - 1}{r}\right) \leq \frac{1}{r_i}.
   \end{equation*}
   Now we can upper bound $r_i$ as follows:
-  \begin{align*}
-    r_i & \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)} \\
-    & = \frac{1}{\frac{r - 2kr + 2k}{r}} \\
-    & = \frac{r}{r \cdot (1 - 2k) + 2k} \\
-  \end{align*}
+  \begin{equation*}
+    r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}
+  \end{equation*}
   If we require that
   \begin{equation}\label{eq:rupper}
-    r < 1 + \frac{\epsilon}{2k(1 + 2\epsilon)},
+    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
   \end{equation}
-  then we have $r_i \leq 1 + \epsilon$, by some magic.
-  \begin{todo}
-    Figure out what this magic is; the book suggests it is ``simple algebraic manipulations''.
-  \end{todo}
+  then we have $r_i \leq 1 + \epsilon$, by \autoref{lem:magic}.
   In other words, $m_Q(\psi_i, \tau) \geq \frac{1}{1 + \epsilon} \cdot m^*_Q(\psi_i)$, which is what we intended to show.
 
   In order to achieve the upper bound on $r$ specified by \autoref{eq:rupper}, we recall that $r = 1 + \frac{r_n - 1}{\alpha}$ and notice that we must choose $\alpha$ such that
   \begin{equation*}
-    r = 1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + 2\epsilon)},
+    r = 1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
   \end{equation*}
   or
   \begin{equation*}
-    \alpha > \frac{2k(1 + 2\epsilon)(r_n - 1)}{\epsilon}
+    \alpha > \frac{2k(1 + \epsilon)(r_n - 1)}{\epsilon}
   \end{equation*}
   We must choose $\alpha$ to be a constant that does not depend on the value of $r$, but we may choose it so that it depends on $r_P$.
   Since $k$ is defined to equal $\ceil{\log_{r_n}{r_P}}$, we have
@@ -736,7 +759,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   where the last inequality is true because we have assumed $r_n < r_P$.
   It follows that we need only choose $\alpha$ such that
   \begin{equation*}
-    \alpha \geq \frac{2(r_P \log{r_P} + r_P - 1)(1 + 2\epsilon)}{\epsilon}.
+    \alpha \geq \frac{2(r_P \log{r_P} + r_P - 1)(1 + \epsilon)}{\epsilon}.
   \end{equation*}
   We choose $\alpha$ to equal that value, and this is a constant since $r_P$ is a constant (defined by the approximation algorithm $A_P$) and $\epsilon$ is a constant (defined in a previous theorem).
 
@@ -744,7 +767,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \begin{align*}
     f(x, r) & = \bigwedge_{i = 0}^{k - 1}{f_s(C(B, (x, i)))} \\
     g(x, \tau, r) & = T(\phi_j, g_s(\phi_j, \tau)) \\
-    \alpha & = 2(r_P \log{r_P} + r_P - 1)\frac{1 + 2\epsilon}{\epsilon}
+    \alpha & = 2(r_P \log{r_P} + r_P - 1)\frac{1 + \epsilon}{\epsilon}
   \end{align*}
 \end{proof}
 
