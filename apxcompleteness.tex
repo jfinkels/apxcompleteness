@@ -554,6 +554,10 @@ Finally, we will show that there is an AP reduction from every minimization prob
 \begin{proof}
   \begin{todo}
     Figure out what this magic is; the book suggests it is ``simple algebraic manipulations'', but I can't figure it out.
+
+    One problem may be that in the discussion preceding the following theorem in the book, they describe a truth assignment satisfying at least a $1 - \epsilon$ factor of the maximum number of satisfiable clauses.
+    However, in their proof, they prove that $r_i \leq 1 + \epsilon$, which implies that a truth assignment satisfies at least $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses.
+    Note that we can easily change the upper bound for $r$ in the hypothesis of this theorem, since it depends on $\alpha$, which we get to choose however we like, so that may help.
   \end{todo}
 \end{proof}
 
