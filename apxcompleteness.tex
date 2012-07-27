@@ -255,12 +255,12 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
 \begin{proof}
   Suppose first that $x \in P$.
   Our goal is to show that $m^*_T(f'(f(x))) \geq \tilde{c}(x)$.
-  Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(x) \geq c(x)$.
+  Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(f(x)) \geq c(x)$.
   Since we have a gap-preserving reduction from $Q$ to $T$, we know that if $m^*_Q(f(x)) \geq c_Q(f(x))$ then $m^*_T(f'(f(x))) \geq c_T(f'(f(x)))$.
   Since $c(x) \geq c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) \geq c_T(f'(f(x))) = \tilde{c}(x)$.
 
   Suppose now that $x \notin P$.
-  Our goal is to show that $M^*_T(f'(f(x))) < \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
+  Our goal is to show that $m^*_T(f'(f(x))) < \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
   Since we have a gap-introducing reduction from $P$ to $Q$, we know $m^*_Q(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$.
   Since we have a gap-preserving reduction from $Q$ to $T$, we know that if $m^*_Q(f(x)) < \frac{1}{1 + \alpha(|f(x)|)} \cdot c_Q(f(x))$ then $m^*_T(f'(f(x))) < \frac{1}{1 + \beta(|f'(f(x))|)} \cdot c_T(f'(f(x)))$.
   Since $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha(|f(x)|)} \cdot c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) < \frac{1}{1 + \beta(|f'(f(x))|)} \cdot c_T(f'(f(x))) = \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
@@ -482,15 +482,15 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   where $n = |\phi|$ and $c_0$ is a constant which comes from the proof of \autoref{lem:intro} (specifically, from bounding the number of random bits read by the verifier).
   The enhanced gap-preserving reduction of \autoref{lem:opt} has
   \begin{align*}
-    c_Q(\pair{U}{F}) & = M, \\
-    c_T(\phi) & = M \cdot 2^k \cdot (k - 2), \\
-    \alpha(n + M) & = 1, \text{ and} \\
-    \beta(n + M) & = ???.
+    c_Q(\pair{U}{F}) & = |F|, \\
+    c_T(\phi) & = |F| \cdot 2^k \cdot (k - 2), \\
+    \alpha(N) & = 1, \text{ and} \\
+    \beta(N) & = ???.
   \end{align*}
 
   To meet the conditions in the hypothesis of \autoref{lem:compose}, we need $c(\phi) \geq c_Q(f(\phi))$ and $\frac{1}{1 + \epsilon} \cdot c(\phi) \leq \frac{1}{1 + \alpha(|f(\phi)|)} \cdot c_Q(f(\phi))$.
-  Since $c(\phi) = n^{c_0}$ and $c_Q(f(\phi)) = c_Q(\pair{B}{G}) = n^{c_0} \cdot 2^k \cdot (k - 2)$, the first inequality is satisfied (for $k \geq 3$).
-  Since $\frac{1}{1 + \epsilon} \cdot c(\phi) = \frac{1}{2} \cdot n^{c_0}$ and $\frac{1}{1 + \alpha(|f(\phi)|)} \cdot c_Q(f(\phi)) = \frac{1}{2} \cdot c_q(\pair{B}{G}) = \frac{1}{2} \cdot n^{c_0} \cdot 2^k \cdot (k - 2)$, the second inequality is satisfied (again for $k \geq 3$).
+  Since $c(\phi) = n^{c_0}$ and $c_Q(f(\phi)) = c_Q(\pair{B}{G}) = |G| = n^{c_0}$, the first inequality is satisfied.
+  Since $\frac{1}{1 + \epsilon} \cdot c(\phi) = \frac{1}{2} \cdot n^{c_0}$ and $\frac{1}{1 + \alpha(|f(\phi)|)} \cdot c_Q(f(\phi)) = \frac{1}{2} \cdot c_Q(\pair{B}{G}) = \frac{1}{2} \cdot n^{c_0}$, the second inequality is also satisfied.
 
   Therefore we can conclude that there is an enhanced gap-introducing reduction $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}, where
   \begin{align*}
@@ -512,7 +512,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \end{proof}
 
 Although \autoref{lem:gap3} specifies an enhanced gap-introducing reduction, the following theorem does not require that the reduction be enhanced.
-However, we provide the enhanced reduction because \autoref{lem:gap3} will be used in \autoref{sec:complete}.
+However, we provide the enhanced reduction because \autoref{lem:gap3} will be used in \autoref{sec:complete}, in order to prove that \textsc{Maximum 3-Satisfiability} is complete for the class \APX.
 
 \begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]\label{thm:hard}
   There is a constant $k$ such that no polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\P = \NP$, for all $r < 1 + ???$.
@@ -530,6 +530,10 @@ However, we provide the enhanced reduction because \autoref{lem:gap3} will be us
 
 \section{\texorpdfstring{\APX}{APX}-completeness}\label{sec:complete}
 
+We can now give another perspective on why \textsc{Maximum 3-Satisfiability} does not have a polynomial time approximation scheme unless $\P = \NP$.
+In this section we prove that this problem is in fact complete for \APX{} under AP reductions.
+This means that if there were a polynomial time approximation scheme for this problem, then there would be one for all problems in \APX.
+
 To show that \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions we must show that it is in \APX{} and that there is an AP reduction from every optimization problem in \APX{} to it.
 We will do this in three steps.
 First, we will show that it is in \APX.
@@ -542,6 +546,8 @@ Finally, we will show that there is an AP reduction from every minimization prob
 \begin{proof}
   \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Satisfiability}, and there exists a polynomial time 2-approximator for \textsc{Satisfiability} (see \cite[Program~3.1]{book}).
 \end{proof}
+
+Before proceeding to \autoref{thm:maxcomplete}, we require the following algebraic rule.
 
 \begin{lemma}\label{lem:magic}
   Let $r, r_i, k, \epsilon \in \mathbb{R}^+$ with $r > 1$, $r_i > 1$, $k > 1$, and $\epsilon > 0$.
