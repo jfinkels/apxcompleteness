@@ -236,8 +236,8 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
 
 \begin{definition}
   Let $P$ and $Q$ be two maximization problems, defined by $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
-  Suppose that there exists a gap-preserving reduction given by $(f, c_P, c_Q, \alpha, \beta)$ from $P$ to $Q$.
-  The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$, we have $g'(x, y) \in S_P(x)$ and $m_P(x, g'(x, y)) \geq \frac{1}{1 + \alpha(|x|)} \cdot c_P(x)$.
+  Suppose that there exists a gap-preserving reduction $(f, c_P, c_Q, \alpha, \beta)$ from $P$ to $Q$.
+  The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$ with $m_Q(f(x), y) \geq \frac{1}{1 + \beta(|f(x)|)} \cdot c_Q(f(x))$, we have $g(x, y) \in S_P(x)$ and $m_P(x, g(x, y)) \geq \frac{1}{1 + \alpha(|x|)} \cdot c_P(x)$.
   We identify such a reduction with the six-tuple $(f, g, c_P, c_Q, \alpha, \beta)$.
 \end{definition}
 
@@ -266,7 +266,7 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
   Since $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha(|f(x)|)} \cdot c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) < \frac{1}{1 + \beta(|f'(f(x))|)} \cdot c_T(f'(f(x))) = \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
 
   We have now shown that the stated reduction is gap-introducing; it remains to show that it is also enhanced.
-  Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
+  Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x) = \frac{1}{1 + \beta(|f'(f(x))|)} \cdot c_T(f'(f(x)))$.
   Our goal is to show that $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $x \in P$.
   Since we have an enhanced gap-preserving reduction from $Q$ to $T$, we know that $g'(f(x), y_T) \in S_Q(f(x))$ and $m_Q(f(x), g'(f(x), y_T)) \geq \frac{1}{1 + \alpha(|f(x)|)} \cdot c_Q(f(x))$.
   Since we have an enhanced gap-introducing reduction from $P$ to $Q$ and $\frac{1}{1 + \alpha(|f(x)|)} \cdot c_Q(f(x)) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ by hypothesis, we know that $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
@@ -445,20 +445,25 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   \end{align*}
   where $\tau|_U$ represents the restriction of the satisfying truth assignment $\tau$ to only the variables of $U$.
   Intuitively, the definitions of $c_P$ and $c_Q$ suggest that if all functions in $F$ are satisfiable then all clauses in $f(\pair{U}{F})$ will be satisfiable (there are at most $M \cdot 2^k \cdot (k - 2)$ of them, from the proof of \autoref{lem:decision}), and the definitions of $\alpha$ and $\beta$ suggest ...
+
+  Suppose $m^*_P(\pair{U}{F}) \geq c_P(\pair{U}{F}) = |F|$, which implies that all the functions in $F$ are satisfiable.
+  By the correctness of the many-one reduction $f_0$, all functions in $F$ are satisfiable if and only if all clauses in $f_0(\pair{U}{F})$ are satisfiable.
+  Therefore, if $\phi$ denotes $f_0(\pair{U}{F})$, then $m^*_Q(f(\pair{U}{F})) = m^*_Q(\phi) = |\phi| = c_Q(\phi)$.
+
+  Now suppose instead that $m^*_P(\pair{U}{F}) < \frac{1}{2} \cdot |F|$, so less than half of the functions in $F$ are satisfiable.
+  Our goal is to show that $m^*_Q(\phi) < \frac{1}{1 + ???} \cdot |\phi|$, where $\phi = f(\pair{U}{F})$, or in other words, that at most half (???) of the clauses in $\phi$ are satisfiable.
   \begin{todo}
-    The number of clauses in $f(\pair{U}{F})$ is \emph{at most} $M \cdot 2^k \cdot (k - 2)$.
-    Isn't this a problem?
+    Determine the fraction of clauses in $\phi$, which equals $f_0(\pair{U}{F})$ that are satisfiable given that less than half of the functions in $F$ are satisfiable.
   \end{todo}
 
-  Suppose $m^*_P(\pair{U}{F}) \geq c_P(x) = |F|$.
-  We know that $m^*_Q(f(\pair{U}{F})) = m^*_Q(f_0(\pair{U}{F})) = |F| \cdot 2^k \cdot (k - 2) = c_Q(f_0(\pair{U}{F}))$.
+  Finally, to show that this gap-introducing reduction is enhanced, we suppose $\pair{U}{F}$ is an instance of \textsc{Maximum $k$-Function Satisfiability}, and let $\phi = f(\pair{U}{F})$.
+  Furthermore, suppose $\tau$ is a truth assignment to $\tau$ which satisfies at least $\frac{1}{1 + ???}$ of the maximum number of satisfiable clauses in $\phi$.
+  By definition, $g(\pair{U}{F}, \tau) = \tau|_U$, so it is certainly a valid solution to $\pair{U}{F}$.
+  Our goal is to show that $m(\pair{U}{F}, \tau|_U) \geq \frac{1}{2} \cdot |F|$.
+  Again, by the correctness of the many-one reduction $f_0$, each function in $F$ is satisfiable if and only if the corresponding conjunction of clauses in $f(\pair{U}{F})$ are satisfiable.
+  In other words, for each conjunction of (at most $k - 2$) related (in the sense that they derive from the same single clause in $F$) clauses in $f(\pair{U}{F})$ which is satisfiable, the single clause in $F$ from which that collection derived is satisfiable, and the converse is true, as well.
   \begin{todo}
-    Same problem as above; requires $f_0(\pair{U}{F})$ to have exactly $M \cdot 2^k \cdot (k - 2)$ clauses.
-  \end{todo}
-
-  Suppose $m^*_P(\pair{U}{F}) < \frac{1}{2} \cdot M$.
-  \begin{todo}
-    The number of clauses satisfiable in the transformed 3-SAT instance may not have anything to do with the number of clauses satisfiable in the original functions.
+    Complete the ``enhanced'' part of this proof.
   \end{todo}
 \end{proof}
 
@@ -483,7 +488,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   The enhanced gap-preserving reduction of \autoref{lem:opt} has
   \begin{align*}
     c_Q(\pair{U}{F}) & = |F|, \\
-    c_T(\phi) & = |F| \cdot 2^k \cdot (k - 2), \\
+    c_T(\phi) & = |\phi| \\
     \alpha(N) & = 1, \text{ and} \\
     \beta(N) & = ???.
   \end{align*}
