@@ -749,7 +749,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \end{displaymath}
   where $k = \ceil{\log_{r_n}{r_P}}$.
   (Notice that the sizes of these subintervals are not necessarily equal; except that of the final subinterval, the sizes are only non-decreasing.
-  This won't be a problem, as we only need a multiplicative constant approximation.)
+  This won't be a problem, as we only need a multiplicative constant approximation, not an additive constant approximation.)
   By construction, we have ${r_n}^k = {r_n}^{\ceil{\log_{r_n}{r_P}}} \geq {r_n}^{\log_{r_n}{r_P}} = r_P$, and hence $r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$.
   Combining this with \autoref{eq:bounds}, we have $a(x) \leq m^*_P(x) \leq r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$, so the optimal measure of $x$ must exist in one of these intervals.
   Now we construct $f$ and $g$ in such a way that for any $x \in I$, we can recover an approximate solution $y$ that lies in the same interval in which $m_P^*(x)$ lies.
