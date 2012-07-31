@@ -506,14 +506,17 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
     & = g(\phi, g'(\pair{B}{G}, \tau)) \\
     & = g(\phi, \tau|_B) \\
     & = {\tau|_B}^+, \\
-    \tilde{c}(\phi) & = c_T(f'(f(x))) \\
+    \tilde{c}(\phi) & = c_T(f'(f(\phi))) \\
     & = c_T(f'(\pair{B}{G})) \\
     & = c_T(f_0(\pair{B}{G})) \\
     & = |f_0(\pair{B}{G})| \\
     & = |G| \cdot 2^k \cdot (k - 2), \text{ and} \\
-    \tilde{\epsilon} & = \beta(|f'(f(x))|) \\
+    \tilde{\epsilon} & = \beta(|f'(f(\phi))|) \\
     & = ???. \qedhere
   \end{align*}
+  \begin{todo}
+    Need to change the definitions, since $\tilde{\epsilon}$ here needs access to the length of $f'(f(x))$.
+  \end{todo}
 \end{proof}
 
 Although \autoref{lem:gap3} specifies an enhanced gap-introducing reduction, the following theorem does not require that the reduction be enhanced.
