@@ -441,7 +441,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
     c_P(\pair{U}{F}) & = |F| \\
     c_Q(\phi) & = |\phi| \\
     \alpha(n + M) & = 1 \\
-    \beta(n + M) & = ???
+    \beta(n + M) & = 2^{k + 1} \cdot (k - 2) - 1 \qquad \text{(see explanation below)},
   \end{align*}
   where $\tau|_U$ represents the restriction of the satisfying truth assignment $\tau$ to only the variables of $U$.
   Intuitively, the definitions of $c_P$ and $c_Q$ suggest that if all functions in $F$ are satisfiable then all clauses in $f(\pair{U}{F})$ will be satisfiable (there are at most $M \cdot 2^k \cdot (k - 2)$ of them, from the proof of \autoref{lem:decision}), and the definitions of $\alpha$ and $\beta$ suggest ...
@@ -450,11 +450,12 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   By the correctness of the many-one reduction $f_0$, all functions in $F$ are satisfiable if and only if all clauses in $f_0(\pair{U}{F})$ are satisfiable.
   Therefore, if $\phi$ denotes $f_0(\pair{U}{F})$, then $m^*_Q(f(\pair{U}{F})) = m^*_Q(\phi) = |\phi| = c_Q(\phi)$.
 
-  Now suppose instead that $m^*_P(\pair{U}{F}) < \frac{1}{2} \cdot |F|$, so less than half of the functions in $F$ are satisfiable.
-  Our goal is to show that $m^*_Q(\phi) < \frac{1}{1 + ???} \cdot |\phi|$, where $\phi = f(\pair{U}{F})$, or in other words, that at most half (???) of the clauses in $\phi$ are satisfiable.
-  \begin{todo}
-    Determine the fraction of clauses in $\phi$, which equals $f_0(\pair{U}{F})$ that are satisfiable given that less than half of the functions in $F$ are satisfiable.
-  \end{todo}
+  Now suppose instead that $m^*_P(\pair{U}{F}) < \frac{1}{2} \cdot |F|$, so less than half of the functions in $F$ are satisfiable, or in other words, at least half of the functions in $F$ are unsatisfiable.
+  Suppose $\gamma_i$ is the conjunction which represents $f_i$ in the formula $f_0(\pair{U}{F})$.
+  For each function $f_i$ which is not satisfiable, at least one clause of $\gamma_i$ must be unsatisfiable, by the correctness of $f_0$.
+  Hence the number of unsatisfiable clauses in $f(\pair{U}{F})$ is at least $\frac{1}{2}|F|$, so $m^*_Q(f(\pair{U}{F})) < \frac{1}{2} |F|$.
+  Since $c_Q(f(\pair{U}{F})) = |f_0(\pair{U}{F})| \leq |F| \cdot 2^k \cdot (k - 2)$, we must choose $\beta$ such that $\frac{1}{2} |F| \leq \frac{1}{1 + \beta(|f(\pair{U}{F}))|)} \cdot |F| \cdot 2^k \cdot (k - 2)$.
+  Hence, we choose $\beta = 2^{k + 1} \cdot (k - 2) - 1$.
 
   Finally, to show that this gap-introducing reduction is enhanced, we suppose $\pair{U}{F}$ is an instance of \textsc{Maximum $k$-Function Satisfiability}, and let $\phi = f(\pair{U}{F})$.
   Furthermore, suppose $\tau$ is a truth assignment to $\tau$ which satisfies at least $\frac{1}{1 + ???}$ of the maximum number of satisfiable clauses in $\phi$.
@@ -490,8 +491,9 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
     c_Q(\pair{U}{F}) & = |F|, \\
     c_T(\phi) & = |\phi| \\
     \alpha(N) & = 1, \text{ and} \\
-    \beta(N) & = ???.
+    \beta(N) & = 2^{k + 1} \cdot (k - 2) - 1,
   \end{align*}
+  where $k$ is some constant.
 
   To meet the conditions in the hypothesis of \autoref{lem:compose}, we need $c(\phi) \geq c_Q(f(\phi))$ and $\frac{1}{1 + \epsilon} \cdot c(\phi) \leq \frac{1}{1 + \alpha(|f(\phi)|)} \cdot c_Q(f(\phi))$.
   Since $c(\phi) = n^{c_0}$ and $c_Q(f(\phi)) = c_Q(\pair{B}{G}) = |G| = n^{c_0}$, the first inequality is satisfied.
@@ -512,7 +514,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
     & = |f_0(\pair{B}{G})| \\
     & = |G| \cdot 2^k \cdot (k - 2), \text{ and} \\
     \tilde{\epsilon} & = \beta(|f'(f(\phi))|) \\
-    & = ???. \qedhere
+    & = 2^{k + 1} \cdot (k - 2) - 1. \qedhere
   \end{align*}
   \begin{todo}
     Need to change the definitions, since $\tilde{\epsilon}$ here needs access to the length of $f'(f(x))$.
@@ -523,7 +525,7 @@ Although \autoref{lem:gap3} specifies an enhanced gap-introducing reduction, the
 However, we provide the enhanced reduction because \autoref{lem:gap3} will be used in \autoref{sec:complete}, in order to prove that \textsc{Maximum 3-Satisfiability} is complete for the class \APX.
 
 \begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]\label{thm:hard}
-  There is a constant $k$ such that no polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\P = \NP$, for all $r < 1 + ???$.
+  There is a constant $k$ such that no polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\P = \NP$, for all $r < 2^{k + 1} \cdot (k - 2)$.
 \end{theorem}
 \begin{proof}
   Follows from \autoref{lem:gap3} and \autoref{thm:gap}.
