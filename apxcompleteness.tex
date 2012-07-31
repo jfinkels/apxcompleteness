@@ -651,6 +651,41 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following algebra
   which concludes the proof.
 \end{proof}
 
+\begin{lemma}\label{lem:alpha}
+  Let $r_P, \epsilon \in \mathbb{Q}^+$ with $r_P > 1$ and $\epsilon > 0$.
+  There exists a constant $\alpha \in \mathbb{Q}^+$ (which depends only on $r_P$ and $\epsilon$) with $\alpha > 1$ such that the following is true.
+  Let $r \in \mathbb{Q}^+$ with $r > 1$, let $r_n = 1 + \alpha \cdot (r - 1)$, and let $k = \log_{r_n}{r_P}$.
+  Then
+  \begin{equation*}
+    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)}.
+  \end{equation*}
+\end{lemma}
+\begin{proof}
+  Since $r_n = 1 + \alpha \cdot (r - 1)$, we have $r = 1 + \frac{r_n - 1}{\alpha}$, so we intend to show
+  \begin{equation*}
+    1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+  \end{equation*}
+  or in other words,
+  \begin{equation*}
+    \alpha > \frac{2k(1 + \epsilon)(r_n - 1)}{\epsilon}.
+  \end{equation*}
+
+  Since $k$ is defined to equal $\ceil{\log_{r_n}{r_P}}$, we have
+  \begin{align*}
+    k & \leq 1 + \frac{\log{r_P}}{\log{r_n}} \\
+    & \leq 1 + \frac{r_n \log{r_P}}{\log{r_n}} \\
+    & \leq 1 + \frac{r_n \log{r_P}}{r_n - 1} \\
+    & = \frac{r_n \log{r_P} + r_n - 1}{r_n - 1} \\
+    & < \frac{r_P \log{r_P} + r_P - 1}{r_n - 1},
+  \end{align*}
+  where the last inequality is true because we have assumed $r_n < r_P$.
+  Since we know $k \cdot (r_n - 1) < r_P \log r_P + r_P - 1$ it suffices to choose
+  \begin{equation*}
+    \alpha \geq \frac{2(1 + \epsilon)(r_P \log r_P + r_P - 1)}{\epsilon}.
+  \end{equation*}
+  Choosing $\alpha$ equal to that quantity (so that it depends only on $r_P$ and $\epsilon$) gives us the desired upper bound on $r$.
+\end{proof}
+
 \begin{lemma}\label{lem:magic}
   Let $r, r_i, k, \epsilon \in \mathbb{R}^+$ with $r > 1$, $r_i > 1$, $k > 1$, and $\epsilon > 0$.
   If
@@ -786,41 +821,17 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \end{algorithm}
 
   We now complete the tasks which we delayed above.
-  First, we must prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$.
-  By \autoref{lem:bounds}, we can upper bound $r_i$ as follows:
+  We will prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$, and in doing so we will also choose the value of the constant $\alpha$.
+  By \autoref{lem:bounds}, we know that
   \begin{equation*}
-    r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}
+    r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}.
   \end{equation*}
-  If we require that
+  By \autoref{lem:alpha} there exists a constant $\alpha$ that depends only on $r_P$ (defined by the approximation algorithm $A_P$) and $\epsilon$ (defined in a previous theorem) such that
   \begin{equation}\label{eq:rupper}
-    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)}.
   \end{equation}
-  then we have $r_i \leq 1 + \epsilon$, by \autoref{lem:magic}.
+  Applying \autoref{lem:magic}, we have $r_i \leq 1 + \epsilon$.
   In other words, $m_Q(\psi_i, \tau) \geq \frac{1}{1 + \epsilon} \cdot m^*_Q(\psi_i)$, which is what we intended to show.
-
-  In order to achieve the upper bound on $r$ specified by \autoref{eq:rupper}, we recall that $r = 1 + \frac{r_n - 1}{\alpha}$ and notice that we must choose $\alpha$ such that
-  \begin{equation*}
-    r = 1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
-  \end{equation*}
-  or
-  \begin{equation*}
-    \alpha > \frac{2k(1 + \epsilon)(r_n - 1)}{\epsilon}
-  \end{equation*}
-  We must choose $\alpha$ to be a constant that does not depend on the value of $r$, but we may choose it so that it depends on $r_P$.
-  Since $k$ is defined to equal $\ceil{\log_{r_n}{r_P}}$, we have
-  \begin{align*}
-    k & \leq 1 + \frac{\log{r_P}}{\log{r_n}} \\
-    & \leq 1 + \frac{r_n \log{r_P}}{\log{r_n}} \\
-    & \leq 1 + \frac{r_n \log{r_P}}{r_n - 1} \\
-    & = \frac{r_n \log{r_P} + r_n - 1}{r_n - 1} \\
-    & < \frac{r_P \log{r_P} + r_P - 1}{r_n - 1},
-  \end{align*}
-  where the last inequality is true because we have assumed $r_n < r_P$.
-  It follows that we need only choose $\alpha$ such that
-  \begin{equation*}
-    \alpha \geq \frac{2(r_P \log{r_P} + r_P - 1)(1 + \epsilon)}{\epsilon}.
-  \end{equation*}
-  We choose $\alpha$ to equal that value, and this is a constant since $r_P$ is a constant (defined by the approximation algorithm $A_P$) and $\epsilon$ is a constant (defined in a previous theorem).
 
   In summary, we define our reduction $(f, g, \alpha)$ as follows for all $x \in I$, $r > 1$, and $\tau \in S_Q(f(x, r))$:
   \begin{align*}
