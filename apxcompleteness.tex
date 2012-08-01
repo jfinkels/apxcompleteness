@@ -59,7 +59,13 @@
 In this work, we attempt to clarify the existing proofs that \textsc{Maximum 3-Satisfiability} is both hard to approximate and complete for the class \APX{} under an appropriate type of reduction.
 By doing this, we hope to provide not only a better understanding of the original proofs, but also a platform on which to base similar proofs.
 
-\section{Preliminaries}
+We introduce the necessary definitions and basic facts in \autoref{sec:prelim}.
+Next, in \autoref{sec:hardness}, we present a proof that \textsc{Maximum 3-Satisfiability} is hard to approximate within a constant factor, for sufficiently small constants.
+The proof here is a careful rewrite of the proofs given in \cite[Theorem~6.3]{book} and \cite[Corollary~29.8]{vazirani}.
+Finally, in \autoref{sec:complete} we present a proof that \textsc{Maximum 3-Satisfiability} is complete for the class of polynomial time constant factor approximable optimization problems, under an appropriate type of reduction.
+The proof here is a careful rewrite of the proof given in \cite[Theorem~8.6]{book}.
+
+\section{Preliminaries}\label{sec:prelim}
 
 Throughout this work, $\Sigma=\{0, 1\}$, and $\Sigma^*$ is the set of all finite binary strings.
 The length of a string $x \in \Sigma^*$ is denoted $|x|$.
