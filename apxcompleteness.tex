@@ -556,11 +556,11 @@ First, we will show that it is in \APX.
 Second, we will show that it is complete under AP reductions for the class of maximization problems in \APX.
 Finally, we will show that there is an AP reduction from every minimization problem to some maximization problem in \APX.
 
-\begin{theorem}\label{thm:inapx}
-  $\textsc{Maximum 3-Satisfiability} \in \APX$.
+\begin{theorem}\label{thm:inncx}
+  $\textsc{Maximum 3-Satisfiability} \in \NCX$.
 \end{theorem}
 \begin{proof}
-  \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Satisfiability}, and there exists a polynomial time 2-approximator for \textsc{Satisfiability} (see \cite[Program~3.1]{book}).
+  \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Maximum Satisfiability}, and there exists a \FNC{} 2-approximator for \textsc{Maximum Satisfiability} (see \cite[Program~3.1]{book}).
 \end{proof}
 
 Before proceeding to \autoref{thm:maxcomplete}, we require the following algebraic rule.
@@ -905,7 +905,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
 \end{corollary}
 \begin{proof}
-  Follows from \autoref{thm:inapx}, \autoref{thm:maxcomplete}, and \autoref{thm:minmax}.
+  Follows from \autoref{thm:inncx} (along with the fact that $\NCX \subseteq \APX$), \autoref{thm:maxcomplete}, and \autoref{thm:minmax}.
 \end{proof}
 
 \section*{About this work}
