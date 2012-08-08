@@ -252,7 +252,7 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
 \begin{lemma}\label{lem:compose}
   Let $P$ be a decision problem and $Q$ and $T$ be maximization problems.
   Suppose there is a polynomial time enhanced gap-introducing reduction $(f, g, c, \epsilon)$ from $P$ to $Q$ and a polynomial time enhanced gap-preserving reduction $(f', g', c_Q, c_T, \alpha, \beta)$ from $Q$ to $T$.
-  If $c(x) \geq c_Q(f(x))$ and $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$ then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $Q$, where
+  If $c(x) \geq c_Q(f(x))$ and $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$ then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is a polynomial time enhanced gap-introducing reduction from $P$ to $Q$, where
   \begin{align*}
     \tilde{f}(x) & = f'(f(x)), \\
     \tilde{g}(x, y) & = g(x, g'(f(x), y)), \\
@@ -281,6 +281,7 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
   Hence $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
 
   Since we have proven the three conditions required for an enhanced gap-introducing reduction, we finally conclude that $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $T$.
+  The functions $\tilde{f}$, $\tilde{g}$, and $\tilde{c}$ are all polynomial time computable because polynomial time computable functions compose.
 \end{proof}
 
 \section{Hardness of approximation}\label{sec:hardness}
