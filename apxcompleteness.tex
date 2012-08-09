@@ -74,8 +74,8 @@ A decision problem is a subset of $\Sigma^*$.
 
 \subsection{Probabilistically checkable proofs}
 
-A \emph{$(\lg n, 1)$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $|x| = n$, $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $c \lg n$ random bits from $\rho$ and reads (with random access) at most $q$ bits from $\pi$, for some constants $c \in \mathbb{N}$ and $q \in \mathbb{N}$.
-Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checkable proofs} with $O(\lg n)$ random bits and $O(1)$ proof queries) as follows: a decision problem $L \in \PCP(\lg n, 1)$ if there exists a $(\lg n, 1)$-verifier $V$ and a polynomial $p$ such that
+A \emph{$(r(n), q(n))$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $|x| = n$, $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $O(r(n))$ random bits from $\rho$ and reads (with random access) at most $O(q(n))$ bits from $\pi$.
+Define the complexity class $\PCP(r(n), q(n))$ (for \emph{probabilistically checkable proofs} with $O(r(n))$ random bits and $O(q(n))$ proof queries) as follows: a decision problem $L \in \PCP(r(n), q(n))$ if there exists a $(r(n), q(n))$-verifier $V$ and a polynomial $p$ such that
 \begin{enumerate}
 \item
   if $x \in L$ then there exists a $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$ such that
