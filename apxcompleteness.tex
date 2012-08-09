@@ -37,7 +37,12 @@
 
 \algrenewcommand\algorithmicrequire{\textbf{Input:}}
 
+\newcommand{\AND}{\textsf{AND}}
+\newcommand{\OR}{\textsf{OR}}
+\newcommand{\NOT}{\textsf{NOT}}
+
 \newcommand{\APr}{\leq_{AP}^{P}}
+\newcommand{\NCAPr}{\leq_{AP}^{NC}}
 \newcommand{\ceil}[1]{\lceil{#1}\rceil}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 %\newcommand{\lb}{\left\{}
@@ -56,14 +61,17 @@
 
 \section{Introduction}
 
-In this work, we attempt to clarify the existing proofs that \textsc{Maximum 3-Satisfiability} is both hard to approximate and complete for the class \APX{} under an appropriate type of reduction.
+In this work, we attempt to clarify the existing proofs that \textsc{Maximum 3-Satisfiability} is both hard to approximate \emph{in polynomial time} and complete for the class \APX{} under an appropriate type of reduction.
 By doing this, we hope to provide not only a better understanding of the original proofs, but also a platform on which to base similar proofs.
+We use this platform to provide a clarification of the existing proofs that \textsc{Maximum 3-Satisfiability} is both hard to approximate \emph{by efficient and highly parallel algorithms} and complete for the class \NCX{} under an appropriate type of reduction.
 
 We introduce the necessary definitions and basic facts in \autoref{sec:prelim}.
-Next, in \autoref{sec:hardness}, we present a proof that \textsc{Maximum 3-Satisfiability} is hard to approximate within a constant factor, for sufficiently small constants.
+In \autoref{ssc:phardness}, we present a proof that \textsc{Maximum 3-Satisfiability} is hard to approximate in polynomial time within a constant factor, for sufficiently small constants.
 The proof here is a careful rewrite of the proofs given in \cite[Theorem~6.3]{book} and \cite[Corollary~29.8]{vazirani}.
-Finally, in \autoref{sec:complete} we present a proof that \textsc{Maximum 3-Satisfiability} is complete for the class of polynomial time constant factor approximable optimization problems, under an appropriate type of reduction.
+The corresponding proof for highly parallel algorithms is in \autoref{ssc:nchardness}.
+In \autoref{ssc:apxcomplete} we present a proof that \textsc{Maximum 3-Satisfiability} is complete for the class of polynomial time constant factor approximable optimization problems, under an appropriate type of reduction.
 The proof here is a careful rewrite of the proof given in \cite[Theorem~8.6]{book}.
+The corresponding proof for highly parallel algorithms is in \autoref{ssc:ncxcomplete}.
 
 \section{Preliminaries}\label{sec:prelim}
 
@@ -71,6 +79,39 @@ Throughout this work, $\Sigma=\{0, 1\}$, and $\Sigma^*$ is the set of all finite
 The length of a string $x \in \Sigma^*$ is denoted $|x|$.
 We denote the set of positive rational numbers by $\mathbb{Q}^*$ and the natural numbers (excluding 0) by $\mathbb{N}$.
 A decision problem is a subset of $\Sigma^*$.
+A binary relation $R \subseteq \Sigma^* \times \Sigma^*$ is \emph{polynomially bounded} if there exists a polynomial $p$ such that for all $(x, y) \in R$, we have $|y| \leq p(|x|)$.
+
+\subsection{Complexity classes}
+
+\NP{} is the class of decision problems $L$ for which there exists a polynomially bounded \emph{solution relation} (or \emph{\NP{} relation}) $R$ such that
+\begin{enumerate}
+\item $R$ is decidable by a deterministic Turing machine running in polynomial time, and
+\item for all $x \in \Sigma^*$, we have $x \in L$ if and only if there exists a $y$ such that $(x, y) \in R$.
+\end{enumerate}
+\P{} is the subclass of \NP{} in which each decision problem $L$ is decidable by a deterministic Turing machine running in polynomial time.
+\NC{} is the subclass of \P{} in which each decision problem is decidable by a logarithmic space uniform family of Boolean circuits (consisting of \AND, \OR, and \NOT gates, each with fan-in at most two) of polynomial size and polylogarithmic depth.
+\FNC{} is the class of functions computable by an \NC{} circuit family.
+\NNC{} is the class of decision problems $L$ for which there exists a polynomially bounded \emph{solution relation} (or \emph{\NNC{} relation}) $R$ such that
+\begin{enumerate}
+\item $R$ is decidable by an \NC{} circuit family, and
+\item for all $x \in \Sigma^*$, we have $x \in L$ if and only if there exists a $y$ such that $(x, y) \in R$.
+\end{enumerate}
+(An equivalent definition for \NNC{} is given in \cite{wolf94}, where it is called \NNCpoly.)
+
+The class of functions computable in polynomial time is denoted \FP.
+The class of functions computable by a \NC{} circuit family is denoted \FNC.
+
+\begin{lemma}
+  \mbox{}
+  \begin{enumerate}
+  \item If $f \in \FP$ and $g \in \FP$, then $f \circ g \in \FP$.
+  \item If $f \in \FNC$ and $g \in \FNC$, then $f \circ g \in \FNC$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{lemma}
+  The addition, subtraction, multiplication, division, and exponentiation functions are all computable by \NC{} circuit families.
+\end{lemma}
 
 \subsection{Probabilistically checkable proofs}
 
@@ -114,11 +155,20 @@ For the sake of simplicity, in \autoref{ssc:gaps} and \autoref{sec:hardness} (th
 The complexity class \NPO{} is the class of all optimization problems $(I, S, m, t)$ such that the following conditions hold.
 \begin{enumerate}
 \item The instance set $I$ is decidable by a deterministic polynomial time Turing machine.
-\item The solution relation $S$ is decidable by a deterministic polynomial time Turing machine and is polynomially bounded (that is, the length of $y$ is bounded by a polynomial in the length of $x$ for all $(x, y)\in S$).
+\item The solution relation $S$ is decidable by a deterministic polynomial time Turing machine and is polynomially bounded.
 \item The measure function $m$ is computable by a deterministic polynomial time Turing machine.
 \end{enumerate}
-
 The complexity class \APX{} is the subclass of \NPO{} in which for each optimization problem $P$ there exists a polynomial time computable $r$-approximator for $P$, where $r(n) \in O(1)$ for all $n \in \mathbb{N}$.
+The complexity class \PTAS{} is the subclass of \APX{} in which for each optimization problem $P$, defined by $P = (I, S, m, t)$, there exists a function $f \colon I \times \mathbb{N} \to \Sigma^*$ such that $R(x, f(x, k)) \leq 1 + \frac{1}{k}$ for all $x \in I$ and all $k \in \mathbb{N}$, and $f$ is computable in polynomial time with respect to the length of $x$.
+
+The complexity class \NNCO{} is the class of optimization problems $(I, S, m, t)$ such that the following conditions hold.
+\begin{enumerate}
+\item The instance set $I$ is decidable by an \NC{} circuit family.
+\item The solution relation $S$ is decidable by an \NC{} circuit family and is polynomially bounded.
+\item The measure function $m$ is computable by an \FNC{} circuit family.
+\end{enumerate}
+The complexity class \NCX{} is the subclass of \NNCO{} in which for each optimization problem $P$ there exists an $r$-approximator, computable by an \FNC{} circuit family, for $P$, where $r(n) \in O(1)$ for all $n \in \mathbb{N}$.
+The complexity class \NCAS{} is the subclass of \NCX{} in which for each optimization problem $P$, defined by $P = (I, S, m, t)$, there exists a function $f \colon I \times \mathbb{N} \to \Sigma^*$ such that $R(x, f(x, k)) \leq 1 + \frac{1}{k}$ for all $x \in I$ and all $k \in \mathbb{N}$, and $f$ is computable by an \FNC{} circuit family with respect to the length of $x$.
 
 \subsubsection{Reductions among optimization problems}
 
@@ -129,13 +179,15 @@ The complexity class \APX{} is the subclass of \NPO{} in which for each optimiza
   \item For all $x \in I_P$ and all $r \in \mathbb{Q}^+$ with $r > 1$, we have $f(x, r) \in I_P$.
   \item For all $x \in I_P$ and all $r \in \mathbb{Q}^+$ with $r > 1$, if $S_P(x) \neq \emptyset$ then $S_Q(f(x, r)) \neq \emptyset$.
   \item For all $x \in I_P$, all $r \in \mathbb{Q}^+$ with $r > 1$, and all $y \in S_Q(f(x, r))$, we have $g(x, y, r) \in S_P(x)$.
-  \item $f$ is computable in polynomial time with respect to $x$ and $g$ is computable in polynomial time with respect to $x$ and $y$.
   \item For all $x \in I_P$, all $r \in \mathbb{Q}^+$ with $r > 1$, and all $y \in S_Q(f(x, r))$, we have
     \begin{equation*}
       R_Q(f(x, r), y) \leq r \text{ implies } R_P(x, g(x, y, r)) \leq 1 + \alpha \cdot (r - 1).
     \end{equation*}
   \end{enumerate}
   We identify such a reduction with the triple $(f, g, \alpha)$.
+
+  If, furthermore, $f$ is computable in polynomial time with respect to $x$ and $g$ is computable in polynomial time with respect to $x$ and $y$, then the reduction is called a \emph{polynomial time AP reduction}.
+  If $f$ and $g$ are computable by \FNC{} circuit families, then the reduction is called an \emph{\NC{} AP reduction}.
 \end{definition}
 
 Although the definition of AP reduction allows $f$ and $g$ access to $r$, the quality of the approximation, in most known natural reductions, this access is not necessary.
@@ -192,28 +244,31 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
 \end{lemma}
 
 \begin{lemma}[{\cite[Example~6.5]{book}}]\label{lem:three}
-  There is a polynomial time computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
+  There is a logarithmic space computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
 \end{lemma}
 
 \subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]\label{def:intro}
   Let $P$ be a decision problem and $Q$ be maximization problem with $Q = (I, S, m, \max)$.
-  There is a \emph{gap-introducing reduction} from $P$ to $Q$ if there exist polynomial time computable functions $f \colon \Sigma^* \to I$ and $c \colon \Sigma^* \to \mathbb{N}$ and an $\epsilon \in \mathbb{Q}^+$ such that for any $x \in \Sigma^*$,
+  There is a \emph{gap-introducing reduction} from $P$ to $Q$ if there exist functions $f \colon \Sigma^* \to I$ and $c \colon \Sigma^* \to \mathbb{N}$ and an $\epsilon \in \mathbb{Q}^+$ such that for any $x \in \Sigma^*$,
   \begin{enumerate}
   \item if $x \in P$ then $m^*(f(x)) \geq c(x)$, and
   \item if $x \notin P$ then $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$.
   \end{enumerate}
   We call $\epsilon$ the \emph{gap parameter} of the reduction.
+
+  If, furthermore, $f$ and $c$ are computable in polynomial time, then the reduction is called a \emph{polynomial time gap-introducing reduction}.
+  If $f$ and $c$ are computable by \FNC{} circuit families, then the reduction is called an \emph{\NC{} gap-introducing reduction}.
 \end{definition}
 
 Notice that as the value of $\epsilon$ increases, so does the ``gap'' between the optimal measures corresponding to strings in $P$ and strings not in $P$.
 
 \begin{definition}
   Let $P\in\NP$ and $Q$ be a maximization problem in \NPO, with $Q = (I, S, m, \max)$.
-  Let $R_P$ be the \NP-relation induced by $P$.
-  Suppose there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$.
-  The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I \times \Sigma^* \to \Sigma^*$ such that for all $x \in I$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
+  Let $R_P$ be the \NP{} relation induced by $P$.
+  Suppose there is a polynomial time (respectively, \NC) gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$.
+  The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time (respectively, \NC) computable function $g \colon I \times \Sigma^* \to \Sigma^*$ such that for all $x \in I$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
 \end{definition}
 
 An enhanced gap-introducing reduction is a gap-introducing reduction by definition.
@@ -229,12 +284,15 @@ The interesting case is the converse, because it requires that $g$ produce a wit
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]
   Let $P$ and $Q$ be maximization problems, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
-  There is a \emph{gap-preserving reduction} from $P$ to $Q$ if there exist a polynomial time computable function $f \colon I_P \to I_Q$, polynomial time computable functions $c_P, c_Q \colon \mathbb{N} \to \mathbb{N}$, and constants $\alpha, \beta \in \mathbb{Q}^+$, with $\alpha \geq 0$ and $\beta \geq 0$, such that
+  There is a \emph{gap-preserving reduction} from $P$ to $Q$ if there exist a function $f \colon I_P \to I_Q$, functions $c_P, c_Q \colon \mathbb{N} \to \mathbb{N}$, and constants $\alpha, \beta \in \mathbb{Q}^+$, with $\alpha \geq 0$ and $\beta \geq 0$, such that
   \begin{itemize}
   \item if $m^*_P(x) \geq c_P(x)$ then $m^*_Q(f(x)) \geq c_Q(f(x))$, and
   \item if $m^*_P(x) < \frac{1}{1 + \alpha} \cdot c_P(x)$ then $m^*_Q(f(x)) < \frac{1}{1 + \beta} \cdot c_Q(f(x))$.
   \end{itemize}
   We identify such a reduction with the five-tuple $(f, c_P, c_Q, \alpha, \beta)$.
+
+  If, furthermore, $f$, $c_P$, and $c_Q$ are computable in polynomial time, then the reduction is called a \emph{polynomial time gap-introducing reduction}.
+  If $f$, $c_P$, and $c_Q$ are computable by \FNC{} circuit families, then the reduction is called an \emph{\NC{} gap-introducing reduction}.
 \end{definition}
 
 Intuitively, the gap in $P$ scales with $\alpha$ and the gap in $Q$ with $\beta$.
@@ -242,15 +300,15 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
 
 \begin{definition}
   Let $P$ and $Q$ be two maximization problems, defined by $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
-  Suppose that there exists a gap-preserving reduction $(f, c_P, c_Q, \alpha, \beta)$ from $P$ to $Q$.
-  The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$ with $m_Q(f(x), y) \geq \frac{1}{1 + \beta} \cdot c_Q(f(x))$, we have $g(x, y) \in S_P(x)$ and $m_P(x, g(x, y)) \geq \frac{1}{1 + \alpha} \cdot c_P(x)$.
+  Suppose that there exists a polynomial time (respectively, \NC) gap-preserving reduction $(f, c_P, c_Q, \alpha, \beta)$ from $P$ to $Q$.
+  The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time (respectively, \NC) computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$ with $m_Q(f(x), y) \geq \frac{1}{1 + \beta} \cdot c_Q(f(x))$, we have $g(x, y) \in S_P(x)$ and $m_P(x, g(x, y)) \geq \frac{1}{1 + \alpha} \cdot c_P(x)$.
   We identify such a reduction with the six-tuple $(f, g, c_P, c_Q, \alpha, \beta)$.
 \end{definition}
 
 \begin{lemma}\label{lem:compose}
   Let $P$ be a decision problem and $Q$ and $T$ be maximization problems.
-  Suppose there is a polynomial time enhanced gap-introducing reduction $(f, g, c, \epsilon)$ from $P$ to $Q$ and a polynomial time enhanced gap-preserving reduction $(f', g', c_Q, c_T, \alpha, \beta)$ from $Q$ to $T$.
-  If $c(x) \geq c_Q(f(x))$ and $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$ then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $Q$, where
+  Suppose there is a polynomial time (respectively, \NC) enhanced gap-introducing reduction $(f, g, c, \epsilon)$ from $P$ to $Q$ and a polynomial time (respectively, \NC) enhanced gap-preserving reduction $(f', g', c_Q, c_T, \alpha, \beta)$ from $Q$ to $T$.
+  If $c(x) \geq c_Q(f(x))$ and $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$ then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is a polynomial time (respectively, \NC) enhanced gap-introducing reduction from $P$ to $Q$, where
   \begin{align*}
     \tilde{f}(x) & = f'(f(x)), \\
     \tilde{g}(x, y) & = g(x, g'(f(x), y)), \\
@@ -283,8 +341,11 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
 
 \section{Hardness of approximation}\label{sec:hardness}
 
-In this section we use the PCP theorem to prove \textsc{Maximum 3-Satisfiability} is hard to approximate (specifically, that for certain constant factors, no approximation can exist unless $\P = \NP$).
+In this section we use the PCP theorem to prove \textsc{Maximum 3-Satisfiability} is hard to approximate (specifically, that for certain constant factors, no approximation can exist unless there is some collapse among complexity classes).
 We do this by reducing \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}, and then reducing that to \textsc{Maximum 3-Satisfiability}, ensuring that the reductions compose.
+We first prove that the problem is hard to approximate in polynomial time, then translate the proof to the efficient and highly parallel setting to show that the problem is also hard to approximate in parallel.
+
+\subsection{Hardness of polynomial time approximation}\label{ssc:phardness}
 
 The main tool of this section is the following theorem, which provides sufficient conditions for an optimization problem in \NPO{} to be hard to approximate.
 
@@ -541,11 +602,64 @@ However, we provide the enhanced reduction because \autoref{lem:gap3} will be us
   Follows from \autoref{thm:hard} and \autoref{cor:notinptas}.
 \end{proof}
 
-\section{\texorpdfstring{\APX}{APX}-completeness}\label{sec:complete}
+\subsection{Hardness of parallel approximation}\label{ssc:nchardness}
 
-We can now give another perspective on why \textsc{Maximum 3-Satisfiability} does not have a polynomial time approximation scheme unless $\P = \NP$.
-In this section we prove that this problem is in fact complete for \APX{} under AP reductions.
-This means that if there were a polynomial time approximation scheme for this problem, then there would be one for all problems in \APX.
+\begin{todo}
+  Need to define \NNC-completeness.
+\end{todo}
+
+\begin{theorem}[\NC{} version of \autoref{thm:gap}]\label{thm:ncgap}
+  Let $P$ be an \NNC-complete decision problem and $Q$ be a maximization problem in \NNCO.
+  If there is an \NC{} gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no \FNC{} $r$-approximator for $P$ unless $\NC = \NNC$.
+\end{theorem}
+\begin{proof}
+  The proof is similar to the proof of \autoref{thm:gap}.
+\end{proof}
+
+\begin{corollary}\label{cor:notinncas}
+  Let $P$ be an \NNC-complete decision problem and $Q$ be a maximization problem in \NNCO.
+  If there is an \NC{} gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ then $Q \notin \NCAS$ unless $\NC = \NNC$.
+\end{corollary}
+\begin{proof}
+  The proof is similar to the proof of \autoref{cor:notinptas}.
+\end{proof}
+
+By \autoref{lem:gap3}, we already know that there exists an \NC{} enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+
+\begin{todo}
+  Need to show that \textsc{Satisfiability} is \NNC-complete.
+\end{todo}
+
+\begin{todo}
+  Need to show $\textsc{Maximum \textit{k}-Satisfiability} \in \NNCO$.
+\end{todo}
+
+\begin{theorem}[\NC{} version of \autoref{thm:hard}]\label{thm:nchard}
+  There is a constant $k$ such that no \FNC{} $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\NC = \NNC$, for all $r < 2^{k + 1} \cdot (k - 2)$.
+\end{theorem}
+\begin{proof}
+  Follows from \autoref{lem:gap3} and \autoref{thm:ncgap}.
+\end{proof}
+
+\begin{corollary}
+  $\textsc{Maximum 3-Satisfiability} \notin \NCAS$ unless $\NC = \NNC$.
+\end{corollary}
+\begin{proof}
+  Follows from \autoref{thm:nchard} and \autoref{cor:notinncas}.
+\end{proof}
+
+\section{Completeness in approximation classes}\label{sec:complete}
+
+We can now give another perspective on why \textsc{Maximum 3-Satisfiability} has no polynomial time approximation scheme unless $\P = \NP$, and why it has no \NC{} approximation scheme unless $\NC = \NNC$.
+In this section we prove that this problem is in fact complete for \APX{} under polynomial time AP reductions, and complete for \NCX{} under \NC{} AP reductions.
+This means that if there were a polynomial time approximation scheme for this problem, then there would be one for all problems in \APX, and if there were a \NC{} approximation scheme for it, then there would be one for all problems in \NCX.
+
+What does it mean for an optimization problem to be both complete for \APX{} under polynomial time reductions and complete for \NCX{} under polynomial time reductions?
+\begin{todo}
+  What \emph{does} this mean?
+\end{todo}
+
+\subsection{\texorpdfstring{\APX}{APX}-completeness}\label{ssc:apxcomplete}
 
 To show that \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions we must show that it is in \APX{} and that there is an AP reduction from every optimization problem in \APX{} to it.
 We will do this in three steps.
@@ -553,7 +667,7 @@ First, we will show that it is in \APX.
 Second, we will show that it is complete under AP reductions for the class of maximization problems in \APX.
 Finally, we will show that there is an AP reduction from every minimization problem to some maximization problem in \APX.
 
-\begin{theorem}\label{thm:inapx}
+\begin{theorem}\label{thm:inncx}\label{thm:inapx}
   $\textsc{Maximum 3-Satisfiability} \in \APX$.
 \end{theorem}
 \begin{proof}
@@ -852,57 +966,205 @@ We describe the idea of the proof before presenting the proof itself, since it i
 \begin{proof}
   Proof omitted; see \cite{book} for the proof.
 \end{proof}
-%% \begin{proof}
-%%   Since $P \in \APX$, there exists an $r$-approximator, call it $A$, for $P$.
-%%   For all $x \in I$, let $a(x) = m_P(x, A(x))$.
-%%   This implies $\frac{a(x)}{m^*_P(x)} \leq r$ and hence $a(x) \leq r \cdot m^*_P(x)$.
-%%   Define $Q$ by $Q = (I, S, m_Q, \max)$, where $m_Q$ is defined by
-%%   \begin{equation*}
-%%     m_Q(x, y) =
-%%     \begin{cases}
-%%       (k + 1) \cdot a(x) - k \cdot m_P(x, y) & \text{if } m_P(x, y) \leq a(x) \\
-%%       t(x) & \text{otherwise,}
-%%     \end{cases}
-%%   \end{equation*}
-%%   for all $x$ and $y$, where $k = \ceil{r}$.
-%%   Following from the definition, we have $a(x) \leq m^*_Q(x) \leq (k + 1) \cdot a(x)$.
-%%   This implies that $A$ is a $(k + 1)$-approximator for $Q$, and hence $Q \in \APX$.
-
-%%   Define the AP reduction $(f, g, \alpha)$ from $P$ to $Q$ as follows.
-%%   Let $f$ be the identity function and $\alpha = k + 1$.
-%%   Define $g$ by
-%%   \begin{equation*}
-%%     g(x, y) =
-%%     \begin{cases}
-%%       y & \text{if } m_P(x, y) \leq a(x) \\
-%%       A(x) & \text{otherwise,}
-%%     \end{cases}
-%%   \end{equation*}
-%%   for all $x \in I$ and all $y \in S(f(x))$.
-
-%%   To show that $(f, g, \alpha)$ is an AP reduction from $P$ to $Q$, suppose $y \in S(f(x))$ with $R_Q(x, y) \leq r'$ for any $r' > 1$.
-%%   Our goal is to show that $R_P(x, g(x, y)) \leq 1 + \alpha \cdot (r' - 1)$.
-%%   There are two cases.
-%%   \begin{enumerate}
-%%   \item $m_P(x, y) > a(x)$.
-%%     In this case,
-%%     \begin{equation*}
-%%       R_P(x, g(x, y)) = R_P(x, A(x)) = R_Q(x, y) \leq r' \leq 1 + \alpha \cdot (r' - 1),
-%%     \end{equation*}
-%%     where the last inequality holds because $\alpha \geq 1$.
-%%   \item $m_P(x, y) \leq a(x)$.
-%%     In this case,
-%%   \end{enumerate}
-%%   \begin{todo}
-%%     Complete this proof.
-%%   \end{todo}
-%% \end{proof}
 
 \begin{corollary}
   \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
 \end{corollary}
 \begin{proof}
   Follows from \autoref{thm:inapx}, \autoref{thm:maxcomplete}, and \autoref{thm:minmax}.
+\end{proof}
+
+\subsection{\texorpdfstring{\NCX}{NCX}-completeness}\label{ssc:ncxcomplete}
+
+To show that \textsc{Maximum 3-Satisfiability} is complete for \NCX{} under \NC{} AP reductions we must show that it is in \NCX{} and that there is an \NC{} AP reduction from every optimization problem in \NCX{} to it.
+By \autoref{thm:inncx}, we already know that it is in \NCX.
+We will show that it is complete under \NC{} AP reductions for the class of maximization problems in \NCX.
+Then we will show that there is an \NC{} AP reduction from every minimization problem to some maximization problem in \NCX.
+
+Before proceeding to \autoref{thm:maxcomplete}, we require the following algebraic rule.
+
+\begin{lemma}\label{lem:ncinterval}
+  Let $P \in \NCX$, with $P = (I, S, m_P, \max)$, and let $A_P$ be the \FNC{} $r$-approximator for $P$, for some constant $r$.
+  Let $r_n \geq 1$.
+  There exists an \NNC{} circuit family, $\left\{B_\ell\right\}_{\ell \in \mathbb{N}}$, such that on input $(x, i)$, where $x \in I$ and $i \in \mathbb{N}$, the circuit $B_\ell$, where $\ell = |x| + |i|$, decides if there exists a solution $y$ with
+  \begin{equation*}
+    {r_n}^i \cdot m_P(x, A_P(x)) \leq m_P(x, y) \leq {r_n}^j \cdot m_P(x, A_P(x)).
+  \end{equation*}
+  Furthermore, if a solution $y$ exists, the output of $B_\ell$ is augmented with gates which output the bits of $y$.
+\end{lemma}
+\begin{proof}
+  Let $p$ be the polynomial which bounds the size of the solutions for an instance $x$ of size $\ell$.
+  Define $B$ as in \autoref{alg:ncinterval}.
+  \begin{algorithm}
+    \caption{\NNC{} algorithm that decides if there is an approximate solution for instance $x$ of problem $P$ in interval $i$%
+      \label{alg:ncinterval}}
+    \begin{algorithmic}[1]
+      \Require{$x \in I$, where $|x| = \ell$, and $i \geq 0$}
+      \Statex{}
+      \Function{$B_\ell$}{$x$, $i$}:
+        \State{\textbf{guess} $y$ with $|y| \leq p(|x|)$}
+        \State{$a \gets m_P(x, A_P(x))$}
+        \If{$(x, y) \in S$ and ${r_n}^i \cdot a \leq m_P(x, y) < {r_n}^{i + 1} \cdot a$}
+          \State{\textbf{output} $y$}
+          \State{\textbf{output} 1}
+        \Else
+          \State{\textbf{output} 0}
+        \EndIf
+      \EndFunction
+    \end{algorithmic}
+  \end{algorithm}
+  Since all operations used during the execution of $B_\ell$ are in \FNC, $B_\ell$ can be implemented by an \FNC{} circuit.
+  Since $B_\ell$ outputs 1 if and only if there exists a solution $y$ with the stated bounds, the conclusion follows.
+\end{proof}
+
+\begin{lemma}[\NC{} version of \autoref{lem:cooklevin}]\label{lem:nccooklevin}
+  There exists an \FNC{} circuit family, $\left\{C_\ell\right\}_{\ell \in \mathbb{N}}$, in which each circuit takes two inputs, the description of a nondeterministic polynomial time Turing machine and a tuple of its arguments, and outputs a Boolean formula $\Phi$ whose variables are the bits of the arguments to $C_\ell$, such that $C_\ell$ outputs 1 if and only if $\Phi$ is satisfiable.
+  That is, $C_\ell(x, i)$ outputs 1 if and only if $\Phi$ is satisfiable.
+\end{lemma}
+
+\begin{todo}
+  Get the notation and statement of the above lemma correct.
+\end{todo}
+
+\begin{theorem}[\NC{} version of \autoref{thm:maxcomplete}]\label{thm:ncmaxcomplete}
+  \textsc{Maximum 3-Satisfiability} is complete for the class of maximization problems in \NCX{} under $\NCAPr$ reductions.
+\end{theorem}
+\begin{proof}
+  For the sake of brevity, we let $Q$ represent $\textsc{Maximum 3-Satisfiability}$.
+
+  Let $P$ be a maximization problem in \NCX, so we have $P = (I, S, m, \max)$.
+  Let $A_P$ be the \NC{} computable $r_P$-approximator for $P$, where $r_P$ is some constant.
+  We need to define an \NC{} AP reduction $(f, g, \alpha)$ from $P$ to $Q$.
+  We will delay the definition of the constant $\alpha$ until later in the proof, and until then we assume it has been fixed.
+  We now wish to define \FNC{} functions $f$ and $g$ for all $r > 1$.
+  Let $r_n = 1 + \alpha \cdot (r - 1)$; this is the desired upper bound of the performance ratio $R_P(x, g(x, \tau, r))$ when $R_Q(f(x, r), \tau) \leq r$, as required by the AP condition.
+
+  In the case that $r_p \leq r_n$, defining $g(x, y, r) = A_P(x)$ for all $x$ and $y$ is sufficient, and no definition of $f$ is necessary, since $R(x, g(x, y, r)) = R(x, A_P(x)) \leq r_P \leq r_n$.
+  Suppose from here on that $r_P > r_n$.
+
+  For $f$ we intend to map an instance $x$ of $P$ to a 3-CNF Boolean formula, and for $g$ we intend to map a truth assignment which satisfies a constant factor of the satisfiable clauses of $f(x, r)$ to a solution $y$ for $P$.
+  In order to recover a solution $y$ for $P$ with $R_P(x, y) \leq r_n$, we need a solution whose measure is close to $m^*_P(x)$, the optimal measure of $x$.
+  If we let $a(x) = m_P(x, A_P(x))$, then
+  \begin{equation}\label{eq:ncbounds}
+    a(x) \leq m^*_P(x) \leq r_P \cdot a(x),
+  \end{equation}
+  since $a(x)$ is the measure of a $r_P$-approximate solution to a maximization problem.
+  We can't just output any solution in this range, because the approximation guarantee would be only $r_P$; we need it to be $r_n$.
+  Hence we will subdivide this interval and derive a solution within a subinterval of size $r_n$.
+
+  Let us divide the interval $[a(x), r_P \cdot a(x)]$ into $k$ subintervals,
+  \begin{displaymath}
+    \left[a(x), r_n \cdot a(x)\right], \left[r_n \cdot a(x), {r_n}^2 \cdot a(x)\right], \ldots, \left[{r_n}^{k - 1} \cdot a(x), r_P \cdot a(x)\right],
+  \end{displaymath}
+  where $k = \ceil{\log_{r_n}{r_P}}$.
+  (Notice that the sizes of these subintervals are not necessarily equal; except that of the final subinterval, the sizes are only non-decreasing.
+  This won't be a problem, as we only need a multiplicative constant approximation, not an additive constant approximation.)
+  By construction, we have ${r_n}^k = {r_n}^{\ceil{\log_{r_n}{r_P}}} \geq {r_n}^{\log_{r_n}{r_P}} = r_P$, and hence $r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$.
+  Combining this with \autoref{eq:ncbounds}, we have $a(x) \leq m^*_P(x) \leq r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$, so the optimal measure of $x$ must exist in one of these intervals.
+  Now we construct $f$ and $g$ in such a way that for any $x \in I$, we can recover an approximate solution $y$ that lies in the same interval in which $m_P^*(x)$ lies.
+  If we were to find a solution $y$ in the same interval in which the optimal measure lies, say, interval $j$, then we would have
+  \begin{equation}\label{eq:ncsubinterval}
+    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x).
+  \end{equation}
+  Then, since
+  \begin{equation*}
+    \frac{m^*_P(x)}{a(x)} \leq {r_n}^{j + 1} \qquad \text{and} \qquad {r_n}^j \leq \frac{m_P(x, y)}{a(x)}
+  \end{equation*}
+  we find that
+  \begin{equation}\label{eq:ncresult}
+    R_P(x, y) = \frac{m_P^*(x)}{m_P(x, y)} = \frac{\frac{m^*_P(x)}{a(x)}}{\frac{m_P(x, y)}{a(x)}} \leq \frac{{r_n}^{j + 1}}{{r_n}^j} = r_n.
+  \end{equation}
+  So this is our goal when constructing $f$ and $g$.
+
+  To define $f$ we need some auxiliary functions.
+  Let $\mathcal{B}$ be the \NC{} circuit family guaranteed by \autoref{lem:ncinterval}.
+  Let $f_s$ be the function from the enhanced gap-introducing reduction of \autoref{lem:gap3}.
+  Let $\left\{C_\ell\right\}_{\ell \in \mathbb{N}}$ be the \FNC{} circuit family computing the Cook-Levin transformation, from \autoref{lem:cooklevin}.
+  Now we can define $f$ by
+  \begin{displaymath}
+    f(x, r) = \bigwedge_{i = 0}^{k - 1}{f_s(C_{n_2}(B_{n_1}, (x, i)))},
+  \end{displaymath}
+  for all $x \in I$, where $n_1$ is the length of the encoding of $(x, i)$ and $n_2$ is the length of the encoding of $B_{n_1}$ along with $(x, i)$.
+  Let us explain this function.
+  Since $B_{n_1}$ outputs a solution $y$ if it outputs 1, $C_{n_2}(B_{n_1}, (x, i))$ will have some gates, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
+  Applying $f_s$ to this Boolean formula produces a 3-CNF formula which has a gap behavior which will be discussed later (since it depends on $g_s$).
+  Observe that $f(x, r)$ is still a 3-CNF formula, since a conjunction of 3-CNF formulae is itself a 3-CNF formula.
+  We assume without loss of generality also that each formula $f_s(C_{n_2}(B_{n_1}, (x, i)))$ has the same number of clauses, say $M$.
+  \begin{todo}
+    Why is this without loss of generality?
+    Adding more clauses may change the fraction of satisfiable clauses\ldots
+  \end{todo}
+  \begin{todo}
+    Explain why $f$ is in \FNC.
+  \end{todo}
+
+  Now, to determine how to define $g$, first suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
+  For each $i$ with $0 \leq i \leq k - 1$, let $\phi_i = C_{n_2}(B_{n_1}, (x, i))$ and $\psi_i = f_s(\phi_i)$.
+  Let $\psi = f(x, r) = \bigwedge_i{\psi_i}$, so $\tau$ is a truth assignment to $\psi$ which satisfies some of the clauses.
+  Suppose $g_s$ is the \FNC{} function from the \NC{} enhanced gap-introducing reduction which produces solutions for $P$, as described in the preceding discussion.
+  For any $\tau$ that satisfies a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses in $\psi_i$ for all $i \leq k - 1$, if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
+  We will assume for now that $\tau$ does indeed satisfy a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses of $\psi_i$ for all $i$, and delay the proof of this fact until later.
+  Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
+  Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$.
+  \begin{todo}
+    Note that $T$ is a \FNC{} circuit.
+  \end{todo}
+
+  Let $j$ be the maximum $i$ such that $\tau_i$ satisfies $\phi_i$ (such a $j$ exists because $m^*_P(x)$ is in some interval, and for all intervals beyond that one, $\phi_i$ must not be satisfiable).
+  This implies that there is a $y$ in interval $j$ with
+  \begin{equation*}
+    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
+  \end{equation*}
+  which is exactly the statement of \autoref{eq:ncsubinterval}, and hence \autoref{eq:ncresult} follows.
+  Therefore, we define $g(x, \tau, r)$ as in \autoref{alg:ncg}.
+  Observe that $g$ is computable by an \FNC{} circuit family since $k$, the number of intervals to search, is a constant, and all other functions are \NC{} computable.
+  \begin{algorithm}
+    \caption{\NC{} algorithm that computes a $r_n$-approximate solution for $x$%
+      \label{alg:ncg}}
+    \begin{algorithmic}
+      \Require{$x \in I$, a truth assignment $\tau$, $r > 1$}
+      \Statex{}
+      \Function{$g$}{$x$, $\tau$, $r$}:
+        \For{$i \in \{0, 1, \dotsc, k - 1\}$}
+          \State{$\phi_i = C_{n_2}(B_{n_1}, (x, i))$}
+          \State{$\tau_i = g_s(\phi_i, \tau)$}
+        \EndFor
+        \State{$j \gets \max_{i = 0}^{k - 1}{\left\{i\,\middle|\, \tau_i \text{ satisfies } \phi_i\right\}}$} \\
+        \hspace{1.5em}\Return{$T(\phi_j, \tau_j)$}
+      \EndFunction
+    \end{algorithmic}
+  \end{algorithm}
+
+  We now complete the tasks which we delayed above.
+  We will prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$, and in doing so we will also choose the value of the constant $\alpha$.
+  By \autoref{lem:bounds}, we know that
+  \begin{equation*}
+    r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}.
+  \end{equation*}
+  By \autoref{lem:alpha} there exists a constant $\alpha$ that depends only on $r_P$ (defined by the approximation algorithm $A_P$) and $\epsilon$ (defined in a previous theorem) such that
+  \begin{equation}
+    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)}.
+  \end{equation}
+  Applying \autoref{lem:magic}, we have $r_i \leq 1 + \epsilon$.
+  In other words, $m_Q(\psi_i, \tau) \geq \frac{1}{1 + \epsilon} \cdot m^*_Q(\psi_i)$, which is what we intended to show.
+
+  In summary, we define our reduction $(f, g, \alpha)$ as follows for all $x \in I$, $r > 1$, and $\tau \in S_Q(f(x, r))$:
+  \begin{align*}
+    f(x, r) & = \bigwedge_{i = 0}^{k - 1}{f_s(C(B, (x, i)))} \\
+    g(x, \tau, r) & = T(\phi_j, g_s(\phi_j, \tau)) \\
+    \alpha & = 2(r_P \log{r_P} + r_P - 1)\frac{1 + \epsilon}{\epsilon}
+  \end{align*}
+\end{proof}
+
+\begin{theorem}[{\cite[Theorem~8.7]{book}}]\label{thm:ncminmax}
+  For every minimization problem $P \in \NCX$, where $P = (I, S, m_P, \min)$, there exists a maximization problem $Q \in \NCX$ such that $P \NCAPr Q$.
+\end{theorem}
+
+\begin{corollary}
+  \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
+\end{corollary}
+\begin{proof}
+  Follows from \autoref{thm:inncx}, \autoref{thm:ncmaxcomplete}, and \autoref{thm:ncminmax}.
 \end{proof}
 
 \section*{About this work}
