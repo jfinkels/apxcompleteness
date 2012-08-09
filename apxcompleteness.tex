@@ -96,10 +96,14 @@ A binary relation $R \subseteq \Sigma^* \times \Sigma^*$ is \emph{polynomially b
 \item $R$ is decidable by an \NC{} circuit family, and
 \item for all $x \in \Sigma^*$, we have $x \in L$ if and only if there exists a $y$ such that $(x, y) \in R$.
 \end{enumerate}
-(An equivalent definition for \NNC{} is given in \cite{wolf94}, where it is called \NNCpoly.)
+(A different but equivalent definition for \NNC{} is given in \cite{wolf94}, where it is called \NNCpoly.)
 
 The class of functions computable in polynomial time is denoted \FP.
 The class of functions computable by a \NC{} circuit family is denoted \FNC.
+
+\begin{theorem}[{\cite{wolf94}}]\label{thm:nncequalsnp}
+  $\NNC = \NP$.
+\end{theorem}
 
 \begin{lemma}
   \mbox{}
@@ -169,6 +173,8 @@ The complexity class \NNCO{} is the class of optimization problems $(I, S, m, t)
 \end{enumerate}
 The complexity class \NCX{} is the subclass of \NNCO{} in which for each optimization problem $P$ there exists an $r$-approximator, computable by an \FNC{} circuit family, for $P$, where $r(n) \in O(1)$ for all $n \in \mathbb{N}$.
 The complexity class \NCAS{} is the subclass of \NCX{} in which for each optimization problem $P$, defined by $P = (I, S, m, t)$, there exists a function $f \colon I \times \mathbb{N} \to \Sigma^*$ such that $R(x, f(x, k)) \leq 1 + \frac{1}{k}$ for all $x \in I$ and all $k \in \mathbb{N}$, and $f$ is computable by an \FNC{} circuit family with respect to the length of $x$.
+
+Note that since $\NNC \subseteq \NP$, it follow that $\NNCO \subseteq \NPO$.
 
 \subsubsection{Reductions among optimization problems}
 
@@ -244,7 +250,7 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
 \end{lemma}
 
 \begin{lemma}[{\cite[Example~6.5]{book}}]\label{lem:three}
-  There is a logarithmic space computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
+  There is an \NC{} computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
 \end{lemma}
 
 \subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
@@ -348,6 +354,37 @@ In this section we use the PCP theorem to prove \textsc{Maximum 3-Satisfiability
 We do this by reducing \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}, and then reducing that to \textsc{Maximum 3-Satisfiability}, ensuring that the reductions compose.
 We first prove that the problem is hard to approximate in polynomial time, then translate the proof to the efficient and highly parallel setting to show that the problem is also hard to approximate in parallel.
 
+\begin{definition}[\textsc{$k$-Function Satisfiability}]
+  \mbox{}
+  \begin{instance}
+    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables, where $k \geq 2$
+  \end{instance}
+  \begin{question}
+    Does there exist a truth assignment $\tau$ such that all the functions are satisfied?
+  \end{question}
+\end{definition}
+
+\begin{definition}[\textsc{Maximum $k$-Function Satisfiability}]
+  \mbox{}
+  \begin{instance}
+    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables, where $k \geq 2$
+  \end{instance}
+  \begin{solution}
+    a truth assignment $\tau$ to the variables
+  \end{solution}
+  \begin{measure}
+   the number of satisfied functions
+  \end{measure}
+\end{definition}
+
+\begin{todo}
+  Show that $\textsc{Maximum \textit{k}-Satisfiability} \in \NNCO$, and hence in $\NPO$.
+\end{todo}
+
+\begin{todo}
+  Show that $\textsc{Maximum 3-Satisfiability} \in \NNCO$, and hence in $\NPO$.
+\end{todo}
+
 \subsection{Hardness of polynomial time approximation}\label{ssc:phardness}
 
 The main tool of this section is the following theorem, which provides sufficient conditions for an optimization problem in \NPO{} to be hard to approximate.
@@ -401,73 +438,51 @@ The main tool of this section is the following theorem, which provides sufficien
   The conclusion follows from \autoref{thm:hard}.
 \end{proof}
 
-In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, we will show a reduction to it from \textsc{Satisfiability} using an intermediate maximization problem, \textsc{Maximum $k$-Function Satisfiability}.
-
-\begin{definition}[\textsc{$k$-Function Satisfiability}]
-  \mbox{}
-  \begin{instance}
-    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables, where $k \geq 2$
-  \end{instance}
-  \begin{question}
-    Does there exist a truth assignment $\tau$ such that all the functions are satisfied?
-  \end{question}
-\end{definition}
-
-\begin{definition}[\textsc{Maximum $k$-Function Satisfiability}]
-  \mbox{}
-  \begin{instance}
-    finite set of Boolean variables $x_1, x_2, \ldots, x_n$ and a finite set of  functions $g_1, g_2, \ldots, g_m$, each of which is a function of $k$ of the variables, where $k \geq 2$
-  \end{instance}
-  \begin{solution}
-    a truth assignment $\tau$ to the variables
-  \end{solution}
-  \begin{measure}
-   the number of satisfied functions
-  \end{measure}
-\end{definition}
-
-Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
+In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, we will show a reduction to it from \textsc{Satisfiability} using \textsc{Maximum $k$-Function Satisfiability} as an intermediate maximization problem.
 
 \begin{lemma}[{\cite[Lemma~29.10]{vazirani}}]\label{lem:intro}
-  There is an enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability} with gap parameter $1$, for some $k \in \mathbb{N}$.
+  There is an \NC{} (and more generally, a polynomial time) enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability} with gap parameter $1$, for some $k \in \mathbb{N}$.
 \end{lemma}
 \begin{proof}
   For the sake of brevity, we will let $P = \textsc{Satisfiability}$ and $Q = \textsc{Maximum \textit{k}-Function Satisfiability}$.
 
   By \autoref{thm:pcp}, there exists a $(\lg n, 1)$-verifier for $P$.
   Let $\phi$ be a Boolean formula of length $n$, which will be the input to the verifier.
-  Let $V$ be that verifier, let $c$ and $q$ be the constants such that $V$ uses at most $c \lg n$ random bits and at most $q$ bits of the proof.
-  For simplicity, let the length of the random string input to $V$ be exactly $c \lg n$.
-  When considering all possible random strings $\rho$ from which $V$ reads its random bits, $V$ reads a total of at most $q \cdot 2^{c \lg n}$ bits of the proof, which equals $q \cdot n^c$.
-  Let $B$ be the set of at most $q \cdot n^c$ Boolean variables representing the values of the bits of the proof at the queried locations.
+  Let $V$ be that verifier, let $c_0$ and $q$ be the constants such that $V$ uses at most $c_0 \lg n$ random bits and at most $q$ bits of the proof.
+  For simplicity, let the length of the random string input to $V$ be exactly $c_0 \lg n$.
+  When considering all possible random strings $\rho$ from which $V$ reads its random bits, $V$ reads a total of at most $q \cdot 2^{c_0 \lg n}$ bits of the proof, which equals $q \cdot n^{c_0}$.
+  Let $B$ be the set of at most $q \cdot n^{c_0}$ Boolean variables representing the values of the bits of the proof at the queried locations.
 
-  We let $k = q$, and then for each string $\rho$ (of length $c \lg n$), we will define a function $g_\rho$ which is a function of at most $q$ of the Boolean variables from $B$.
+  We let $k = q$, and then for each string $\rho$ (of length $c_0 \lg n$), we will define a function $g_\rho$ which is a function of at most $q$ of the Boolean variables from $B$.
   Consider the Cook-Levin transformation of the operation of the verifier $V$ on input $(\phi, \tau; \rho)$, where $\phi$ is a Boolean formula (an instance of $P$) and $\tau$ is a satisfying assignment to the variables of $\phi$.
   Let $\psi$ be the Boolean formula over the variables $z_1, z_2, \ldots, z_{h(n)}$ produced by this transformation, where $h(n)$ is the polynomial bounding the size of the Boolean formula produced by the Cook-Levin transformation.
   Some of these variables depend on the bits of $\phi$, some depend on $q$ bits of $\tau$, and some depend on the bits of $\rho$ (and these sets may intersect).
   If we let $\phi$ and $\rho$ be fixed, however, we can define $g_\rho$ to be the restriction of the Boolean function $\psi$ to the $q$ variables of $\psi$ corresponding to the $q$ bits of $\tau$ read by the verifier on input $(\phi, \tau; \rho)$.
 
-  Let $G = \left\{g_\rho \,\middle|\, \rho \in \Sigma^* \textnormal{ and } |\rho| = c \lg n \right\}$.
-  Notice that $|G| = 2^{c \lg n} = n^c$.
+  Let $G = \left\{g_\rho \,\middle|\, \rho \in \Sigma^* \textnormal{ and } |\rho| = c_0 \lg n \right\}$.
+  Notice that $|G| = 2^{c_0 \lg n} = n^{c_0}$.
   Now we define the enhanced gap-introducing reduction as follows for all Boolean formulae $\phi$ of length $n$, and all truth assignments $\tau$ to the variables in $B$ (\emph{not} the variables of $\phi$):
   \begin{align*}
     f(\phi) & = (B, G) \\
-    c(\phi) & = n^c \\
+    c(\phi) & = n^{c_0} \\
     \epsilon & = 1 \\
     g(\phi, \tau) & = \tau^+
   \end{align*}
   where $\tau^+$ is the extension of $\tau$ in which any variables in $\phi$ not in $B$ are assigned an arbitrary binary value (say 0).
-  The function $c$ is polynomial time computable because exponentiation of $n$ to a constant power is polynomial time computable.
-  The function $f$ is polynomial time computable because both the size of $B$ and the size of $G$ are polynomial in $n$, and the length of each of their elements is polynomial in $n$ as well.
-  The function $g$ is polynomial time computable because it simply copies $\tau$ to its output along with a polynomial number of extra bits.
+  The function $c$ is \NC{} computable because multiplication is in \NC{}, and there are a constant number of multiplications.
+  The function $f$ is \NC{} computable because $B$ is simply a list of variables which requires almost no computation and the functions in $G$ can be constructed by $n^{c_0}$ processors in parallel, each of which constructs the function $g_\rho$ by a \ldots.
+  \begin{todo}
+    How is each function $g_\rho$ in $G$ constructed?
+  \end{todo}
+  The function $g$ is \NC{} computable because it simply copies $\tau$ to its output along with a polynomial number of extra bits.
 
   If $\phi \in P$ then there is a truth assignment $\tau$ such that $V$ accepts on input $(\phi, \tau; \rho)$ with probability 1 over the random strings $\rho$.
-  In this case, $m^*(f(\phi)) = m^*((B, G)) = n^c$, since all the functions $g_\rho$ in $G$ are satisfied.
+  In this case, $m^*(f(\phi)) = m^*((B, G)) = n^{c_0}$, since all the functions $g_\rho$ in $G$ are satisfied.
   If $\phi \notin P$ then for every truth assignment, the verifier accepts with probability at most $\frac{1}{2}$.
-  In this case, every truth assignment satisfies less than half of all the $n^c$ functions in $G$.
-  Hence $m^*(f(\phi)) = m^*((B, G)) < \frac{1}{2} \cdot n^c = \frac{1}{1 + \epsilon} c(\phi)$.
+  In this case, every truth assignment satisfies less than half of all the $n^{c_0}$ functions in $G$.
+  Hence $m^*(f(\phi)) = m^*((B, G)) < \frac{1}{2} \cdot n^{c_0} = \frac{1}{1 + \epsilon} c(\phi)$.
   
-  To show that this gap-introducing reduction is enhanced, we suppose $\tau$ is a satisfying assignment for $f(\phi)$ which satisfies at least $\frac{1}{2} \cdot n^c$ of the functions in $f(\phi)$.
+  To show that this gap-introducing reduction is enhanced, we suppose $\tau$ is a satisfying assignment for $f(\phi)$ which satisfies at least $\frac{1}{2} \cdot n^{c_0}$ of the functions in $f(\phi)$.
   Let $R_P$ be the \NP-relation corresponding to $P$.
   Our goal is to show that $(\phi, g(\phi, \tau)) \in R_P$ if and only if $\phi \in P$.
   By \autoref{lem:xinp}, it suffices to show that $\phi \in P$ implies $(\phi, g(\phi, \tau)) \in R_P$.
@@ -476,11 +491,11 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   Then $g(\phi, \tau)$, which equals $\tau^+$, is a truth assignment on which the verifier $V$ will accept with probability 1 (it ignores the bits of $\tau^+$ not in $\tau$).
   Hence $(\phi, g(\phi, \tau)) \in R_P$.
 
-  Therefore we have constructed a polynomial time enhanced gap-introducing reduction with gap parameter 1 from $P$ to $Q$ (that is, from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}).
+  Therefore we have constructed an \NC{} enhanced gap-introducing reduction with gap parameter 1 from $P$ to $Q$ (that is, from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}).
 \end{proof}
 
 \begin{lemma}[{\cite[Proof of Theorem~29.7]{vazirani}}]\label{lem:decision}
-  There is a polynomial time many-one reduction from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
+  There is an \NC{} many-one reduction from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
 \end{lemma}
 \begin{proof}
   Let $(\{x_1, x_2, \ldots, x_n\}, \{f_1, f_2, \ldots, f_m\})$ be an instance of \textsc{$k$-Function Satisfiability}.
@@ -488,16 +503,18 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   Call this Boolean formula $\psi_i$, and let $\psi = \bigwedge_{i = 1}^m{\psi_i}$.
   Observe that the given instance of \textsc{$k$-Function Satisfiability} is satisfiable if and only if $\psi$ is satisfiable.
 
-  Let $T$ be the polynomial time computable function from \autoref{lem:three}.
+  Let $T$ be the \NC{} computable function from \autoref{lem:three}.
   Now we can define the reduction $g$ by $g(\phi) = T(\psi)$ for all Boolean formulae $\phi$.
   The total number of clauses in $\psi$ is at most $m \cdot 2 ^ k$, so the total number of clauses in $T(\psi)$ is at most $m \cdot 2^k \cdot (k - 2)$ (still a polynomial in the length of the input since $k$ is considered a fixed constant).
-  It is clear that $g$ is polynomial time computable, and $\phi$ is satisfiable if and only if $\psi$ is satisfiable if and only if $T(\psi)$ is satisfiable.
+  $g$ is \NC{} computable because each of the $m$ functions can be transformed by an independent processor, each processor performs the transformation from $f_i$ to $\psi_i$ in a constant amount of time, and for each processor the transformation fron $\psi_i$ to $T(\psi_i)$ is computable in \NC.
+  \begin{todo}
+    Check that the transformation from $f_i$ to $\psi_i$ is computable in \NC.
+  \end{todo}
+  Finally, $\phi$ is satisfiable if and only if $\psi$ is satisfiable if and only if $T(\psi)$ is satisfiable.
 \end{proof}
 
 \begin{lemma}\label{lem:opt}
-  There exists a polynomial time enhanced gap-preserving reduction from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}.
-  %, with preservation factor $\alpha$ defined by $\alpha = 2^{k + 1} - 1$.
-  % which is greater than $\alpha = 2^{k + 1} \cdot (k - 2) - 1$.
+  There exists an \NC{} (and more generally, a polynomial time) enhanced gap-preserving reduction from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}.
 \end{lemma}
 \begin{proof}
   For brevity, we let $P = \textsc{Maximum \textit{k}-Function Satisfiability}$ and $Q = \textsc{Maximum 3-Satisfiability}$.
@@ -514,7 +531,14 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
     \beta & = 2^{k + 1} \cdot (k - 2) - 1 \qquad \text{(see explanation below)},
   \end{align*}
   where $\tau|_U$ represents the restriction of the satisfying truth assignment $\tau$ to only the variables of $U$.
-  Intuitively, the definitions of $c_P$ and $c_Q$ suggest that if all functions in $F$ are satisfiable then all clauses in $f(\pair{U}{F})$ will be satisfiable (there are at most $M \cdot 2^k \cdot (k - 2)$ of them, from the proof of \autoref{lem:decision}), and the definitions of $\alpha$ and $\beta$ suggest ...
+  Intuitively, the definitions of $c_P$ and $c_Q$ suggest that if all functions in $F$ are satisfiable then all clauses in $f(\pair{U}{F})$ will be satisfiable (there are at most $M \cdot 2^k \cdot (k - 2)$ of them, from the proof of \autoref{lem:decision}), and the definitions of $\alpha$ and $\beta$ suggest \ldots
+  \begin{todo}
+    What do the definitions of $\alpha$ and $\beta$ suggest, intuitively?
+  \end{todo}
+
+  $f$ is computable by an \NC{} circuit family because $f_0$ is.
+  $g$ is computable by an \NC{} circuit family because it simply chooses a subset of the bits of $\tau$.
+  $c_P$ and $c_Q$ are computable in \NC{} because they simply output the length of their respective inputs (or part of their inputs).
 
   Suppose $m^*_P(\pair{U}{F}) \geq c_P(\pair{U}{F}) = |F|$, which implies that all the functions in $F$ are satisfiable.
   By the correctness of the many-one reduction $f_0$, all functions in $F$ are satisfiable if and only if all clauses in $f_0(\pair{U}{F})$ are satisfiable.
@@ -539,17 +563,12 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \end{proof}
 
 \begin{lemma}\label{lem:gap3}
-  There is an enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
-  %% with gap parameter $\epsilon$ defined by
-  %% \begin{displaymath}
-  %%   \epsilon = \frac{1}{2^{k + 1} - 1},
-  %% \end{displaymath}
-  %% where $k$ is a constant coming from the intermediate reduction from \textsc{Maximum $k$-Function Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+  There is an \NC{} (and more generally, a polynomial time) enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
 \end{lemma}
 \begin{proof}
   We will use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
 
-  We will let $(f, g, c, \epsilon)$ be the enhanced gap-introducing reduction and let $(f', g', c_Q, c_T, \alpha, \beta)$ be the enhanced gap-preserving reduction.
+  We will let $(f, g, c, \epsilon)$ be the \NC{} enhanced gap-introducing reduction and let $(f', g', c_Q, c_T, \alpha, \beta)$ be the \NC{} enhanced gap-preserving reduction.
   The enhanced gap-introducing reduction of \autoref{lem:intro} has
   \begin{align*}
     c(\phi) & = n^{c_0}, \text{ and} \\
@@ -569,7 +588,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
   Since $c(\phi) = n^{c_0}$ and $c_Q(f(\phi)) = c_Q(\pair{B}{G}) = |G| = n^{c_0}$, the first inequality is satisfied.
   Since $\frac{1}{1 + \epsilon} \cdot c(\phi) = \frac{1}{2} \cdot n^{c_0}$ and $\frac{1}{1 + \alpha} \cdot c_Q(f(\phi)) = \frac{1}{2} \cdot c_Q(\pair{B}{G}) = \frac{1}{2} \cdot n^{c_0}$, the second inequality is also satisfied.
 
-  Therefore we can conclude that there is an enhanced gap-introducing reduction $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}, where
+  Therefore we can conclude that there is an \NC{} enhanced gap-introducing reduction $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}, where
   \begin{align*}
     \tilde{f}(\phi) & = f'(f(\phi)) \\
     & = f'(\pair{B}{G}) \\
@@ -589,7 +608,7 @@ Observe that $\textsc{Maximum \textit{k}-Satisfiability} \in \NPO$.
 \end{proof}
 
 Although \autoref{lem:gap3} specifies an enhanced gap-introducing reduction, the following theorem does not require that the reduction be enhanced.
-However, we provide the enhanced reduction because \autoref{lem:gap3} will be used in \autoref{sec:complete}, in order to prove that \textsc{Maximum 3-Satisfiability} is complete for the class \APX.
+However, we provide the enhanced reduction because \autoref{lem:gap3} will be used in \autoref{sec:complete}, in order to prove that \textsc{Maximum 3-Satisfiability} is complete for the class \APX (and \NCX).
 
 \begin{theorem}[{\cite[Theorem~6.3]{book}} and {\cite[Corollary~29.8]{vazirani}}]\label{thm:hard}
   There is a constant $k$ such that no polynomial time $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\P = \NP$, for all $r < 2^{k + 1} \cdot (k - 2)$.
@@ -655,11 +674,10 @@ By \autoref{lem:gap3}, we already know that there exists an \NC{} enhanced gap-i
 
 We can now give another perspective on why \textsc{Maximum 3-Satisfiability} has no polynomial time approximation scheme unless $\P = \NP$, and why it has no \NC{} approximation scheme unless $\NC = \NNC$.
 In this section we prove that this problem is in fact complete for \APX{} under polynomial time AP reductions, and complete for \NCX{} under \NC{} AP reductions.
-This means that if there were a polynomial time approximation scheme for this problem, then there would be one for all problems in \APX, and if there were a \NC{} approximation scheme for it, then there would be one for all problems in \NCX.
+This means that if there were a polynomial time approximation scheme for this problem, then there would be one for all problems in \APX, and if there were an \NC{} approximation scheme for it, then there would be one for all problems in \NCX.
 
-What does it mean for an optimization problem to be both complete for \APX{} under polynomial time reductions and complete for \NCX{} under polynomial time reductions?
 \begin{todo}
-  What \emph{does} this mean?
+  What does it mean for an optimization problem to be both complete for \APX{} under polynomial time reductions and complete for \NCX{} under polynomial time reductions?
 \end{todo}
 
 \subsection{\texorpdfstring{\APX}{APX}-completeness}\label{ssc:apxcomplete}
@@ -671,8 +689,7 @@ Second, we will show that it is complete under AP reductions for the class of ma
 Finally, we will show that there is an AP reduction from every minimization problem to some maximization problem in \APX.
 
 \begin{theorem}\label{thm:inncx}\label{thm:inapx}
-  $\textsc{Maximum 3-Satisfiability} \in \NCX$.
-  More generally, $\textsc{Maximum 3-Satisfiability} \in \APX$.
+  \textsc{Maximum 3-Satisfiability} is in \NCX, and more generally in \APX.
 \end{theorem}
 \begin{proof}
   \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Maximum Satisfiability}, and there exists a \FNC{} 2-approximator for \textsc{Maximum Satisfiability} (see \cite[Program~3.1]{book}).
