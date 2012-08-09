@@ -115,8 +115,8 @@ The class of functions computable by a \NC{} circuit family is denoted \FNC.
 
 \subsection{Probabilistically checkable proofs}
 
-A \emph{$(\lg n, 1)$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $|x| = n$, $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $c \lg n$ random bits from $\rho$ and reads (with random access) at most $q$ bits from $\pi$, for some constants $c \in \mathbb{N}$ and $q \in \mathbb{N}$.
-Define the complexity class $\PCP(\lg n, 1)$ (for \emph{probabilistically checkable proofs} with $O(\lg n)$ random bits and $O(1)$ proof queries) as follows: a decision problem $L \in \PCP(\lg n, 1)$ if there exists a $(\lg n, 1)$-verifier $V$ and a polynomial $p$ such that
+A \emph{$(r(n), q(n))$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $|x| = n$, $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $O(r(n))$ random bits from $\rho$ and reads (with random access) at most $O(q(n))$ bits from $\pi$.
+Define the complexity class $\PCP(r(n), q(n))$ (for \emph{probabilistically checkable proofs} with $O(r(n))$ random bits and $O(q(n))$ proof queries) as follows: a decision problem $L \in \PCP(r(n), q(n))$ if there exists a $(r(n), q(n))$-verifier $V$ and a polynomial $p$ such that
 \begin{enumerate}
 \item
   if $x \in L$ then there exists a $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$ such that
@@ -296,6 +296,8 @@ The interesting case is the converse, because it requires that $g$ produce a wit
 \end{definition}
 
 Intuitively, the gap in $P$ scales with $\alpha$ and the gap in $Q$ with $\beta$.
+Also, we note here that although Vazirani allows $\alpha$ and $\beta$ to be functions of the length of the input $x$, we require them to be constants both for consistency with the definition of the gap-introducing reduction and for simplicity since we will not need this relaxation.
+
 Like the enhanced gap-introducing reduction, there is also an enhanced gap-preserving reduction.
 
 \begin{definition}
@@ -337,6 +339,7 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
   Hence $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
 
   Since we have proven the three conditions required for an enhanced gap-introducing reduction, we finally conclude that $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $T$.
+  The functions $\tilde{f}$, $\tilde{g}$, and $\tilde{c}$ are all polynomial time computable because polynomial time computable functions compose.
 \end{proof}
 
 \section{Hardness of approximation}\label{sec:hardness}
@@ -668,10 +671,12 @@ Second, we will show that it is complete under AP reductions for the class of ma
 Finally, we will show that there is an AP reduction from every minimization problem to some maximization problem in \APX.
 
 \begin{theorem}\label{thm:inncx}\label{thm:inapx}
-  $\textsc{Maximum 3-Satisfiability} \in \APX$.
+  $\textsc{Maximum 3-Satisfiability} \in \NCX$.
+  More generally, $\textsc{Maximum 3-Satisfiability} \in \APX$.
 \end{theorem}
 \begin{proof}
-  \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Satisfiability}, and there exists a polynomial time 2-approximator for \textsc{Satisfiability} (see \cite[Program~3.1]{book}).
+  \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Maximum Satisfiability}, and there exists a \FNC{} 2-approximator for \textsc{Maximum Satisfiability} (see \cite[Program~3.1]{book}).
+  Since $\NCX \subseteq \APX$, it is also in \APX.
 \end{proof}
 
 Before proceeding to \autoref{thm:maxcomplete}, we require the following algebraic rule.
@@ -971,7 +976,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
 \end{corollary}
 \begin{proof}
-  Follows from \autoref{thm:inapx}, \autoref{thm:maxcomplete}, and \autoref{thm:minmax}.
+  Follows from \autoref{thm:inncx}, \autoref{thm:maxcomplete}, and \autoref{thm:minmax}.
 \end{proof}
 
 \subsection{\texorpdfstring{\NCX}{NCX}-completeness}\label{ssc:ncxcomplete}
