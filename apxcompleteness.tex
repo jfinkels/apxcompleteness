@@ -46,6 +46,9 @@
 \newcommand{\ceil}[1]{\lceil{#1}\rceil}
 \newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 %\newcommand{\lb}{\left\{}
+\newcommand{\mornt}{\leq_m}
+\newcommand{\mor}{\mornt^P}
+\newcommand{\mornc}{\mornt^{NC}}
 \newcommand{\pair}[2]{{\left\langle{#1}, {#2}\right\rangle}}
 %\newcommand{\pb}{\textsf{pb}}
 %\newcommand{\rb}{\right\}}
@@ -116,6 +119,12 @@ The class of functions computable by a \NC{} circuit family is denoted \FNC.
 \begin{lemma}
   The addition, subtraction, multiplication, division, and exponentiation functions are all computable by \NC{} circuit families.
 \end{lemma}
+
+\subsection{Reductions among decision problems}
+
+If $P$ and $Q$ are two decision problems, we say \emph{$P$ many-one reduces to $Q$} and write $P \mornt Q$ if there exists a function $f$ such that $x \in P$ if and only if $f(x) \in Q$.
+If $f$ is computable in polynomial time (respectively, \NC) then we say the reduction is a polynomial time (respectively, \NC) many-one reduction and write $P \mor Q$ (respectively, $P \mornc Q$).
+For any complexity class $\mathcal{C}$ and $Q \in \mathcal{C}$, if for all problems $P \in \mathcal{C}$ we have $P$ many-one reduces to $Q$, then we say $Q$ is complete for $\mathcal{C}$ under many-one reductions.
 
 \subsection{Probabilistically checkable proofs}
 
@@ -244,6 +253,29 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
     the number of satisfied clauses in $\phi$
   \end{measure}
 \end{definition}
+
+\begin{lemma}[Cook-Levin Theorem]\label{lem:cooklevin}
+  There exists a logarithmic-space (and more generally an \NC{} and \P) computable function $C$ which takes two inputs, the description of a Turing machine $B$ and a tuple of its arguments $(x_1, x_2, \dotsc, x_k)$, and outputs a Boolean formula $\phi$ whose variables represent the bits of the arguments to $C$, such that $B(x_1, x_2, \dotsc, x_k)$ accepts if and only if $\phi$ is satisfiable.
+\end{lemma}
+
+\begin{todo}
+  State the type of Turing machine that $B$ must be (must it be a nondeterministic polynomial time Turing machine?).
+  State the length of the description of $B$.
+  State the length of the output $\Phi$.
+\end{todo}
+
+\begin{todo}
+  Find a reference which explicitly states that the Cook-Levin reduction is computable in logarithmic space.
+\end{todo}
+
+\begin{lemma}\label{lem:satisnnccomplete}
+  $\textsc{Satisfiability}$ is complete for \NNC{} under \NC{} many-one reductions, and more generally it is complete for \NP{} under polynomial time many-one reductions.
+\end{lemma}
+\begin{proof}
+  Since $\NP = \NNC$ and $\NC \subseteq \P$ it suffices to show that the problem is complete in $\NP$ under $\NC$ reductions.
+  By \autoref{lem:cooklevin}, there is a logarithmic space computable (and hence \NC{} computable) function which maps any nondeterministic polynomial time Turing machine to an equivalent Boolean formula.
+  This function satisfies the requirements of an \NC{} many-one reduction.
+\end{proof}
 
 \begin{lemma}\label{lem:half}
  At least half of the clauses of any Boolean formula in conjunctive normal form are always satisfiable.
@@ -392,13 +424,19 @@ We first prove that the problem is hard to approximate in polynomial time, then 
   \end{measure}
 \end{definition}
 
-\begin{todo}
-  Show that $\textsc{Maximum \textit{k}-Satisfiability} \in \NNCO$, and hence in $\NPO$.
-\end{todo}
+\begin{lemma}
+  $\textsc{Maximum \textit{k}-Function Satisfiability} \in \NNCO$, and more generally in $\NPO$.
+\end{lemma}
+\begin{proof}
+  It is clear that the instance set is decidable in \NC.
+  By \autoref{lem:evaluation}, the solution set is decidable in \NC.
+  To compute the measure function, evaluate each of the functions and then compute the total number of those that are satisfied.
+  Since Boolean function evaluation is in \NC{} and computing the sum of $m$ numbers is in \NC, the measure function is computable by an \NC{} circuit family.
+\end{proof}
 
-\begin{todo}
-  Show that $\textsc{Maximum 3-Satisfiability} \in \NNCO$, and hence in $\NPO$.
-\end{todo}
+\begin{lemma}\label{lem:maxsatnnco}
+  $\textsc{Maximum 3-Satisfiability} \in \NNCO$, and more generally in $\NPO$.
+\end{lemma}
 
 \subsection{Hardness of polynomial time approximation}\label{ssc:phardness}
 
@@ -632,7 +670,7 @@ However, we provide the enhanced reduction because \autoref{lem:gap3} will be us
   Follows from \autoref{lem:gap3} and \autoref{thm:gap}.
 \end{proof}
 
-\begin{corollary}
+\begin{corollary}\label{cor:satnotinptas}
   $\textsc{Maximum 3-Satisfiability} \notin \PTAS$ unless $\P = \NP$.
 \end{corollary}
 \begin{proof}
@@ -641,12 +679,9 @@ However, we provide the enhanced reduction because \autoref{lem:gap3} will be us
 
 \subsection{Hardness of parallel approximation}\label{ssc:nchardness}
 
-\begin{todo}
-  Need to define \NNC-completeness.
-\end{todo}
-
 \begin{theorem}[\NC{} version of \autoref{thm:gap}]\label{thm:ncgap}
-  Let $P$ be an \NNC-complete decision problem and $Q$ be a maximization problem in \NNCO.
+  Let $P$ be a decision problem which is complete for \NNC{} under \NC{} many-one reductions.
+  Let $Q$ be a maximization problem in \NNCO.
   If there is an \NC{} gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no \FNC{} $r$-approximator for $P$ unless $\NC = \NNC$.
 \end{theorem}
 \begin{proof}
@@ -654,36 +689,27 @@ However, we provide the enhanced reduction because \autoref{lem:gap3} will be us
 \end{proof}
 
 \begin{corollary}\label{cor:notinncas}
-  Let $P$ be an \NNC-complete decision problem and $Q$ be a maximization problem in \NNCO.
-  If there is an \NC{} gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$ then $Q \notin \NCAS$ unless $\NC = \NNC$.
+  Let $P$ be a decision problem which is complete for \NNC{} under \NC{} many-one reductions.
+  Let $Q$ be a maximization problem in \NNCO.
+  If there is an \NC{} gap-introducing reduction from $P$ to $Q$ then $Q \notin \NCAS$ unless $\NC = \NNC$.
 \end{corollary}
 \begin{proof}
   The proof is similar to the proof of \autoref{cor:notinptas}.
 \end{proof}
 
 By \autoref{lem:gap3}, we already know that there exists an \NC{} enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+By \autoref{lem:satisnnccomplete} we know that \textsc{Satisfiability} is complete for \NNC{} under \NC{} many-one reductions, and by \autoref{lem:maxsatnnco} we know that $\textsc{Maximum 3-Satisfiability}$ is in \NNCO.
+Therefore we have the following analogs of \autoref{thm:hard} and \autoref{cor:satnotinptas}.
 
-\begin{todo}
-  Need to show that \textsc{Satisfiability} is \NNC-complete.
-\end{todo}
-
-\begin{todo}
-  Need to show $\textsc{Maximum \textit{k}-Satisfiability} \in \NNCO$.
-\end{todo}
-
-\begin{theorem}[\NC{} version of \autoref{thm:hard}]\label{thm:nchard}
+\begin{theorem}\label{thm:nchard}
   There is a constant $k$ such that no \FNC{} $r$-approximator for \textsc{Maximum 3-Satisfiability} exists unless $\NC = \NNC$, for all $r < 2^{k + 1} \cdot (k - 2)$.
 \end{theorem}
-\begin{proof}
-  Follows from \autoref{lem:gap3} and \autoref{thm:ncgap}.
-\end{proof}
 
 \begin{corollary}
   $\textsc{Maximum 3-Satisfiability} \notin \NCAS$ unless $\NC = \NNC$.
 \end{corollary}
-\begin{proof}
-  Follows from \autoref{thm:nchard} and \autoref{cor:notinncas}.
-\end{proof}
+
+Finally, we remark that $\NC = \NNC = \NP$ implies $\P = \NP$, so it should be considered a more severe consequence
 
 \section{Completeness in approximation classes}\label{sec:complete}
 
@@ -693,6 +719,12 @@ This means that if there were a polynomial time approximation scheme for this pr
 
 \begin{todo}
   What does it mean for an optimization problem to be both complete for \APX{} under polynomial time reductions and complete for \NCX{} under polynomial time reductions?
+\end{todo}
+
+\begin{todo}
+  Find a reference for the following statement (probably in the Ausiello book): if $P$ is \APX-complete and $P \in \PTAS$ then $\P = \NP$.
+  Hence (we should note), \APX-completeness implies hardness of approximation.
+  The key component which implies both $P \notin \PTAS$ and $P$ is \APX-complete is the gap-introducing reduction.
 \end{todo}
 
 \subsection{\texorpdfstring{\APX}{APX}-completeness}\label{ssc:apxcomplete}
@@ -750,15 +782,6 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
   Since all operations used during the execution of $B$ are polynomial time computable, $B$ runs in polynomial time.
   Since $B$ accepts if and only if there exists a solution $y$ with the stated bounds, the conclusion follows.
 \end{proof}
-
-\begin{lemma}[Cook-Levin Theorem]\label{lem:cooklevin}
-  There exists a logarithmic-space (and more generally an \NC{} and \P) computable function $C$ which takes two inputs, the description of a Turing machine and a tuple of its arguments, and outputs a Boolean formula $\Phi$ whose variables are the bits of the arguments to $C$, such that $C$ accepts if and only if $\Phi$ is satisfiable.
-  That is, $B(x, i)$ accepts if and only if $\Phi(x, i)$ is satisfiable.
-\end{lemma}
-
-\begin{todo}
-  Find a reference which explicitly states that the Cook-Levin reduction is computable in logarithmic space.
-\end{todo}
 
 \begin{lemma}\label{lem:bounds}
   Let $r, r_i, k > 1$.
