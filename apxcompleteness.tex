@@ -700,14 +700,14 @@ Finally, we will show that there is an AP reduction from every minimization prob
   Since $\NCX \subseteq \APX$, it is also in \APX.
 \end{proof}
 
-Before proceeding to \autoref{thm:maxcomplete}, we require the following algebraic rule.
+Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata.
 
 \begin{lemma}\label{lem:interval}
   Let $P \in \APX$, with $P = (I, S, m, \max)$, and let $A$ be the $r$-approximator for $P$ for some constant $r$.
   Let $r_n \geq 1$.
   There exists a nondeterministic polynomial time algorithm $B$ such that on input $(x, i)$, where $x \in I$ and $i \in \mathbb{N}$, $B$ decides if there exists a solution $y$ with
   \begin{equation*}
-    {r_n}^i \cdot m(x, A(x)) \leq m(x, y) \leq {r_n}^j \cdot m(x, A(x)).
+    {r_n}^i \cdot m(x, A(x)) \leq m(x, y) \leq {r_n}^{i + 1} \cdot m(x, A(x)).
   \end{equation*}
   Furthermore, if a solution $y$ exists, $B$ writes $y$ before accepting.
 \end{lemma}
