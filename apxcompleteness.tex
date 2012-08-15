@@ -665,17 +665,21 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following algebra
   Let $r \in \mathbb{Q}^+$ with $r > 1$, let $r_n = 1 + \alpha \cdot (r - 1)$, and let $k = \log_{r_n}{r_P}$.
   Then
   \begin{equation*}
-    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)}.
+    r < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon}.
   \end{equation*}
 \end{lemma}
 \begin{proof}
   Since $r_n = 1 + \alpha \cdot (r - 1)$, we have $r = 1 + \frac{r_n - 1}{\alpha}$, so we intend to show
   \begin{equation*}
-    1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+    1 + \frac{r_n - 1}{\alpha} < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon},
   \end{equation*}
   or in other words,
   \begin{equation*}
-    \alpha > \frac{2k(1 + \epsilon)(r_n - 1)}{\epsilon}.
+    \alpha > \frac{(r_n - 1) \left[2k \cdot (1 + \epsilon) - \epsilon\right]}{\epsilon}.
+  \end{equation*}
+  In fact, we will prove the stronger lower bound
+  \begin{equation*}
+    \alpha > \frac{(r_n - 1)\left[2k \cdot (1 + \epsilon)\right]}{\epsilon}.
   \end{equation*}
 
   Since $k$ is defined to equal $\ceil{\log_{r_n}{r_P}}$, we have
@@ -698,18 +702,24 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following algebra
   Let $r, r_i, k, \epsilon \in \mathbb{R}^+$ with $r > 1$, $r_i > 1$, $k > 1$, and $\epsilon > 0$.
   If
   \begin{equation*}
-    r_i \leq \frac{1}{1 - 2k(\frac{r - 1}{r} - 1)} \qquad \text{and} \qquad r < 1 + \frac{\epsilon}{2k(1 + \epsilon)},
+    r_i \leq \frac{1}{1 - 2k(\frac{r - 1}{r})} \qquad \text{and} \qquad r < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon},
   \end{equation*}
   then $r_i < 1 + \epsilon$.
 \end{lemma}
 \begin{proof}
-  \begin{todo}
-    Figure out what this magic is; the book suggests it is ``simple algebraic manipulations'', but I can't figure it out.
-
-    One problem may be that in the discussion preceding the following theorem in the book, they describe a truth assignment satisfying at least a $1 - \epsilon$ factor of the maximum number of satisfiable clauses.
-    However, in their proof, they prove that $r_i \leq 1 + \epsilon$, which implies that a truth assignment satisfies at least $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses.
-    Note that we can easily change the upper bound for $r$ in the hypothesis of this theorem, since it depends on $\alpha$, which we get to choose however we like, so that may help.
-  \end{todo}
+  It suffices to show $\frac{1}{1 - 2k(\frac{r - 1}{r})} < 1 + \epsilon$. To determine if $r$ meets this condition, we attempt to express the $r$ that appears in this inequality in terms of $\epsilon$ and $k$.
+  \begin{align*}
+    & \phantom{\iff} \frac{1}{1 - 2k(\frac{r - 1}{r})} < 1 + \epsilon \\
+    & \iff \frac{1}{1 + \epsilon} < 1 - 2k(\frac{r - 1}{r}) \\
+    & \iff 2k(\frac{r - 1}{r}) < 1 - \frac{1}{1 + \epsilon} \\
+    & \iff \frac{r - 1}{r} < \frac{1}{2k} - \frac{1}{2k \cdot (1 + \epsilon)} \\
+    & \iff 1 - \frac{1}{r} < \frac{1 + \epsilon}{2k \cdot (1 + \epsilon)} - \frac{1}{2k \cdot (1 + \epsilon)} \\
+    & \iff \frac{1}{r} > 1 - \frac{\epsilon}{2k \cdot (1 + \epsilon)} \\
+    & \iff \frac{1}{r} > \frac{2k \cdot (1 + \epsilon)}{2k \cdot (1 + \epsilon)} - \frac{\epsilon}{2k \cdot (1 + \epsilon)} \\
+    & \iff r < \frac{2k \cdot (1 + \epsilon)}{2k \cdot (1 + \epsilon) - \epsilon} \\
+    & \iff r < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon}
+  \end{align*}
+  Since the last inequality is true by hypothesis and each step is a biconditional, the first inequality is true, which is what we intended to show.
 \end{proof}
 
 \begin{theorem}[{\cite[Theorem~8.6]{book}}]\label{thm:maxcomplete}
@@ -836,7 +846,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \end{equation*}
   By \autoref{lem:alpha} there exists a constant $\alpha$ that depends only on $r_P$ (defined by the approximation algorithm $A_P$) and $\epsilon$ (defined in a previous theorem) such that
   \begin{equation}\label{eq:rupper}
-    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)}.
+    r < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon}.
   \end{equation}
   Applying \autoref{lem:magic}, we have $r_i \leq 1 + \epsilon$.
   In other words, $m_Q(\psi_i, \tau) \geq \frac{1}{1 + \epsilon} \cdot m^*_Q(\psi_i)$, which is what we intended to show.
