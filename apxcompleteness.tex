@@ -1016,7 +1016,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
 \end{proof}
 
 \begin{corollary}
-  \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
+  \textsc{Maximum 3-Satisfiability} is complete for \APX{} under polynomial time AP reductions.
 \end{corollary}
 \begin{proof}
   Follows from \autoref{thm:inncx}, \autoref{thm:maxcomplete}, and \autoref{thm:minmax}.
@@ -1064,7 +1064,7 @@ We can reuse most of the auxiliary algorithms from the previous section, but we 
   By hypothesis, we know that $m_P$ and $A_P$ are in \FNC, and $S \in \NC$.
   Multiplication can be performed in \NC{} \cite{citationneeded}; let $M$ be the depth of that circuit, so $M \in O(\log{(n + i)})$.
   By repeated squaring, ${r_n}^i$ can be computed by an \FNC{} circuit whose depth is $O(M \log i)$, which is still polylogarithmic in $n + i$.
-  Since inequalities can also be decided in \NC, the algorithm $B_\ell$ can be computed by an \NC circuit.
+  Since inequalities can also be decided in \NC, the algorithm $B_\ell$ can be computed by an \NC{} circuit.
   Since $B_\ell$ outputs 1 if and only if there exists a solution $y$ with the stated bounds, the conclusion follows.
 \end{proof}
 
@@ -1095,12 +1095,18 @@ We can reuse most of the auxiliary algorithms from the previous section, but we 
   The value of $\alpha$ and the algebra proving the correctness of the reduction remains the same.
 \end{proof}
 
-\begin{theorem}[{\cite[Theorem~8.7]{book}}]\label{thm:ncminmax}
-  For every minimization problem $P \in \NCX$, where $P = (I, S, m_P, \min)$, there exists a maximization problem $Q \in \NCX$ such that $P \NCAPr Q$.
+\begin{theorem}[\NC{} version of \autoref{thm:minmax}]\label{thm:ncminmax}
+  For every minimization problem $P \in \NCX$ there exists a maximization problem $Q \in \NCX$ such that $P \NCAPr Q$.
 \end{theorem}
+\begin{proof}
+  A careful examination of the proof of \autoref{thm:minmax} reveals that if $P \in \NCX$, the necessary functions for the reduction are also computable in \NC.
+  \begin{todo}
+    Double check this.
+  \end{todo}
+\end{proof}
 
 \begin{corollary}
-  \textsc{Maximum 3-Satisfiability} is complete for \APX{} under AP reductions.
+  \textsc{Maximum 3-Satisfiability} is complete for \NCX{} under \NC{} AP reductions.
 \end{corollary}
 \begin{proof}
   Follows from \autoref{thm:inncx}, \autoref{thm:ncmaxcomplete}, and \autoref{thm:ncminmax}.
