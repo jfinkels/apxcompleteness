@@ -300,6 +300,16 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
   Boolean formula evaluation is a special case of Boolean circuit evaluation, which is \P-complete, so I just want to be sure.
 \end{todo}
 
+\begin{lemma}\label{lem:maxsatnnco}
+  $\textsc{Maximum 3-Satisfiability}$ is in \NNCO, and more generally in $\NPO$.
+\end{lemma}
+\begin{proof}
+  It is clear that the instance set is decidable in \NC.
+  By \autoref{lem:evaluation}, the solution set is decidable in \NC.
+  To compute the measure function, evaluate each of the clauses and then compute the total number of those that are satisfied.
+  Since Boolean function evaluation is in \NC{} and computing the sum of $m$ numbers is in \NC, the measure function is computable by an \NC{} circuit family.
+\end{proof}
+
 \subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]\label{def:intro}
@@ -428,15 +438,8 @@ We first prove that the problem is hard to approximate in polynomial time, then 
   $\textsc{Maximum \textit{k}-Function Satisfiability} \in \NNCO$, and more generally in $\NPO$.
 \end{lemma}
 \begin{proof}
-  It is clear that the instance set is decidable in \NC.
-  By \autoref{lem:evaluation}, the solution set is decidable in \NC.
-  To compute the measure function, evaluate each of the functions and then compute the total number of those that are satisfied.
-  Since Boolean function evaluation is in \NC{} and computing the sum of $m$ numbers is in \NC, the measure function is computable by an \NC{} circuit family.
+  The proof is similar to the proof of \autoref{lem:maxsatnnco}.
 \end{proof}
-
-\begin{lemma}\label{lem:maxsatnnco}
-  $\textsc{Maximum 3-Satisfiability} \in \NNCO$, and more generally in $\NPO$.
-\end{lemma}
 
 \subsection{Hardness of polynomial time approximation}\label{ssc:phardness}
 
