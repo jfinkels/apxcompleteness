@@ -1,5 +1,9 @@
 \documentclass[]{article}
 
+% Package `amsthm` and `thmtools` must come before package `hyperref`.
+\usepackage{amsthm}
+\usepackage{thmtools}
+
 % Package `hyperref` must come before package `complexity`.
 \usepackage[pdftitle={Revisiting the hardness of approximation of Maximum 3-Satisfiability}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
 
@@ -7,17 +11,13 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{amsthm}
 \usepackage{complexity}
 
-\theoremstyle{plain}
-\newtheorem{corollary}{Corollary}
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
-\newtheorem{todo}{TODO}
-
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
+\declaretheorem[numberwithin=section]{theorem}
+\declaretheorem[numberlike=theorem]{corollary}
+\declaretheorem[numberlike=theorem]{lemma}
+\declaretheorem[numberlike=theorem, name=TODO]{todo}
+\declaretheorem[style=definition]{definition}
 
 \newenvironment{instance}{\\Instance:}{}
 \newenvironment{measure}{\\Measure:}{}
@@ -26,9 +26,6 @@
 \newenvironment{question}{\\Question:}{}
 
 \newcommand{\algorithmautorefname}{Algorithm}
-\newcommand{\corollaryautorefname}{Corollary}
-\newcommand{\definitionautorefname}{Definition}
-\newcommand{\lemmaautorefname}{Lemma}
 
 \algrenewcommand\algorithmicrequire{\textbf{Input:}}
 
@@ -178,7 +175,7 @@ Note that since $\NNC \subseteq \NP$, it follow that $\NNCO \subseteq \NPO$.
 
 \subsubsection{Reductions among optimization problems}
 
-\begin{definition}[{\cite[Definition~8.3]{book}}]
+\begin{definition}[{{\cite[Definition~8.3]{book}}}]
   Let $P$ and $Q$ be optimization problems, so $P = (I_P, S_P, m_P, t_P)$ and $Q = (I_Q, S_Q, m_Q, t_Q)$.
   There is an \emph{AP reduction from $P$ to $Q$}, denoted $P \APr Q$, if there exist functions $f \colon I_P \times \mathbb{Q}^+ \to I_Q$ and $g \colon I_P \times \Sigma^* \times \mathbb{Q}^+ \to \Sigma^*$ and constant $\alpha \in \mathbb{Q}^+$ with $\alpha \geq 1$ such that:
   \begin{enumerate}
@@ -272,7 +269,7 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
  At least half of the clauses of any Boolean formula in conjunctive normal form are always satisfiable.
 \end{lemma}
 
-\begin{lemma}[{\cite[Example~6.5]{book}}]\label{lem:three}
+\begin{lemma}[{{\cite[Example~6.5]{book}}}]\label{lem:three}
   There is an \NC{} computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
 \end{lemma}
 
@@ -303,7 +300,7 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
 
 \subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
 
-\begin{definition}[{\cite[Section~29.1]{vazirani}}]\label{def:intro}
+\begin{definition}[{{\cite[Section~29.1]{vazirani}}}]\label{def:intro}
   Let $P$ be a decision problem and $Q$ be maximization problem with $Q = (I, S, m, \max)$.
   There is a \emph{gap-introducing reduction} from $P$ to $Q$ if there exist functions $f \colon \Sigma^* \to I$ and $c \colon \Sigma^* \to \mathbb{N}$ and an $\epsilon \in \mathbb{Q}^+$ such that for any $x \in \Sigma^*$,
   \begin{enumerate}
@@ -336,7 +333,7 @@ The interesting case is the converse, because it requires that $g$ produce a wit
   Since $m^*(f(x)) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
 \end{proof}
 
-\begin{definition}[{\cite[Section~29.1]{vazirani}}]
+\begin{definition}[{{\cite[Section~29.1]{vazirani}}}]
   Let $P$ and $Q$ be maximization problems, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
   There is a \emph{gap-preserving reduction} from $P$ to $Q$ if there exist a function $f \colon I_P \to I_Q$, functions $c_P, c_Q \colon \mathbb{N} \to \mathbb{N}$, and constants $\alpha, \beta \in \mathbb{Q}^+$, with $\alpha \geq 0$ and $\beta \geq 0$, such that
   \begin{itemize}
@@ -436,7 +433,7 @@ We first prove that the problem is hard to approximate in polynomial time, then 
 
 The main tool of this section is the following theorem, which provides sufficient conditions for an optimization problem in \NPO{} to be hard to approximate.
 
-\begin{theorem}[{\cite[Theorem~3.7]{book}}]\label{thm:gap}
+\begin{theorem}[{{\cite[Theorem~3.7]{book}}}]\label{thm:gap}
   Let $P$ be an \NP-complete decision problem and $Q$ be a maximization problem in \NPO.
   If there is a polynomial time gap-introducing reduction from $P$ to $Q$ with gap parameter $\epsilon$, then for all $r < 1 + \epsilon$, there is no polynomial time $r$-approximator for $P$ unless $\P = \NP$.
 \end{theorem}
@@ -487,7 +484,7 @@ The main tool of this section is the following theorem, which provides sufficien
 
 In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, we will show a reduction to it from \textsc{Satisfiability} using \textsc{Maximum $k$-Function Satisfiability} as an intermediate maximization problem.
 
-\begin{lemma}[{\cite[Lemma~29.10]{vazirani}}]\label{lem:intro}
+\begin{lemma}[{{\cite[Lemma~29.10]{vazirani}}}]\label{lem:intro}
   There is an \NC{} (and more generally, a polynomial time) enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability} with gap parameter $1$, for some $k \in \mathbb{N}$.
 \end{lemma}
 \begin{proof}
@@ -541,7 +538,7 @@ In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, 
   Therefore we have constructed an \NC{} enhanced gap-introducing reduction with gap parameter 1 from $P$ to $Q$ (that is, from \textsc{Satisfiability} to \textsc{Maximum $k$-Function Satisfiability}).
 \end{proof}
 
-\begin{lemma}[{\cite[Proof of Theorem~29.7]{vazirani}}]\label{lem:decision}
+\begin{lemma}[{{\cite[Proof of Theorem~29.7]{vazirani}}}]\label{lem:decision}
   There is an \NC{} many-one reduction from \textsc{$k$-Function Satisfiability} to \textsc{3-Satisfiability}.
 \end{lemma}
 \begin{proof}
@@ -610,7 +607,7 @@ In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, 
 \end{proof}
 
 \begin{lemma}\label{lem:gap3}
-  There is an \NC{} (more generally, a polynomial time) enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+  There is an \NC{} (more generally, a polynomial time) enhanced gap-introducing reduction from the decision problem \textsc{Satisfiability} to the optimization problem \textsc{Maximum 3-Satisfiability}.
 \end{lemma}
 \begin{proof}
   We will use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
@@ -650,7 +647,7 @@ In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, 
     & = |f_0(\pair{B}{G})| \\
     & = |G| \cdot 2^k \cdot (k - 2), \text{ and} \\
     \tilde{\epsilon} & = \beta \\
-    & = 2^{k + 1} \cdot (k - 2) - 1. \qedhere
+    & = 2^{k + 1} \cdot (k - 2) - 1.
   \end{align*}
 \end{proof}
 
@@ -696,7 +693,8 @@ However, we provide the enhanced reduction because \autoref{lem:gap3} will be us
 \end{proof}
 
 By \autoref{lem:gap3}, we already know that there exists an \NC{} enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
-By \autoref{lem:satisnnccomplete} we know that \textsc{Satisfiability} is complete for \NNC{} under \NC{} many-one reductions, and by \autoref{lem:maxsatnnco} we know that $\textsc{Maximum 3-Satisfiability}$ is in \NNCO.
+By \autoref{lem:satisnnccomplete} we know that \textsc{Satisfiability} is complete for \NNC{} under \NC{} many-one reductions.
+By \autoref{lem:maxsatnnco} we know \textsc{Maximum 3-Satisfiability} is in \NNCO.
 Therefore we have the following analogs of \autoref{thm:hard} and \autoref{cor:satnotinptas}.
 
 \begin{theorem}\label{thm:nchard}
@@ -897,7 +895,7 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
   Since the last inequality is true by hypothesis and each step is a biconditional, the first inequality is true, which is what we intended to show.
 \end{proof}
 
-\begin{theorem}[{\cite[Theorem~8.6]{book}}]\label{thm:maxcomplete}
+\begin{theorem}[{{\cite[Theorem~8.6]{book}}}]\label{thm:maxcomplete}
   \textsc{Maximum 3-Satisfiability} is complete for the class of maximization problems in \APX{} under $\APr$ reductions.
 \end{theorem}
 
@@ -1037,7 +1035,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \end{align*}
 \end{proof}
 
-\begin{theorem}[{\cite[Theorem~8.7]{book}}]\label{thm:minmax}
+\begin{theorem}[{{\cite[Theorem~8.7]{book}}}]\label{thm:minmax}
   For every minimization problem $P \in \APX$, where $P = (I, S, m_P, \min)$, there exists a maximization problem $Q \in \APX$ such that $P \APr Q$.
 \end{theorem}
 \begin{proof}
