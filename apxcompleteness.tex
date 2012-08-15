@@ -263,7 +263,7 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
   \item if single bit, output that bit, otherwise
   \item recursively evaluate left subtree
   \item recursively evaluate right subtree
-  \item combine left and right according to \AND or \OR
+  \item combine left and right according to gate type
   \end{enumerate}
   Boolean formula evaluation is a special case of Boolean circuit evaluation, which is \P-complete, so I just want to be sure.
 \end{todo}
@@ -578,7 +578,7 @@ In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, 
 \end{proof}
 
 \begin{lemma}\label{lem:gap3}
-  There is an \NC{} (and more generally, a polynomial time) enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
+  There is an \NC{} (more generally, a polynomial time) enhanced gap-introducing reduction from \textsc{Satisfiability} to \textsc{Maximum 3-Satisfiability}.
 \end{lemma}
 \begin{proof}
   We will use \autoref{lem:intro} and \autoref{lem:opt} to invoke \autoref{lem:compose}.
@@ -1032,7 +1032,7 @@ Then we will show that there is an \NC{} AP reduction from every minimization pr
 We can reuse most of the auxiliary algorithms from the previous section, but we need a slight modification of \autoref{lem:interval}.
 
 \begin{lemma}[\NNC{} version of \autoref{lem:interval}]\label{lem:ncinterval}
-  Let $P \in \NCX$, with $P = (I, S, m_P, \max)$, and let $A_P$ be the \FNC{} $r$-approximator for $P$, for some constant $r$.
+  Suppose $P \in \NCX$ and has measure function $m_P$, and let $A_P$ be the \FNC{} $r$-approximator for $P$, for some constant $r$.
   Let $r_n \geq 1$.
   There exists an \NNC{} circuit family, $\left\{B_\ell\right\}_{\ell \in \mathbb{N}}$, such that on input $(x, i)$, where $x \in I$ and $i$ is a natural number \emph{expressed in unary}, the circuit $B_\ell$, where $\ell = |x| + |i|$, decides if there exists a solution $y$ with
   \begin{equation*}
