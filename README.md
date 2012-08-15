@@ -31,7 +31,7 @@ Compiling this work requires the following LaTeX packages:
 The following command will install the necessary system packages on Ubuntu
 12.04:
 
-    sudo apt-get install  # fill me in...
+    sudo apt-get install texlive-latex-base texlive-science texlive-base
 
 ## Getting and compiling this work ##
 
