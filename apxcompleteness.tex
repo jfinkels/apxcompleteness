@@ -1012,20 +1012,20 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following algebra
 \begin{lemma}\label{lem:ncinterval}
   Let $P \in \NCX$, with $P = (I, S, m_P, \max)$, and let $A_P$ be the \FNC{} $r$-approximator for $P$, for some constant $r$.
   Let $r_n \geq 1$.
-  There exists an \NNC{} circuit family, $\left\{B_\ell\right\}_{\ell \in \mathbb{N}}$, such that on input $(x, i)$, where $x \in I$ and $i \in \mathbb{N}$, the circuit $B_\ell$, where $\ell = |x| + |i|$, decides if there exists a solution $y$ with
+  There exists an \NNC{} circuit family, $\left\{B_\ell\right\}_{\ell \in \mathbb{N}}$, such that on input $(x, i)$, where $x \in I$ and $i$ is a natural number \emph{expressed in unary}, the circuit $B_\ell$, where $\ell = |x| + |i|$, decides if there exists a solution $y$ with
   \begin{equation*}
-    {r_n}^i \cdot m_P(x, A_P(x)) \leq m_P(x, y) \leq {r_n}^j \cdot m_P(x, A_P(x)).
+    {r_n}^i \cdot m_P(x, A_P(x)) \leq m_P(x, y) \leq {r_n}^{i + 1} \cdot m_P(x, A_P(x)).
   \end{equation*}
-  Furthermore, if a solution $y$ exists, the output of $B_\ell$ is augmented with gates which output the bits of $y$.
+  Furthermore, if a solution $y$ exists, the output of $B_\ell$ is augmented with gates that output the bits of $y$.
 \end{lemma}
 \begin{proof}
-  Let $p$ be the polynomial which bounds the size of the solutions for an instance $x$ of size $\ell$.
+  Let $p$ be the polynomial which bounds the size of the solutions for an instance $x$.
   Define $B$ as in \autoref{alg:ncinterval}.
   \begin{algorithm}
-    \caption{\NNC{} algorithm that decides if there is an approximate solution for instance $x$ of problem $P$ in interval $i$%
+    \caption{\NNC{} algorithm that decides if there is an approximate solution for instance $x$ of problem $P$ in interval $i$; here $\ell = |x| + |i|$%
       \label{alg:ncinterval}}
     \begin{algorithmic}[1]
-      \Require{$x \in I$, where $|x| = \ell$, and $i \geq 0$}
+      \Require{$x \in I$, $i$ a natural number expressed in unary with $i \geq 0$}
       \Statex{}
       \Function{$B_\ell$}{$x$, $i$}:
         \State{\textbf{guess} $y$ with $|y| \leq p(|x|)$}
@@ -1039,7 +1039,10 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following algebra
       \EndFunction
     \end{algorithmic}
   \end{algorithm}
-  Since all operations used during the execution of $B_\ell$ are in \FNC, $B_\ell$ can be implemented by an \FNC{} circuit.
+  By hypothesis, we know that $m_P$ and $A_P$ are in \FNC, and $S \in \NC$.
+  Multiplication can be performed in \NC{} \cite{citationneeded}; let $M$ be the depth of that circuit, so $M \in O(\log{(n + i)})$.
+  By repeated squaring, ${r_n}^i$ can be computed by an \FNC{} circuit whose depth is $O(M \log i)$, which is still polylogarithmic in $n + i$.
+  Since inequalities can also be decided in \NC, the algorithm $B_\ell$ can be computed by an \NC circuit.
   Since $B_\ell$ outputs 1 if and only if there exists a solution $y$ with the stated bounds, the conclusion follows.
 \end{proof}
 
