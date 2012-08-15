@@ -253,6 +253,21 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
   There is an \NC{} computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
 \end{lemma}
 
+\begin{lemma}\label{lem:evaluation}
+  There is a logarithmic space (more generally, a polynomial time) Turing machine which, when given Boolean formula $\phi$ and truth assignment $\tau$, whether $\tau$ satisfies $\phi$.
+\end{lemma}
+\begin{todo}
+  Is this true?
+  It should be by a simple recursive procedure:
+  \begin{enumerate}
+  \item if single bit, output that bit, otherwise
+  \item recursively evaluate left subtree
+  \item recursively evaluate right subtree
+  \item combine left and right according to \AND or \OR
+  \end{enumerate}
+  Boolean formula evaluation is a special case of Boolean circuit evaluation, which is \P-complete, so I just want to be sure.
+\end{todo}
+
 \subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
 
 \begin{definition}[{\cite[Section~29.1]{vazirani}}]\label{def:intro}
@@ -737,9 +752,13 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
 \end{proof}
 
 \begin{lemma}[Cook-Levin Theorem]\label{lem:cooklevin}
-  There exists a polynomial time computable function $C$ which takes two inputs, the description of a Turing machine and a tuple of its arguments, and outputs a Boolean formula $\Phi$ whose variables are the bits of the arguments to $C$, such that $C$ accepts if and only if $\Phi$ is satisfiable.
+  There exists a logarithmic-space (and more generally an \NC{} and \P) computable function $C$ which takes two inputs, the description of a Turing machine and a tuple of its arguments, and outputs a Boolean formula $\Phi$ whose variables are the bits of the arguments to $C$, such that $C$ accepts if and only if $\Phi$ is satisfiable.
   That is, $B(x, i)$ accepts if and only if $\Phi(x, i)$ is satisfiable.
 \end{lemma}
+
+\begin{todo}
+  Find a reference which explicitly states that the Cook-Levin reduction is computable in logarithmic space.
+\end{todo}
 
 \begin{lemma}\label{lem:bounds}
   Let $r, r_i, k > 1$.
@@ -939,6 +958,9 @@ We describe the idea of the proof before presenting the proof itself, since it i
   We will assume for now that $\tau$ does indeed satisfy a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses of $\psi_i$ for all $i$, and delay the proof of this fact until later.
   Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
   Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$.
+  \begin{todo}
+    Note that this function can be computed in logarithmic space.
+  \end{todo}
 
   Let $j$ be the maximum $i$ such that $\tau_i$ satisfies $\phi_i$ (such a $j$ exists because $m^*_P(x)$ is in some interval, and for all intervals beyond that one, $\phi_i$ must not be satisfiable).
   This implies that there is a $y$ in interval $j$ with
@@ -1007,9 +1029,9 @@ By \autoref{thm:inncx}, we already know that it is in \NCX.
 We will show that it is complete under \NC{} AP reductions for the class of maximization problems in \NCX.
 Then we will show that there is an \NC{} AP reduction from every minimization problem to some maximization problem in \NCX.
 
-Before proceeding to \autoref{thm:maxcomplete}, we require the following algebraic rule.
+We can reuse most of the auxiliary algorithms from the previous section, but we need a slight modification of \autoref{lem:interval}.
 
-\begin{lemma}\label{lem:ncinterval}
+\begin{lemma}[\NNC{} version of \autoref{lem:interval}]\label{lem:ncinterval}
   Let $P \in \NCX$, with $P = (I, S, m_P, \max)$, and let $A_P$ be the \FNC{} $r$-approximator for $P$, for some constant $r$.
   Let $r_n \geq 1$.
   There exists an \NNC{} circuit family, $\left\{B_\ell\right\}_{\ell \in \mathbb{N}}$, such that on input $(x, i)$, where $x \in I$ and $i$ is a natural number \emph{expressed in unary}, the circuit $B_\ell$, where $\ell = |x| + |i|$, decides if there exists a solution $y$ with
@@ -1046,147 +1068,31 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following algebra
   Since $B_\ell$ outputs 1 if and only if there exists a solution $y$ with the stated bounds, the conclusion follows.
 \end{proof}
 
-\begin{lemma}[\NC{} version of \autoref{lem:cooklevin}]\label{lem:nccooklevin}
-  There exists an \FNC{} circuit family, $\left\{C_\ell\right\}_{\ell \in \mathbb{N}}$, in which each circuit takes two inputs, the description of a nondeterministic polynomial time Turing machine and a tuple of its arguments, and outputs a Boolean formula $\Phi$ whose variables are the bits of the arguments to $C_\ell$, such that $C_\ell$ outputs 1 if and only if $\Phi$ is satisfiable.
-  That is, $C_\ell(x, i)$ outputs 1 if and only if $\Phi$ is satisfiable.
-\end{lemma}
-
-\begin{todo}
-  Get the notation and statement of the above lemma correct.
-\end{todo}
-
-\begin{todo}
-  Find a reference which explicitly states that the Cook-Levin reduction is computable in logarithmic space.
-\end{todo}
-
 \begin{theorem}[\NC{} version of \autoref{thm:maxcomplete}]\label{thm:ncmaxcomplete}
   \textsc{Maximum 3-Satisfiability} is complete for the class of maximization problems in \NCX{} under $\NCAPr$ reductions.
 \end{theorem}
 \begin{proof}
-  For the sake of brevity, we let $Q$ represent $\textsc{Maximum 3-Satisfiability}$.
+  The proof is nearly the same as the proof of \autoref{thm:maxcomplete}, replacing all polynomial time computable functions and procedures with those computable by \NC{} circuits.
+  The main differences are as follows.
 
-  Let $P$ be a maximization problem in \NCX, so we have $P = (I, S, m, \max)$.
-  Let $A_P$ be the \NC{} computable $r_P$-approximator for $P$, where $r_P$ is some constant.
-  We need to define an \NC{} AP reduction $(f, g, \alpha)$ from $P$ to $Q$.
-  We will delay the definition of the constant $\alpha$ until later in the proof, and until then we assume it has been fixed.
-  We now wish to define \FNC{} functions $f$ and $g$ for all $r > 1$.
-  Let $r_n = 1 + \alpha \cdot (r - 1)$; this is the desired upper bound of the performance ratio $R_P(x, g(x, \tau, r))$ when $R_Q(f(x, r), \tau) \leq r$, as required by the AP condition.
-
-  In the case that $r_p \leq r_n$, defining $g(x, y, r) = A_P(x)$ for all $x$ and $y$ is sufficient, and no definition of $f$ is necessary, since $R(x, g(x, y, r)) = R(x, A_P(x)) \leq r_P \leq r_n$.
-  Suppose from here on that $r_P > r_n$.
-
-  For $f$ we intend to map an instance $x$ of $P$ to a 3-CNF Boolean formula, and for $g$ we intend to map a truth assignment which satisfies a constant factor of the satisfiable clauses of $f(x, r)$ to a solution $y$ for $P$.
-  In order to recover a solution $y$ for $P$ with $R_P(x, y) \leq r_n$, we need a solution whose measure is close to $m^*_P(x)$, the optimal measure of $x$.
-  If we let $a(x) = m_P(x, A_P(x))$, then
-  \begin{equation}\label{eq:ncbounds}
-    a(x) \leq m^*_P(x) \leq r_P \cdot a(x),
-  \end{equation}
-  since $a(x)$ is the measure of a $r_P$-approximate solution to a maximization problem.
-  We can't just output any solution in this range, because the approximation guarantee would be only $r_P$; we need it to be $r_n$.
-  Hence we will subdivide this interval and derive a solution within a subinterval of size $r_n$.
-
-  Let us divide the interval $[a(x), r_P \cdot a(x)]$ into $k$ subintervals,
+  When defining $f$, we use the \NC{} algorithm $B_\ell$ from \autoref{lem:ncinterval} instead of the polynomial time algorithm $B$ from \autoref{lem:interval}, so we have
   \begin{displaymath}
-    \left[a(x), r_n \cdot a(x)\right], \left[r_n \cdot a(x), {r_n}^2 \cdot a(x)\right], \ldots, \left[{r_n}^{k - 1} \cdot a(x), r_P \cdot a(x)\right],
+    f(x, r) = \bigwedge_{i = 0}^{k - 1}{f_s(C(B_\ell, (x, i)))},
   \end{displaymath}
-  where $k = \ceil{\log_{r_n}{r_P}}$.
-  (Notice that the sizes of these subintervals are not necessarily equal; except that of the final subinterval, the sizes are only non-decreasing.
-  This won't be a problem, as we only need a multiplicative constant approximation, not an additive constant approximation.)
-  By construction, we have ${r_n}^k = {r_n}^{\ceil{\log_{r_n}{r_P}}} \geq {r_n}^{\log_{r_n}{r_P}} = r_P$, and hence $r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$.
-  Combining this with \autoref{eq:ncbounds}, we have $a(x) \leq m^*_P(x) \leq r_P \cdot a(x) \leq {r_n}^k \cdot a(x)$, so the optimal measure of $x$ must exist in one of these intervals.
-  Now we construct $f$ and $g$ in such a way that for any $x \in I$, we can recover an approximate solution $y$ that lies in the same interval in which $m_P^*(x)$ lies.
-  If we were to find a solution $y$ in the same interval in which the optimal measure lies, say, interval $j$, then we would have
-  \begin{equation}\label{eq:ncsubinterval}
-    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x).
-  \end{equation}
-  Then, since
-  \begin{equation*}
-    \frac{m^*_P(x)}{a(x)} \leq {r_n}^{j + 1} \qquad \text{and} \qquad {r_n}^j \leq \frac{m_P(x, y)}{a(x)}
-  \end{equation*}
-  we find that
-  \begin{equation}\label{eq:ncresult}
-    R_P(x, y) = \frac{m_P^*(x)}{m_P(x, y)} = \frac{\frac{m^*_P(x)}{a(x)}}{\frac{m_P(x, y)}{a(x)}} \leq \frac{{r_n}^{j + 1}}{{r_n}^j} = r_n.
-  \end{equation}
-  So this is our goal when constructing $f$ and $g$.
+  where $\ell = |x| + |i|$ and $i$ is expressed in unary.
+  Observe that for each $i$, the formula $f_s(C(B_\ell, (x, i)))$ can be computed independently and in parallel.
+  $B_\ell$ can be constructed in logarithmic space since it comes from a logarithmic space uniform family of circuits.
+  Since $i < k$ and $k$ is a constant, $i$ can be written in unary in constant time when it is provided as input to the function $C$.
+  $C$ is a logarithmic space computable function, and $f_s$ is in \NC.
+  It follows that $f$ can be computed by an \NC{} circuit.
 
-  To define $f$ we need some auxiliary functions.
-  Let $\mathcal{B}$ be the \NC{} circuit family guaranteed by \autoref{lem:ncinterval}.
-  Let $f_s$ be the function from the enhanced gap-introducing reduction of \autoref{lem:gap3}.
-  Let $\left\{C_\ell\right\}_{\ell \in \mathbb{N}}$ be the \FNC{} circuit family computing the Cook-Levin transformation, from \autoref{lem:cooklevin}.
-  Now we can define $f$ by
-  \begin{displaymath}
-    f(x, r) = \bigwedge_{i = 0}^{k - 1}{f_s(C_{n_2}(B_{n_1}, (x, i)))},
-  \end{displaymath}
-  for all $x \in I$, where $n_1$ is the length of the encoding of $(x, i)$ and $n_2$ is the length of the encoding of $B_{n_1}$ along with $(x, i)$.
-  Let us explain this function.
-  Since $B_{n_1}$ outputs a solution $y$ if it outputs 1, $C_{n_2}(B_{n_1}, (x, i))$ will have some gates, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
-  Applying $f_s$ to this Boolean formula produces a 3-CNF formula which has a gap behavior which will be discussed later (since it depends on $g_s$).
-  Observe that $f(x, r)$ is still a 3-CNF formula, since a conjunction of 3-CNF formulae is itself a 3-CNF formula.
-  We assume without loss of generality also that each formula $f_s(C_{n_2}(B_{n_1}, (x, i)))$ has the same number of clauses, say $M$.
-  \begin{todo}
-    Why is this without loss of generality?
-    Adding more clauses may change the fraction of satisfiable clauses\ldots
-  \end{todo}
-  \begin{todo}
-    Explain why $f$ is in \FNC.
-  \end{todo}
+  When defining $g$, we again use $B_\ell$ instead of $B$, and express $i$ in unary where necessary.
+  We again observe that for each $i$, the formula $\phi_i$ and the truth assignment $\tau_i$ can be computed independently and in parallel, as can deciding whether $\tau_i$ satisfies $\phi_i$.
+  We can decide in logarithmic space whether a truth assignment satisfies a Boolean formula by \autoref{lem:evaluation}.
+  Computing the maximum of a constant number of natural numbers, each of which has constant size, can be performed by an \NC{} circuit.
+  It follows that $g$ can be computed by an \NC{} circuit.
 
-  Now, to determine how to define $g$, first suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
-  For each $i$ with $0 \leq i \leq k - 1$, let $\phi_i = C_{n_2}(B_{n_1}, (x, i))$ and $\psi_i = f_s(\phi_i)$.
-  Let $\psi = f(x, r) = \bigwedge_i{\psi_i}$, so $\tau$ is a truth assignment to $\psi$ which satisfies some of the clauses.
-  Suppose $g_s$ is the \FNC{} function from the \NC{} enhanced gap-introducing reduction which produces solutions for $P$, as described in the preceding discussion.
-  For any $\tau$ that satisfies a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses in $\psi_i$ for all $i \leq k - 1$, if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
-  We will assume for now that $\tau$ does indeed satisfy a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses of $\psi_i$ for all $i$, and delay the proof of this fact until later.
-  Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
-  Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$.
-  \begin{todo}
-    Note that $T$ is a \FNC{} circuit.
-  \end{todo}
-
-  Let $j$ be the maximum $i$ such that $\tau_i$ satisfies $\phi_i$ (such a $j$ exists because $m^*_P(x)$ is in some interval, and for all intervals beyond that one, $\phi_i$ must not be satisfiable).
-  This implies that there is a $y$ in interval $j$ with
-  \begin{equation*}
-    {r_n}^j \cdot a(x) \leq m_P(x, y) \leq m^*_P(x) \leq {r_n}^{j + 1} \cdot a(x),
-  \end{equation*}
-  which is exactly the statement of \autoref{eq:ncsubinterval}, and hence \autoref{eq:ncresult} follows.
-  Therefore, we define $g(x, \tau, r)$ as in \autoref{alg:ncg}.
-  Observe that $g$ is computable by an \FNC{} circuit family since $k$, the number of intervals to search, is a constant, and all other functions are \NC{} computable.
-  \begin{algorithm}
-    \caption{\NC{} algorithm that computes a $r_n$-approximate solution for $x$%
-      \label{alg:ncg}}
-    \begin{algorithmic}
-      \Require{$x \in I$, a truth assignment $\tau$, $r > 1$}
-      \Statex{}
-      \Function{$g$}{$x$, $\tau$, $r$}:
-        \For{$i \in \{0, 1, \dotsc, k - 1\}$}
-          \State{$\phi_i = C_{n_2}(B_{n_1}, (x, i))$}
-          \State{$\tau_i = g_s(\phi_i, \tau)$}
-        \EndFor
-        \State{$j \gets \max_{i = 0}^{k - 1}{\left\{i\,\middle|\, \tau_i \text{ satisfies } \phi_i\right\}}$} \\
-        \hspace{1.5em}\Return{$T(\phi_j, \tau_j)$}
-      \EndFunction
-    \end{algorithmic}
-  \end{algorithm}
-
-  We now complete the tasks which we delayed above.
-  We will prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$, and in doing so we will also choose the value of the constant $\alpha$.
-  By \autoref{lem:bounds}, we know that
-  \begin{equation*}
-    r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}.
-  \end{equation*}
-  By \autoref{lem:alpha} there exists a constant $\alpha$ that depends only on $r_P$ (defined by the approximation algorithm $A_P$) and $\epsilon$ (defined in a previous theorem) such that
-  \begin{equation}
-    r < 1 + \frac{\epsilon}{2k(1 + \epsilon)}.
-  \end{equation}
-  Applying \autoref{lem:magic}, we have $r_i \leq 1 + \epsilon$.
-  In other words, $m_Q(\psi_i, \tau) \geq \frac{1}{1 + \epsilon} \cdot m^*_Q(\psi_i)$, which is what we intended to show.
-
-  In summary, we define our reduction $(f, g, \alpha)$ as follows for all $x \in I$, $r > 1$, and $\tau \in S_Q(f(x, r))$:
-  \begin{align*}
-    f(x, r) & = \bigwedge_{i = 0}^{k - 1}{f_s(C(B, (x, i)))} \\
-    g(x, \tau, r) & = T(\phi_j, g_s(\phi_j, \tau)) \\
-    \alpha & = 2(r_P \log{r_P} + r_P - 1)\frac{1 + \epsilon}{\epsilon}
-  \end{align*}
+  The value of $\alpha$ and the algebra proving the correctness of the reduction remains the same.
 \end{proof}
 
 \begin{theorem}[{\cite[Theorem~8.7]{book}}]\label{thm:ncminmax}
