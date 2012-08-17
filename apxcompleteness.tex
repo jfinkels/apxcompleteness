@@ -505,10 +505,7 @@ In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, 
   \end{align*}
   where $\tau^+$ is the extension of $\tau$ in which any variables in $\phi$ not in $B$ are assigned an arbitrary binary value (say 0).
   The function $c$ is \NC{} computable because multiplication is in \NC{}, and there are a constant number of multiplications.
-  The function $f$ is \NC{} computable because $B$ is simply a list of variables which requires almost no computation and the functions in $G$ can be constructed by $n^{c_0}$ processors in parallel, each of which constructs the function $g_\rho$ by a \ldots.
-  \begin{todo}
-    How is each function $g_\rho$ in $G$ constructed?
-  \end{todo}
+  The function $f$ is \NC{} computable because $B$ is simply a list of variables which requires almost no computation and the functions in $G$ can be constructed by $n^{c_0}$ processors in parallel, each of which constructs the function $g_\rho$ by performing a partial Boolean function evaluation (in logarithmic space, see \autoref{lem:evaluation}).
   The function $g$ is \NC{} computable because it simply copies $\tau$ to its output along with a polynomial number of extra bits.
 
   If $\phi \in P$ then there is a truth assignment $\tau$ such that $V$ accepts on input $(\phi, \tau; \rho)$ with probability 1 over the random strings $\rho$.
