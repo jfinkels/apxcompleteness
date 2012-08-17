@@ -276,17 +276,8 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
 \begin{lemma}\label{lem:evaluation}
   There is a logarithmic space (more generally, a polynomial time) Turing machine which, when given Boolean formula $\phi$ and truth assignment $\tau$, whether $\tau$ satisfies $\phi$.
 \end{lemma}
-\begin{todo}
-  Is this true?
-  It should be by a simple recursive procedure:
-  \begin{enumerate}
-  \item if single bit, output that bit, otherwise
-  \item recursively evaluate left subtree
-  \item recursively evaluate right subtree
-  \item combine left and right according to gate type
-  \end{enumerate}
-  Boolean formula evaluation is a special case of Boolean circuit evaluation, which is \P-complete, so I just want to be sure.
-\end{todo}
+
+See \cite{buss87} for an exact characterization of the complexity of the Boolean formula evaluation problem.
 
 \begin{lemma}\label{lem:maxsatnnco}
   $\textsc{Maximum 3-Satisfiability}$ is in \NNCO, and more generally in $\NPO$.
