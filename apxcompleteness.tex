@@ -533,17 +533,14 @@ Note that \autoref{lem:intro} did not use any information specific to \textsc{Sa
 \end{lemma}
 \begin{proof}
   Let $(\{x_1, x_2, \ldots, x_n\}, \{f_1, f_2, \ldots, f_m\})$ be an instance of \textsc{$k$-Function Satisfiability}.
-  Without loss of generality, each function $f_i$ of $k$ variables can be written as a Boolean formula containing at most $2^k$ clauses, in which each clause contains at most $k$ literals (why?).
+  Without loss of generality, each function $f_i$ of $k$ variables can be written as a CNF Boolean formula containing at most $2^k$ clauses, in which each clause contains at most $k$ literals (why?).
   Call this Boolean formula $\psi_i$, and let $\psi = \bigwedge_{i = 1}^m{\psi_i}$.
   Observe that the given instance of \textsc{$k$-Function Satisfiability} is satisfiable if and only if $\psi$ is satisfiable.
 
   Let $T$ be the \NC{} computable function from \autoref{lem:three}.
   Now we can define the reduction $g$ by $g(\phi) = T(\psi)$ for all Boolean formulae $\phi$.
   The total number of clauses in $\psi$ is at most $m \cdot 2 ^ k$, so the total number of clauses in $T(\psi)$ is at most $m \cdot 2^k \cdot (k - 2)$ (still a polynomial in the length of the input since $k$ is considered a fixed constant).
-  $g$ is \NC{} computable because each of the $m$ functions can be transformed by an independent processor, each processor performs the transformation from $f_i$ to $\psi_i$ in a constant amount of time, and for each processor the transformation fron $\psi_i$ to $T(\psi_i)$ is computable in \NC.
-  \begin{todo}
-    Check that the transformation from $f_i$ to $\psi_i$ is computable in \NC.
-  \end{todo}
+  $g$ is \NC{} computable because each of the $m$ functions can be transformed by an independent processor, each processor performs the transformation from $f_i$ to $\psi_i$ in a constant amount of time (since $k$ is a constant, so is $2^k$), and for each processor the transformation fron $\psi_i$ to $T(\psi_i)$ is computable in \NC.
   Finally, $\phi$ is satisfiable if and only if $\psi$ is satisfiable if and only if $T(\psi)$ is satisfiable.
 \end{proof}
 
