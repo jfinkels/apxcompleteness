@@ -579,7 +579,7 @@ Note that \autoref{lem:intro} did not use any information specific to \textsc{Sa
   Hence, we choose $\beta = 2^{k + 1} \cdot (k - 2) - 1$.
 
   Finally, to show that this gap-introducing reduction is enhanced, we suppose $\pair{U}{F}$ is an instance of \textsc{Maximum $k$-Function Satisfiability}, and let $\phi = f(\pair{U}{F})$.
-  Furthermore, suppose $\tau$ is a truth assignment to $\tau$ which satisfies at least $\frac{1}{1 + ???}$ of the maximum number of satisfiable clauses in $\phi$.
+  Furthermore, suppose $\tau$ is a truth assignment to $\phi$ which satisfies at least $\frac{1}{1 + \left[2^{k + 1} \cdot (k - 2) - 1\right]}$ of the maximum number of satisfiable clauses in $\phi$.
   By definition, $g(\pair{U}{F}, \tau) = \tau|_U$, so it is certainly a valid solution to $\pair{U}{F}$.
   Our goal is to show that $m(\pair{U}{F}, \tau|_U) \geq \frac{1}{2} \cdot |F|$.
   Again, by the correctness of the many-one reduction $f_0$, each function in $F$ is satisfiable if and only if the corresponding conjunction of clauses in $f(\pair{U}{F})$ are satisfiable.
