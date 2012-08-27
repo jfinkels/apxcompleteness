@@ -20,14 +20,14 @@ The author can be contacted via email at <jeffreyf@bu.edu>.
 
 Compiling this work requires the following LaTeX packages:
 
-* algorithm
-* algpseudocode
-* amsmath
-* amssymb
-* amsthm
-* complexity
-* hyperref
-* thmtools
+* `algorithm`
+* `algpseudocode`
+* `amsmath`
+* `amssymb`
+* `amsthm`
+* `complexity`
+* `hyperref`
+* `thmtools`
 
 The following command will install the necessary system packages on Ubuntu
 12.04:
