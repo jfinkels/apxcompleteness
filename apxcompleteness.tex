@@ -247,12 +247,6 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
 \end{lemma}
 
 \begin{todo}
-  State the type of Turing machine that $B$ must be (must it be a nondeterministic polynomial time Turing machine?).
-  State the length of the description of $B$.
-  State the length of the output $\Phi$.
-\end{todo}
-
-\begin{todo}
   Find a reference which explicitly states that the Cook-Levin reduction is computable in logarithmic space.
 \end{todo}
 
@@ -1041,65 +1035,19 @@ By \autoref{thm:inncx}, we already know that it is in \NCX.
 We will show that it is complete under \NC{} AP reductions for the class of maximization problems in \NCX.
 Then we will show that there is an \NC{} AP reduction from every minimization problem to some maximization problem in \NCX.
 
-We can reuse most of the auxiliary algorithms from the previous section, but we need a slight modification of \autoref{lem:interval}.
-
-\begin{lemma}[\NNC{} version of \autoref{lem:interval}]\label{lem:ncinterval}
-  Suppose $P \in \NCX$ and has measure function $m_P$, and let $A_P$ be the \FNC{} $r$-approximator for $P$, for some constant $r$.
-  Let $r_n \geq 1$.
-  There exists an \NNC{} circuit family, $\left\{B_\ell\right\}_{\ell \in \mathbb{N}}$, such that on input $(x, i)$, where $x \in I$ and $i$ is a natural number \emph{expressed in unary}, the circuit $B_\ell$, where $\ell = |x| + |i|$, decides if there exists a solution $y$ with
-  \begin{equation*}
-    {r_n}^i \cdot m_P(x, A_P(x)) \leq m_P(x, y) \leq {r_n}^{i + 1} \cdot m_P(x, A_P(x)).
-  \end{equation*}
-  Furthermore, if a solution $y$ exists, the output of $B_\ell$ is augmented with gates that output the bits of $y$.
-\end{lemma}
-\begin{proof}
-  Let $p$ be the polynomial which bounds the size of the solutions for an instance $x$.
-  Define $B$ as in \autoref{alg:ncinterval}.
-  \begin{algorithm}
-    \caption{\NNC{} algorithm that decides if there is an approximate solution for instance $x$ of problem $P$ in interval $i$; here $\ell = |x| + |i|$%
-      \label{alg:ncinterval}}
-    \begin{algorithmic}[1]
-      \Require{$x \in I$, $i$ a natural number expressed in unary with $i \geq 0$}
-      \Statex{}
-      \Function{$B_\ell$}{$x$, $i$}:
-        \State{\textbf{guess} $y$ with $|y| \leq p(|x|)$}
-        \State{$a \gets m_P(x, A_P(x))$}
-        \If{$(x, y) \in S$ and ${r_n}^i \cdot a \leq m_P(x, y) < {r_n}^{i + 1} \cdot a$}
-          \State{\textbf{output} $y$}
-          \State{\textbf{output} 1}
-        \Else
-          \State{\textbf{output} 0}
-        \EndIf
-      \EndFunction
-    \end{algorithmic}
-  \end{algorithm}
-  By hypothesis, we know that $m_P$ and $A_P$ are in \FNC, and $S \in \NC$.
-  Multiplication can be performed in \NC{} \cite{citationneeded}; let $M$ be the depth of that circuit, so $M \in O(\log{(n + i)})$.
-  By repeated squaring, ${r_n}^i$ can be computed by an \FNC{} circuit whose depth is $O(M \log i)$, which is still polylogarithmic in $n + i$.
-  Since inequalities can also be decided in \NC, the algorithm $B_\ell$ can be computed by an \NC{} circuit.
-  Since $B_\ell$ outputs 1 if and only if there exists a solution $y$ with the stated bounds, the conclusion follows.
-\end{proof}
-
 \begin{theorem}[\NC{} version of \autoref{thm:maxcomplete}]\label{thm:ncmaxcomplete}
   \textsc{Maximum 3-Satisfiability} is complete for the class of maximization problems in \NCX{} under $\NCAPr$ reductions.
 \end{theorem}
 \begin{proof}
   The proof is nearly the same as the proof of \autoref{thm:maxcomplete}, replacing all polynomial time computable functions and procedures with those computable by \NC{} circuits.
-  The main differences are as follows.
 
-  When defining $f$, we use the \NC{} algorithm $B_\ell$ from \autoref{lem:ncinterval} instead of the polynomial time algorithm $B$ from \autoref{lem:interval}, so we have
-  \begin{displaymath}
-    f(x, r) = \bigwedge_{i = 0}^{k - 1}{f_s(C(B_\ell, (x, i)))},
-  \end{displaymath}
-  where $\ell = |x| + |i|$ and $i$ is expressed in unary.
-  Observe that for each $i$, the formula $f_s(C(B_\ell, (x, i)))$ can be computed independently and in parallel.
-  $B_\ell$ can be constructed in logarithmic space since it comes from a logarithmic space uniform family of circuits.
-  Since $i < k$ and $k$ is a constant, $i$ can be written in unary in constant time when it is provided as input to the function $C$.
-  $C$ is a logarithmic space computable function, and $f_s$ is in \NC.
+  When defining $f$, observe that for each $i$, the formula $f_s(C(B, (x, i)))$ can be computed independently and in parallel.
+  The description of $B$ can be written in constant time since it does not depend on the input $x$, and additionally its length is a constant in $|x|$.
+  Since $i < k$ and $k$ is a constant, $i$ can be written in constant time when it is provided as input to the function $C$.
+  $C$ is a logarithmic space computable function, and $f_s$ is computable in \NC.
   It follows that $f$ can be computed by an \NC{} circuit.
 
-  When defining $g$, we again use $B_\ell$ instead of $B$, and express $i$ in unary where necessary.
-  We again observe that for each $i$, the formula $\phi_i$ and the truth assignment $\tau_i$ can be computed independently and in parallel, as can deciding whether $\tau_i$ satisfies $\phi_i$.
+  When defining $g$, we again observe that for each $i$, the formula $\phi_i$ and the truth assignment $\tau_i$ can be computed independently and in parallel, as can deciding whether $\tau_i$ satisfies $\phi_i$.
   We can decide in logarithmic space whether a truth assignment satisfies a Boolean formula by \autoref{lem:evaluation}.
   Computing the maximum of a constant number of natural numbers, each of which has constant size, can be performed by an \NC{} circuit.
   It follows that $g$ can be computed by an \NC{} circuit.
