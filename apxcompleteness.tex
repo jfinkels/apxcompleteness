@@ -712,11 +712,7 @@ Finally, we will show that there is an AP reduction from every minimization prob
   \textsc{Maximum 3-Satisfiability} is in \NCX, and more generally in \APX.
 \end{theorem}
 \begin{proof}
-  \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Maximum Satisfiability}, and there exists a \FNC{} 2-approximator for \textsc{Maximum Satisfiability} (see \cite[Program~3.1]{book}).
-  \begin{todo}
-    Examine this algorithm to see if it is in \NC.
-    Otherwise, look at \cite{dsst97} to see if they have an algorithm for \textsc{Maximum 3-Satisfiability}.
-  \end{todo}
+  \textsc{Maximum 3-Satisfiability} is a restriction of \textsc{Maximum $k$-Function Satisfiability}, which is in \NCX{} \cite[Corollary~13]{trevisan98}.
   Since $\NCX \subseteq \APX$, it is also in \APX.
 \end{proof}
 
