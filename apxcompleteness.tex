@@ -688,16 +688,14 @@ Therefore we have the following analogs of \autoref{thm:hard} and \autoref{cor:s
 
 We can now give another perspective on why \textsc{Maximum 3-Satisfiability} has no polynomial time approximation scheme unless $\P = \NP$, and why it has no \NC{} approximation scheme unless $\NC = \NNC$.
 In this section we prove that this problem is in fact complete for \APX{} under polynomial time AP reductions, and complete for \NCX{} under \NC{} AP reductions.
-This means that if there were a polynomial time approximation scheme for this problem, then there would be one for all problems in \APX, and if there were an \NC{} approximation scheme for it, then there would be one for all problems in \NCX.
+This means that if there were a polynomial time approximation scheme for this problem, then there would be one for all problems in \APX{} (that is, we would have $\APX = \PTAS$), and if there were an \NC{} approximation scheme for it, then there would be one for all problems in \NCX{} (that is, $\NCX = \NCAS$).
+In fact, we have $\P = \NP$ if and only if $\APX = \PTAS$ \cite[Section~2]{crescenzi97}, and $\NC = \NNC$ if and only if $\NCX = \NCAS$.
+(Interestingly, we also have $\P = \NP$ if and only if $\APX = \NCX$ \cite[Theorem~8.2.9]{dsst97}.)
+Therefore, just as \NP-completeness intuitively implies hardness of decision for decision problems, so does \APX-completeness imply hardness of approximation for optimization problems.
+As a historical note, \APX{}-completeness was a precursor to hardness of approximation results due to the PCP Theorem.
 
 \begin{todo}
   What does it mean for an optimization problem to be both complete for \APX{} under polynomial time reductions and complete for \NCX{} under polynomial time reductions?
-\end{todo}
-
-\begin{todo}
-  Find a reference for the following statement (probably in the Ausiello book): if $P$ is \APX-complete and $P \in \PTAS$ then $\P = \NP$.
-  Hence (we should note), \APX-completeness implies hardness of approximation.
-  The key component which implies both $P \notin \PTAS$ and $P$ is \APX-complete is the gap-introducing reduction.
 \end{todo}
 
 \subsection{\texorpdfstring{\APX}{APX}-completeness}\label{ssc:apxcomplete}
