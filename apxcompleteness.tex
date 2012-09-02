@@ -574,14 +574,12 @@ Note that \autoref{lem:intro} did not use any information specific to \textsc{Sa
   Since $c_Q(f(\pair{U}{F})) = |f_0(\pair{U}{F})| \leq |F| \cdot 2^k \cdot (k - 2)$, we must choose $\beta$ such that $\frac{1}{2} |F| \leq \frac{1}{1 + \beta} \cdot |F| \cdot 2^k \cdot (k - 2)$.
   Hence, we choose $\beta = 2^{k + 1} \cdot (k - 2) - 1$.
 
-  Finally, to show that this gap-introducing reduction is enhanced, we suppose $\pair{U}{F}$ is an instance of \textsc{Maximum $k$-Function Satisfiability}, and let $\phi = f(\pair{U}{F})$.
-  Furthermore, suppose $\tau$ is a truth assignment to $\phi$ which satisfies at least $\frac{1}{1 + \left[2^{k + 1} \cdot (k - 2) - 1\right]}$ of the maximum number of satisfiable clauses in $\phi$.
-  By definition, $g(\pair{U}{F}, \tau) = \tau|_U$, so it is certainly a valid solution to $\pair{U}{F}$.
-  Our goal is to show that $m(\pair{U}{F}, \tau|_U) \geq \frac{1}{2} \cdot |F|$.
-  Again, by the correctness of the many-one reduction $f_0$, each function in $F$ is satisfiable if and only if the corresponding conjunction of clauses in $f(\pair{U}{F})$ are satisfiable.
-  In other words, for each conjunction of (at most $k - 2$) related (in the sense that they derive from the same single clause in $F$) clauses in $f(\pair{U}{F})$ which is satisfiable, the single clause in $F$ from which that collection derived is satisfiable, and the converse is true, as well.
   \begin{todo}
-    Complete the ``enhanced'' part of this proof.
+    This theorem is false because the reduction cannot be enhanced; consider the following counterexample.
+    Let $k = 3$ and suppose each function in $F$ is simply a single disjunction of three variables, so $|f(\pair{U}{F})| = |F|$.
+    Assume that a truth assignment $\tau$ satisfies at least $\frac{1}{2^{k + 1} (k - 2)} |F| = \frac{1}{8} |F|$ of the clauses in $f(\pair{U}{F})$.
+    In the case that such a truth assignment satisfies exactly one eighth of the clauses, then exactly one eighth of the functions in $F$ are satisfied by $\tau|_U$ (which equals $\tau$).
+    Since one eighth is less than one half, this is a contradiction.
   \end{todo}
 \end{proof}
 
