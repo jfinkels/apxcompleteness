@@ -808,7 +808,7 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
 \begin{lemma}\label{lem:alpha}
   Let $r_P, \epsilon \in \mathbb{Q}^+$ with $r_P > 1$ and $\epsilon > 0$.
   There exists a constant $\alpha \in \mathbb{Q}^+$ (which depends only on $r_P$ and $\epsilon$) with $\alpha > 1$ such that the following is true.
-  Let $r \in \mathbb{Q}^+$ with $r > 1$, let $r_n = 1 + \alpha \cdot (r - 1)$, and let $k = \log_{r_n}{r_P}$.
+  Let $r \in \mathbb{Q}^+$ with $1 < r < 1 + \frac{r_P - 1}{\alpha}$, let $r_n = 1 + \alpha \cdot (r - 1)$, and let $k = \ceil{\log_{r_n}{r_P}}$.
   Then
   \begin{equation*}
     r < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon}.
@@ -823,10 +823,12 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
   \begin{equation*}
     \alpha > \frac{(r_n - 1) \left[2k \cdot (1 + \epsilon) - \epsilon\right]}{\epsilon}.
   \end{equation*}
+  %% Here, there is some slack in the proof.
   In fact, we will prove the stronger lower bound
   \begin{equation*}
-    \alpha > \frac{(r_n - 1)\left[2k \cdot (1 + \epsilon)\right]}{\epsilon}.
+    \alpha > \frac{(r_n - 1)\left[2k \cdot (1 + \epsilon)\right]}{\epsilon}
   \end{equation*}
+  by finding an upper bound on $k$ which allows us to cancel the $(r_n - 1)$ term in the numerator.
 
   Since $k$ is defined to equal $\ceil{\log_{r_n}{r_P}}$, we have
   \begin{align*}
@@ -836,7 +838,7 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
     & = \frac{r_n \log{r_P} + r_n - 1}{r_n - 1} \\
     & < \frac{r_P \log{r_P} + r_P - 1}{r_n - 1},
   \end{align*}
-  where the last inequality is true because we have assumed $r_n < r_P$.
+  where the last inequality is true because we have assumed $r < 1 + \frac{r_P - 1}{\alpha}$, which implies $r_n < r_P$.
   Since we know $k \cdot (r_n - 1) < r_P \log r_P + r_P - 1$ it suffices to choose
   \begin{equation*}
     \alpha \geq \frac{2(1 + \epsilon)(r_P \log r_P + r_P - 1)}{\epsilon}.
@@ -993,7 +995,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \begin{equation*}
     r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}.
   \end{equation*}
-  By \autoref{lem:alpha} there exists a constant $\alpha$ that depends only on $r_P$ (defined by the approximation algorithm $A_P$) and $\epsilon$ (defined in a previous theorem) such that
+  By \autoref{lem:alpha} (using the assumption that $r_n < r_P$), there exists a constant $\alpha$ that depends only on the constant $r_P$ (defined by the approximation algorithm $A_P$) and the constant $\epsilon$ (defined in a previous theorem) such that
   \begin{equation}\label{eq:rupper}
     r < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon}.
   \end{equation}
