@@ -957,10 +957,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   For any $\tau$ that satisfies a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses in $\psi_i$ for all $i \leq k - 1$, if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
   We will assume for now that $\tau$ does indeed satisfy a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses of $\psi_i$ for all $i$, and delay the proof of this fact until later.
   Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
-  Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$.
-  \begin{todo}
-    Note that this function can be computed in logarithmic space.
-  \end{todo}
+  Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$; this function can be computed in logarithmic space by \autoref{lem:evaluation}.
 
   Let $j$ be the maximum $i$ such that $\tau_i$ satisfies $\phi_i$ (such a $j$ exists because $m^*_P(x)$ is in some interval, and for all intervals beyond that one, $\phi_i$ must not be satisfiable).
   This implies that there is a $y$ in interval $j$ with
