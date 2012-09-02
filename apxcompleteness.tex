@@ -750,7 +750,7 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
 
 \begin{lemma}\label{lem:bounds}
   Let $r, r_i, k > 1$.
-  Let $\psi$ be a Boolean formula which satisfies $\psi = \psi_0 \land \psi_1 \land \dotsb \land \psi_{k - 1}$, where each $\psi_i$ is a 3-CNF Boolean formula with at most $M$ satisfiable clauses.
+  Let $\psi$ be a Boolean formula which satisfies $\psi = \psi_0 \land \psi_1 \land \dotsb \land \psi_{k - 1}$, where each $\psi_i$ is a 3-CNF Boolean formula with exactly $M$ clauses, for some $M \in \mathbb{N}$.
   Let $R(\psi, \tau)$ be the performance ratio corresponding to \textsc{Maximum 3-Satisfiability} for all 3-CNF Boolean formulae $\psi$ and all truth assignments $\tau$.
   Let $\tau$ be a truth assignment such that $R(\psi, \tau) \leq r$ and $R(\psi_i, \tau) = r_i$, for all $i \leq k - 1$ (here, $R(\psi_i, \tau)$ is the performance ratio of $\tau$ with respect to only $\psi_i$).
   Then $r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}$.
@@ -769,7 +769,7 @@ Before proceeding to \autoref{thm:maxcomplete}, we require the following lemmata
     & = m^*(\psi) \left(\frac{r - 1}{r}\right)\\
     & \leq kM \left(\frac{r - 1}{r}\right),
   \end{align*}
-  where the final inequality is true because there are at most $M$ satisfiable clauses in each of the $k$ formulas $\psi_0, \psi_1, \dotsc, \psi_{k - 1}$.
+  where the final inequality is true because there are at most $M$ (satisfiable) clauses in each of the $k$ formulae $\psi_0, \psi_1, \dotsc, \psi_{k - 1}$.
 
   Since
   \begin{equation*}
