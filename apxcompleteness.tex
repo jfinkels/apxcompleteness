@@ -944,11 +944,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Since $B$ writes a solution $y$ before it accepts, $C(B, (x, i))$ will have some variables, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
   Applying $f_s$ to this Boolean formula produces a 3-CNF formula which has a gap behavior which will be discussed later (since it depends on $g_s$).
   Observe that $f(x, r)$ is still a 3-CNF formula, since a conjunction of 3-CNF formulae is itself a 3-CNF formula.
-  We assume without loss of generality also that each formula $f_s(C(B(x, i)))$ has the same number of clauses, say $M$.
-  \begin{todo}
-    Why is this without loss of generality?
-    Adding more clauses may change the fraction of satisfiable clauses\ldots
-  \end{todo}
+  We assume without loss of generality also (by padding with unsatisfiable clauses) that each formula $f_s(C(B, (x, i)))$ has the same number of clauses, say $M$.
 
   Now, to determine how to define $g$, first suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
   For each $i$ with $0 \leq i \leq k - 1$, let $\phi_i = C(B(x, i))$ and $\psi_i = f_s(\phi_i)$.
@@ -988,8 +984,9 @@ We describe the idea of the proof before presenting the proof itself, since it i
   We will prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$, and in doing so we will also choose the value of the constant $\alpha$.
   By \autoref{lem:bounds}, we know that
   \begin{equation*}
-    r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)}.
+    r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)},
   \end{equation*}
+  where $r_i$ is the performance ratio of $\tau$ with respect to only $\psi_i$.
   By \autoref{lem:alpha} (using the assumption that $r_n < r_P$), there exists a constant $\alpha$ that depends only on the constant $r_P$ (defined by the approximation algorithm $A_P$) and the constant $\epsilon$ (defined in a previous theorem) such that
   \begin{equation}\label{eq:rupper}
     r < 1 + \frac{\epsilon}{2k \cdot (1 + \epsilon) - \epsilon}.
