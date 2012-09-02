@@ -951,6 +951,10 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Let $\psi = f(x, r)$, so $\tau$ is a truth assignment to $\psi$ which satisfies some of the clauses.
   Suppose $g_s$ is the function from the enhanced gap-introducing reduction which produces solutions for $P$, as described in the preceding discussion.
   For any $\tau$ that satisfies a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses in $\psi_i$ for all $i \leq k - 1$, if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
+  \begin{todo}
+    Should this be ``maximum number of satisfiable clauses'' or ``total number of clauses'', or something else?
+    Check the book, and revise the definitions of ``enhanced'' reductions.
+  \end{todo}
   We will assume for now that $\tau$ does indeed satisfy a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses of $\psi_i$ for all $i$, and delay the proof of this fact until later.
   Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
   Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$; this function can be computed in logarithmic space by \autoref{lem:evaluation}.
