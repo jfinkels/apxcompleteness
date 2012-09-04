@@ -72,7 +72,9 @@ We denote the set of positive rational numbers by $\mathbb{Q}^*$ and the natural
 A decision problem is a subset of $\Sigma^*$.
 A binary relation $R \subseteq \Sigma^* \times \Sigma^*$ is \emph{polynomially bounded} if there exists a polynomial $p$ such that for all $(x, y) \in R$, we have $|y| \leq p(|x|)$.
 
-\subsection{Complexity classes}
+\subsection{Decision problems}
+
+\subsubsection{Classes of decision problems}
 
 \NP{} is the class of decision problems $L$ for which there exists a polynomially bounded \emph{solution relation} (or \emph{\NP{} relation}) $R$ such that
 \begin{enumerate}
@@ -108,33 +110,11 @@ The class of functions computable by a \NC{} circuit family is denoted \FNC.
   The addition, subtraction, multiplication, division, and exponentiation functions are all computable by \NC{} circuit families.
 \end{lemma}
 
-\subsection{Reductions among decision problems}
+\subsubsection{Reductions among decision problems}
 
 If $P$ and $Q$ are two decision problems, we say \emph{$P$ many-one reduces to $Q$} and write $P \mornt Q$ if there exists a function $f$ such that $x \in P$ if and only if $f(x) \in Q$.
 If $f$ is computable in polynomial time (respectively, \NC) then we say the reduction is a polynomial time (respectively, \NC) many-one reduction and write $P \mor Q$ (respectively, $P \mornc Q$).
 For any complexity class $\mathcal{C}$ and $Q \in \mathcal{C}$, if for all problems $P \in \mathcal{C}$ we have $P$ many-one reduces to $Q$, then we say $Q$ is complete for $\mathcal{C}$ under many-one reductions.
-
-\subsection{Probabilistically checkable proofs}
-
-A \emph{$(r(n), q(n))$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $|x| = n$, $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $O(r(n))$ random bits from $\rho$ and reads (with random access) at most $O(q(n))$ bits from $\pi$.
-Define the complexity class $\PCP(r(n), q(n))$ (for \emph{probabilistically checkable proofs} with $O(r(n))$ random bits and $O(q(n))$ proof queries) as follows: a decision problem $L \in \PCP(r(n), q(n))$ if there exists a $(r(n), q(n))$-verifier $V$ and a polynomial $p$ such that
-\begin{enumerate}
-\item
-  if $x \in L$ then there exists a $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$ such that
-  \begin{displaymath}
-    \Pr_{\rho \in \Sigma^{p(|x|)}}\left[V(x, \pi; \rho) \textnormal{ accepts}\right] = 1,
-  \end{displaymath}
-  and
-\item
-  if $x \notin L$ then for all $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$, we have
-  \begin{displaymath}
-    \Pr_{\rho \in \Sigma^{p(|x|)}}\left[V(x, \pi; \rho) \textnormal{ accepts}\right] < \frac{1}{2}.
-  \end{displaymath}
-\end{enumerate}
-
-\begin{theorem}[PCP Theorem \cite{pcp}]\label{thm:pcp}
-  $\NP = \PCP(\lg n, 1)$.
-\end{theorem}
 
 \subsection{Optimization problems}
 
@@ -283,6 +263,28 @@ See \cite{buss87} for an exact characterization of the complexity of the Boolean
   Since Boolean function evaluation is in \NC{} and computing the sum of $m$ numbers is in \NC, the measure function is computable by an \NC{} circuit family.
 \end{proof}
 
+\subsection{Probabilistically checkable proofs}
+
+A \emph{$(r(n), q(n))$-verifier} is a probabilistic polynomial time Turing machine that, on input $(x, \pi, \rho)$ where $|x| = n$, $\pi$ is interpreted as a \emph{proof} (also known as a \emph{witness} or \emph{certificate}) and $\rho$ is interpreted as a sequence of random bits, reads at most $O(r(n))$ random bits from $\rho$ and reads (with random access) at most $O(q(n))$ bits from $\pi$.
+Define the complexity class $\PCP(r(n), q(n))$ (for \emph{probabilistically checkable proofs} with $O(r(n))$ random bits and $O(q(n))$ proof queries) as follows: a decision problem $L \in \PCP(r(n), q(n))$ if there exists a $(r(n), q(n))$-verifier $V$ and a polynomial $p$ such that
+\begin{enumerate}
+\item
+  if $x \in L$ then there exists a $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$ such that
+  \begin{displaymath}
+    \Pr_{\rho \in \Sigma^{p(|x|)}}\left[V(x, \pi; \rho) \textnormal{ accepts}\right] = 1,
+  \end{displaymath}
+  and
+\item
+  if $x \notin L$ then for all $\pi \in \Sigma^*$ with $|\pi| \leq p(|x|)$, we have
+  \begin{displaymath}
+    \Pr_{\rho \in \Sigma^{p(|x|)}}\left[V(x, \pi; \rho) \textnormal{ accepts}\right] < \frac{1}{2}.
+  \end{displaymath}
+\end{enumerate}
+
+\begin{theorem}[PCP Theorem \cite{pcp}]\label{thm:pcp}
+  $\NP = \PCP(\lg n, 1)$.
+\end{theorem}
+
 \subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
 
 \begin{definition}[{{\cite[Section~29.1]{vazirani}}}]\label{def:intro}
@@ -351,7 +353,13 @@ Gap-introducing reductions and gap-preserving reductions compose in the natural 
 \begin{lemma}\label{lem:compose}
   Let $P$ be a decision problem and $Q$ and $T$ be maximization problems.
   Suppose there is a polynomial time (respectively, \NC) enhanced gap-introducing reduction $(f, g, c, \epsilon)$ from $P$ to $Q$ and a polynomial time (respectively, \NC) enhanced gap-preserving reduction $(f', g', c_Q, c_T, \alpha, \beta)$ from $Q$ to $T$.
-  If $c(x) \geq c_Q(f(x))$ and $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$ then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is a polynomial time (respectively, \NC) enhanced gap-introducing reduction from $P$ to $Q$, where
+  If
+  \begin{enumerate}
+  \item $\alpha \leq \epsilon$,
+  \item $c(x) \geq c_Q(f(x))$, and
+  \item $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$,
+  \end{enumerate}
+  then $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is a polynomial time (respectively, \NC) enhanced gap-introducing reduction from $P$ to $Q$, where
   \begin{align*}
     \tilde{f}(x) & = f'(f(x)), \\
     \tilde{g}(x, y) & = g(x, g'(f(x), y)), \\
@@ -376,7 +384,7 @@ Gap-introducing reductions and gap-preserving reductions compose in the natural 
   Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} m^*_T(f'(f(x))) = \frac{1}{1 + \beta} m^*_T(f'(f(x)))$.
   Our goal is to show that $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $x \in P$.
   Since we have an enhanced gap-preserving reduction from $Q$ to $T$, we know that $g'(f(x), y_T) \in S_Q(f(x))$ and $m_Q(f(x), g'(f(x), y_T)) \geq \frac{1}{1 + \alpha} m^*_Q(f(x))$.
-  Since we have an enhanced gap-introducing reduction from $P$ to $Q$, we know $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
+  Since $\alpha \leq \epsilon$ and since we have an enhanced gap-introducing reduction from $P$ to $Q$, we know that $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
   Hence $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
 
   Since we have proven the three conditions required for an enhanced gap-introducing reduction, we finally conclude that $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $T$.
@@ -609,7 +617,8 @@ Note that \autoref{lem:intro} did not use any information specific to \textsc{Sa
   \end{align*}
   where $k$ is some constant.
 
-  To meet the conditions in the hypothesis of \autoref{lem:compose}, we need $c(\phi) \geq c_Q(f(\phi))$ and $\frac{1}{1 + \epsilon} \cdot c(\phi) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(\phi))$.
+  To meet the conditions in the hypothesis of \autoref{lem:compose}, we need $\alpha \leq \epsilon$, $c(\phi) \geq c_Q(f(\phi))$, and $\frac{1}{1 + \epsilon} \cdot c(\phi) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(\phi))$.
+  The first property is true because $\alpha = \epsilon$.
   Since $c(\phi) = n^{c_0}$ and $c_Q(f(\phi)) = c_Q(\pair{B}{G}) = |G| = n^{c_0}$, the first inequality is satisfied.
   Since $\frac{1}{1 + \epsilon} \cdot c(\phi) = \frac{1}{2} \cdot n^{c_0}$ and $\frac{1}{1 + \alpha} \cdot c_Q(f(\phi)) = \frac{1}{2} \cdot c_Q(\pair{B}{G}) = \frac{1}{2} \cdot n^{c_0}$, the second inequality is also satisfied.
 
