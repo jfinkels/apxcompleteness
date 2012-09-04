@@ -307,15 +307,16 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
   The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time (respectively, \NC) computable function $g \colon \Sigma^* \times \Sigma^* \to \Sigma^*$ such that for all $x \in \Sigma^*$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot m^*(f(x))$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
 \end{definition}
 
-%% An enhanced gap-introducing reduction is a gap-introducing reduction by definition.
-%% Notice that from \autoref{lem:xinp} it is vacuously true that $\left(x, g(x, y)\right) \in R_P$ implies $x \in P$, since the conclusion is always true.
+%% Notice from \autoref{lem:xinp} that when an enhanced gap-introducing reduction has ``reasonable'' parameters, it is vacuously true that $\left(x, g(x, y)\right) \in R_P$ implies $x \in P$, since the conclusion is always true.
 %% The interesting case is the converse, because it requires that $g$ produce a witness that $x$ is in $P$ even though it may only have an approximate solution $y$.
 
 %% \begin{lemma}\label{lem:xinp}
-%%   If there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$, then for all $x \in I_P$ and all $y \in S_Q(f(x))$, if $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$.
+%%   Suppose there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$ where $Q = (I, S, m, \max)$.
+%%   Let $x \in \Sigma^*$ and $y \in S(f(x))$.
+%%   If $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot m^*(f(x))$ and $m^*(f(x)) \geq c(x)$, then $x \in P$.
 %% \end{lemma}
 %% \begin{proof}
-%%   Since $m^*(f(x)) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
+%%   Since $m^*(f(x)) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} m^*(f(x)) \geq \frac{1}{1 + \epsilon} c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
 %% \end{proof}
 
 We also want to be able to use a reduction which preserves some gap behavior between optimization problems.
@@ -372,10 +373,10 @@ Gap-introducing reductions and gap-preserving reductions compose in the natural 
   Since $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) < \frac{1}{1 + \beta} \cdot c_T(f'(f(x))) = \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
 
   We have now shown that the stated reduction is gap-introducing; it remains to show that it is also enhanced.
-  Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} \cdot m^*_T(f'(f(x))) = \frac{1}{1 + \beta} \cdot m^*_T(f'(f(x)))$.
+  Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} m^*_T(f'(f(x))) = \frac{1}{1 + \beta} m^*_T(f'(f(x)))$.
   Our goal is to show that $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $x \in P$.
-  Since we have an enhanced gap-preserving reduction from $Q$ to $T$, we know that $g'(f(x), y_T) \in S_Q(f(x))$ and $m_Q(f(x), g'(f(x), y_T)) \geq \frac{1}{1 + \alpha} \cdot m^*_Q(f(x))$.
-  Since we have an enhanced gap-introducing reduction from $P$ to $Q$, we know that $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
+  Since we have an enhanced gap-preserving reduction from $Q$ to $T$, we know that $g'(f(x), y_T) \in S_Q(f(x))$ and $m_Q(f(x), g'(f(x), y_T)) \geq \frac{1}{1 + \alpha} m^*_Q(f(x))$.
+  Since we have an enhanced gap-introducing reduction from $P$ to $Q$, we know $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
   Hence $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
 
   Since we have proven the three conditions required for an enhanced gap-introducing reduction, we finally conclude that $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $T$.
@@ -512,12 +513,13 @@ In order to show that \textsc{Maximum 3-Satisfiability} is hard to approximate, 
   In this case, every truth assignment satisfies less than half of all the $n^{c_0}$ functions in $G$.
   Hence $m^*(f(\phi)) = m^*((B, G)) < \frac{1}{2} \cdot n^{c_0} = \frac{1}{1 + \epsilon} c(\phi)$.
   
-  To show that this gap-introducing reduction is enhanced, we suppose $\tau$ is a satisfying assignment for $f(\phi)$ which satisfies at least $\frac{1}{2} \cdot n^{c_0}$ of the functions in $f(\phi)$.
+  To show that this gap-introducing reduction is enhanced, we suppose $\tau$ is a satisfying assignment for $f(\phi)$ which satisfies at least half of the satisfiable functions in $f(\phi)$.
   Let $R_P$ be the \NP-relation corresponding to $P$.
   Our goal is to show that $(\phi, g(\phi, \tau)) \in R_P$ if and only if $\phi \in P$.
-  By \autoref{lem:xinp}, it suffices to show that $\phi \in P$ implies $(\phi, g(\phi, \tau)) \in R_P$.
-  If $\phi$ is satisfiable, then all its clauses are satisfiable.
-  Subsequently, all the functions in $f(\phi)$ are satisfiable.
+  The forward implication is trivially true, since the existence of any satisfying assignment for $\phi$ implies that $\phi$ is satisfiable.
+  Therefore, it suffices to show that $\phi \in P$ implies $(\phi, g(\phi, \tau)) \in R_P$.
+  Suppose $\phi$ is satisfiable.
+  Since all the clauses in $\phi$ must be satisfiable, all the functions in $f(\phi)$ are satisfiable.
   Then $g(\phi, \tau)$, which equals $\tau^+$, is a truth assignment on which the verifier $V$ will accept with probability 1 (it ignores the bits of $\tau^+$ not in $\tau$).
   Hence $(\phi, g(\phi, \tau)) \in R_P$.
 
