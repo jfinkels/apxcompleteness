@@ -703,11 +703,8 @@ This means that if there were a polynomial time approximation scheme for this pr
 In fact, we have $\P = \NP$ if and only if $\APX = \PTAS$ \cite[Section~2]{crescenzi97}, and $\NC = \NNC$ if and only if $\NCX = \NCAS$.
 (Interestingly, we also have $\P = \NP$ if and only if $\APX = \NCX$ \cite[Theorem~8.2.9]{dsst97}.)
 Therefore, just as \NP-completeness intuitively implies hardness of decision for decision problems, so does \APX-completeness imply hardness of approximation for optimization problems.
-As a historical note, \APX{}-completeness was a precursor to hardness of approximation results due to the PCP Theorem.
 
-\begin{todo}
-  What does it mean for an optimization problem to be both complete for \APX{} under polynomial time reductions and complete for \NCX{} under polynomial time reductions?
-\end{todo}
+As a historical note, \APX{}-completeness was a precursor to hardness of approximation results due to the PCP Theorem.
 
 \subsection{\texorpdfstring{\APX}{APX}-completeness}\label{ssc:apxcomplete}
 
@@ -964,10 +961,6 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Let $\psi = f(x, r)$, so $\tau$ is a truth assignment to $\psi$ which satisfies some of the clauses.
   Suppose $g_s$ is the function from the enhanced gap-introducing reduction which produces solutions for $P$, as described in the preceding discussion.
   For any $\tau$ that satisfies a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses in $\psi_i$ for all $i \leq k - 1$, if we let $\tau_i = g_s(\phi_i, \tau)$ then $\tau_i$ satisfies $\phi_i$ if and only if $\phi_i$ is satisfiable.
-  \begin{todo}
-    Should this be ``maximum number of satisfiable clauses'' or ``total number of clauses'', or something else?
-    Check the book, and revise the definitions of ``enhanced'' reductions.
-  \end{todo}
   We will assume for now that $\tau$ does indeed satisfy a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses of $\psi_i$ for all $i$, and delay the proof of this fact until later.
   Furthermore, if $\phi_i$ is satisfiable via truth assignment $\tau_i$, then we can recover the bits of the solution $y$ from the appropriate variables of $\phi_i$, as described previously.
   Let $T$ be the function which outputs $y$ given $\phi_i$ and $\tau_i$; this function can be computed in logarithmic space by \autoref{lem:evaluation}.
