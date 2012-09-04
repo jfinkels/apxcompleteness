@@ -304,19 +304,21 @@ Notice that as the value of $\epsilon$ increases, so does the ``gap'' between th
   Let $P\in\NP$ and $Q$ be a maximization problem in \NPO, with $Q = (I, S, m, \max)$.
   Let $R_P$ be the \NP{} relation induced by $P$.
   Suppose there is a polynomial time (respectively, \NC) gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$.
-  The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time (respectively, \NC) computable function $g \colon I \times \Sigma^* \to \Sigma^*$ such that for all $x \in I$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
+  The gap-introducing reduction is \emph{enhanced} if there exists a polynomial time (respectively, \NC) computable function $g \colon \Sigma^* \times \Sigma^* \to \Sigma^*$ such that for all $x \in \Sigma^*$ and all $y \in S(f(x))$ with $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot m^*(f(x))$, we have $\left(x, g(x, y)\right) \in R_P$ if and only if $x \in P$.
 \end{definition}
 
-An enhanced gap-introducing reduction is a gap-introducing reduction by definition.
-Notice that from \autoref{lem:xinp} it is vacuously true that $\left(x, g(x, y)\right) \in R_P$ implies $x \in P$, since the conclusion is always true.
-The interesting case is the converse, because it requires that $g$ produce a witness that $x$ is in $P$ even though it may only have an approximate solution $y$.
+%% An enhanced gap-introducing reduction is a gap-introducing reduction by definition.
+%% Notice that from \autoref{lem:xinp} it is vacuously true that $\left(x, g(x, y)\right) \in R_P$ implies $x \in P$, since the conclusion is always true.
+%% The interesting case is the converse, because it requires that $g$ produce a witness that $x$ is in $P$ even though it may only have an approximate solution $y$.
 
-\begin{lemma}\label{lem:xinp}
-  If there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$, then for all $x \in I_P$ and all $y \in S_Q(f(x))$, if $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$.
-\end{lemma}
-\begin{proof}
-  Since $m^*(f(x)) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
-\end{proof}
+%% \begin{lemma}\label{lem:xinp}
+%%   If there is a gap-introducing reduction $(f, c, \epsilon)$ from $P$ to $Q$, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$, then for all $x \in I_P$ and all $y \in S_Q(f(x))$, if $m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ then $x \in P$.
+%% \end{lemma}
+%% \begin{proof}
+%%   Since $m^*(f(x)) \geq m(f(x), y) \geq \frac{1}{1 + \epsilon} \cdot c(x)$, we have $x \in P$ by condition 2 of the gap-introducing reduction.
+%% \end{proof}
+
+We also want to be able to use a reduction which preserves some gap behavior between optimization problems.
 
 \begin{definition}[{{\cite[Section~29.1]{vazirani}}}]
   Let $P$ and $Q$ be maximization problems, where $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
@@ -339,7 +341,7 @@ Like the enhanced gap-introducing reduction, there is also an enhanced gap-prese
 \begin{definition}
   Let $P$ and $Q$ be two maximization problems, defined by $P = (I_P, S_P, m_P, \max)$ and $Q = (I_Q, S_Q, m_Q, \max)$.
   Suppose that there exists a polynomial time (respectively, \NC) gap-preserving reduction $(f, c_P, c_Q, \alpha, \beta)$ from $P$ to $Q$.
-  The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time (respectively, \NC) computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$ with $m_Q(f(x), y) \geq \frac{1}{1 + \beta} \cdot c_Q(f(x))$, we have $g(x, y) \in S_P(x)$ and $m_P(x, g(x, y)) \geq \frac{1}{1 + \alpha} \cdot c_P(x)$.
+  The gap-preserving reduction is \emph{enhanced} if there exists a polynomial time (respectively, \NC) computable function $g \colon I_P \times \Sigma^* \to \Sigma^*$ such that for all $x \in I_P$ and all $y \in S_Q(f(x))$ with $m_Q(f(x), y) \geq \frac{1}{1 + \beta} \cdot m^*_Q(f(x))$, we have $g(x, y) \in S_P(x)$ and $m_P(x, g(x, y)) \geq \frac{1}{1 + \alpha} \cdot m^*_P(x)$.
   We identify such a reduction with the six-tuple $(f, g, c_P, c_Q, \alpha, \beta)$.
 \end{definition}
 
@@ -370,10 +372,10 @@ Gap-introducing reductions and gap-preserving reductions compose in the natural 
   Since $\frac{1}{1 + \epsilon} \cdot c(x) \leq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$ by hypothesis, it follows that $m^*_T(f'(f(x))) < \frac{1}{1 + \beta} \cdot c_T(f'(f(x))) = \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x)$.
 
   We have now shown that the stated reduction is gap-introducing; it remains to show that it is also enhanced.
-  Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} \cdot \tilde{c}(x) = \frac{1}{1 + \beta} \cdot c_T(f'(f(x)))$.
+  Suppose $y_T \in S_T(f'(f(x)))$ and $m_T(f'(f(x)), y_T) \geq \frac{1}{1 + \tilde{\epsilon}} \cdot m^*_T(f'(f(x))) = \frac{1}{1 + \beta} \cdot m^*_T(f'(f(x)))$.
   Our goal is to show that $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $x \in P$.
-  Since we have an enhanced gap-preserving reduction from $Q$ to $T$, we know that $g'(f(x), y_T) \in S_Q(f(x))$ and $m_Q(f(x), g'(f(x), y_T)) \geq \frac{1}{1 + \alpha} \cdot c_Q(f(x))$.
-  Since we have an enhanced gap-introducing reduction from $P$ to $Q$ and $\frac{1}{1 + \alpha} \cdot c_Q(f(x)) \geq \frac{1}{1 + \epsilon} \cdot c(x)$ by hypothesis, we know that $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
+  Since we have an enhanced gap-preserving reduction from $Q$ to $T$, we know that $g'(f(x), y_T) \in S_Q(f(x))$ and $m_Q(f(x), g'(f(x), y_T)) \geq \frac{1}{1 + \alpha} \cdot m^*_Q(f(x))$.
+  Since we have an enhanced gap-introducing reduction from $P$ to $Q$, we know that $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
   Hence $(x, \tilde{g}(x, y_T)) \in R_P$ if and only if $(x, g(x, g'(f(x), y_T))) \in R_P$ if and only if $x \in P$.
 
   Since we have proven the three conditions required for an enhanced gap-introducing reduction, we finally conclude that $(\tilde{f}, \tilde{g}, \tilde{c}, \tilde{\epsilon})$ is an enhanced gap-introducing reduction from $P$ to $T$.
@@ -944,7 +946,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   Since $B$ writes a solution $y$ before it accepts, $C(B, (x, i))$ will have some variables, $y_1, y_2, \dotsc, y_{p(|x|)}$, which, correspond to the bits of a solution $y$, should one exist in subinterval $i$.
   Applying $f_s$ to this Boolean formula produces a 3-CNF formula which has a gap behavior which will be discussed later (since it depends on $g_s$).
   Observe that $f(x, r)$ is still a 3-CNF formula, since a conjunction of 3-CNF formulae is itself a 3-CNF formula.
-  We assume without loss of generality also (by padding with unsatisfiable clauses) that each formula $f_s(C(B, (x, i)))$ has the same number of clauses, say $M$.
+  We assume without loss of generality (by padding with unsatisfiable clauses) that each formula $f_s(C(B, (x, i)))$ has the same number of clauses, say $M$.
 
   Now, to determine how to define $g$, first suppose $x \in I$ and $\tau \in S_Q(f(x, r))$.
   For each $i$ with $0 \leq i \leq k - 1$, let $\phi_i = C(B(x, i))$ and $\psi_i = f_s(\phi_i)$.
@@ -985,7 +987,7 @@ We describe the idea of the proof before presenting the proof itself, since it i
   \end{algorithm}
 
   We now complete the tasks which we delayed above.
-  We will prove that any truth assignment $\tau$ to $\psi$ satisfies at least a factor $\frac{1}{1 + \epsilon}$ of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$, and in doing so we will also choose the value of the constant $\alpha$.
+  We will prove that any truth assignment $\tau$ to $\psi$ satisfies at least a $\frac{1}{1 + \epsilon}$ factor of the maximum number of satisfiable clauses in each $\psi_i$ for each $i \leq k - 1$, and in doing so we will also choose the value of the constant $\alpha$.
   By \autoref{lem:bounds}, we know that
   \begin{equation*}
     r_i \leq \frac{1}{1 - 2k\left(\frac{r - 1}{r}\right)},
