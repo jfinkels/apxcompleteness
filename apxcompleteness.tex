@@ -189,6 +189,9 @@ The set of variables which appear in a Boolean formula is $Var(\phi)$.
 A \emph{truth assignment} to a Boolean formula $\phi$ is a function $\tau \colon Var(\phi) \to \{0, 1\}$.
 A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the variables in $\phi$ with their corresponding truth assignments yields a true formula.
 
+In this work, the most important decision problem concerning Boolean formulae is the \textsc{Satisfiability} problem, which is the problem of deciding whether a Boolean formula is satisfiable.
+We will also consider its restriction to 3-CNF Boolean formula, and a corresponding optimization problem.
+
 \begin{definition}[\textsc{Satisfiability}]
   \mbox{}
   \begin{instance}
@@ -222,30 +225,20 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
   \end{measure}
 \end{definition}
 
-\begin{lemma}[Cook-Levin Theorem]\label{lem:cooklevin}
-  There exists a logarithmic-space (and more generally an \NC{} and \P) computable function $C$ which takes two inputs, the description of a Turing machine $B$ and a tuple of its arguments $(x_1, x_2, \dotsc, x_k)$, and outputs a Boolean formula $\phi$ whose variables represent the bits of the arguments to $C$, such that $B(x_1, x_2, \dotsc, x_k)$ accepts if and only if $\phi$ is satisfiable.
-\end{lemma}
-
-\begin{todo}
-  Find a reference which explicitly states that the Cook-Levin reduction is computable in logarithmic space.
-\end{todo}
-
-\begin{lemma}\label{lem:satisnnccomplete}
-  $\textsc{Satisfiability}$ is complete for \NNC{} under \NC{} many-one reductions, and more generally it is complete for \NP{} under polynomial time many-one reductions.
-\end{lemma}
-\begin{proof}
-  Since $\NP = \NNC$ and $\NC \subseteq \P$ it suffices to show that the problem is complete in $\NP$ under $\NC$ reductions.
-  By \autoref{lem:cooklevin}, there is a logarithmic space computable (and hence \NC{} computable) function which maps any nondeterministic polynomial time Turing machine to an equivalent Boolean formula.
-  This function satisfies the requirements of an \NC{} many-one reduction.
-\end{proof}
-
-\begin{lemma}\label{lem:half}
- At least half of the clauses of any Boolean formula in conjunctive normal form are always satisfiable.
-\end{lemma}
+We sometimes wish to transform a general CNF Boolean formula to a 3-CNF Boolean formula.
+The following lemma guarantees such a transformation.
 
 \begin{lemma}[{{\cite[Example~6.5]{book}}}]\label{lem:three}
   There is an \NC{} computable function $T$ that maps a Boolean formula in conjunctive normal form with $c$ clauses and at most $k$ literals per clause into an equivalent Boolean formula in conjunctive normal form with $c \cdot (k - 2)$ clauses and at most three literals per clause.
 \end{lemma}
+
+It will be helpful to have a lower bound on the number of clauses in a Boolean formula that are satisfiable.
+
+\begin{lemma}[{{\cite[]{citationneeded}}}]\label{lem:half}
+ At least half of the clauses of any Boolean formula in conjunctive normal form are always satisfiable.
+\end{lemma}
+
+It is also necessary for us to know the computational complexity of \emph{evaluating} (or \emph{simplifying}) a Boolean formula given a (partial) truth assignment.
 
 \begin{lemma}\label{lem:evaluation}
   There is a logarithmic space (more generally, a polynomial time) Turing machine which, when given Boolean formula $\phi$ and truth assignment $\tau$, whether $\tau$ satisfies $\phi$.
@@ -253,8 +246,28 @@ A truth assignment \emph{satisfies} a Boolean formula $\phi$ if replacing the va
 
 See \cite{buss87} for an exact characterization of the complexity of the Boolean formula evaluation problem.
 
+The Cook-Levin Theorem provides a generic transformation from a nondeterministic polynomial time Turing machine to an equivalent Boolean formula which captures its exact computation.
+A proof can be found in any introductory text on computational complexity, although most texts just provide a polynomial time computable function and note that a more careful examination of the proof would produce a logarithmic space computable function.
+
+\begin{lemma}[Cook-Levin Theorem]\label{lem:cooklevin}
+  There exists a logarithmic space (and more generally an \NC{} and \P) computable function $C$ which takes two inputs, the description of a nondeterministic polynomial time Turing machine $B$ and a tuple of its arguments $(x_1, x_2, \dotsc, x_k)$, and outputs a Boolean formula $\phi$ (of polynomial size with respect to the size of $(x_1, x_2, \dotsc, x_k)$) whose variables represent the bits of the arguments to $C$, such that $B(x_1, x_2, \dotsc, x_k)$ accepts if and only if $\phi$ is satisfiable.
+\end{lemma}
+
+The Cook-Levin Theorem provides a generic reduction which allows us to prove that \textsc{Satisfiability} is \NP-complete (recall that $\NNC = \NP$).
+
+\begin{lemma}\label{lem:satisnnccomplete}
+  \textsc{Satisfiability} is complete for \NNC{} under \NC{} many-one reductions, and more generally it is complete for \NP{} under polynomial time many-one reductions.
+\end{lemma}
+\begin{proof}
+  Since $\NP = \NNC$ and $\NC \subseteq \P$ it suffices to show that the problem is complete in $\NP$ under $\NC$ reductions.
+  By \autoref{lem:cooklevin}, there is a logarithmic space computable (and hence \NC{} computable) function which maps any nondeterministic polynomial time Turing machine to an equivalent Boolean formula.
+  This function satisfies the requirements of an \NC{} many-one reduction.
+\end{proof}
+
+We also wish to know the complexity of the \textsc{Maximum 3-Satisfiability} problem.
+
 \begin{lemma}\label{lem:maxsatnnco}
-  $\textsc{Maximum 3-Satisfiability}$ is in \NNCO, and more generally in $\NPO$.
+  \textsc{Maximum 3-Satisfiability} is in \NNCO, and more generally in \NPO.
 \end{lemma}
 \begin{proof}
   It is clear that the instance set is decidable in \NC.
