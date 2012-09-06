@@ -232,9 +232,12 @@ The following lemma guarantees such a transformation.
 
 It will be helpful to have a lower bound on the number of clauses in a Boolean formula that are satisfiable.
 
-\begin{lemma}[{{\cite[]{citationneeded}}}]\label{lem:half}
+\begin{lemma}\label{lem:half}
  At least half of the clauses of any Boolean formula in conjunctive normal form are always satisfiable.
 \end{lemma}
+\begin{proofidea}
+  Iteratively choose the true or false setting of the variable which would satisfy the greatest number of clauses, simplifying after each step.
+\end{proofidea}
 
 It is also necessary for us to know the computational complexity of \emph{evaluating} (or \emph{simplifying}) a Boolean formula given a (partial) truth assignment.
 
