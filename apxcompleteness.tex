@@ -126,6 +126,7 @@ The \emph{performance ratio}, $R$, of a solution $y$ for $x$ is
 \end{displaymath}
 A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^*$.
 If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \emph{$\delta$-approximator}.
+A function $f \colon I \times \mathbb{N} \to \Sigma^*$ is an \emph{approximation scheme} if $R(x, f(x, k)) \leq 1 + \frac{1}{k}$ for all $x \in I$ and all $k \in \mathbb{N}$.
 
 For the sake of simplicity, in \autoref{ssc:gaps} and \autoref{sec:hardness} (the sections dealing with hardness of approximation) we will consider \emph{only} maximization problems, although the definitions and results also hold for minimization problems, with the appropriate (slight) changes to the definitions (for example, in \autoref{def:intro} we would require that $m^*(f(x)) > (1 + \epsilon) \cdot c(x)$ instead of $m^*(f(x)) < \frac{1}{1 + \epsilon} \cdot c(x)$).
 
@@ -150,6 +151,20 @@ The complexity class \NCX{} is the subclass of \NNCO{} in which for each optimiz
 The complexity class \NCAS{} is the subclass of \NCX{} in which for each optimization problem $P$, defined by $P = (I, S, m, t)$, there exists a function $f \colon I \times \mathbb{N} \to \Sigma^*$ such that $R(x, f(x, k)) \leq 1 + \frac{1}{k}$ for all $x \in I$ and all $k \in \mathbb{N}$, and $f$ is computable by an \FNC{} circuit family with respect to the length of $x$.
 
 Note that since $\NNC \subseteq \NP$, it follow that $\NNCO \subseteq \NPO$.
+
+\subsubsection{Classes of approximable optimization problems}
+
+We will also consider classes of optimization problems which have efficient approximation algorithms.
+\begin{definition}
+  Let $P \in \NPO$.
+  $P \in \APX$ if there exists a polynomial time computable $r$-approximator for $P$, where $r(n) \in O(1)$ for all $n \in \mathbb{N}$.
+  $P \in \PTAS$ if there exists an approximation scheme $f$ for $P$ such that $f(x, k)$ is computable in polynomial time with respect to the length of $x$.
+\end{definition}
+\begin{definition}
+  Let $P \in \NNCO$.
+  $P \in \NCX$ if there exists an $r$-approximator in \FNC{} for $P$, where $r(n) \in O(1)$ for all $n \in \mathbb{N}$.
+  $P \in \NCAS$ if there exists an approximation scheme $f$ for $P$ such that $f_k \in \FNC$ for each $k \in \mathbb{N}$, where $f_k(x) = f(x, k)$ for all $x \in \Sigma^*$.
+\end{definition}
 
 \subsubsection{Reductions among optimization problems}
 
