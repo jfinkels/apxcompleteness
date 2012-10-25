@@ -5,20 +5,28 @@ This work contains a proof that Maximum 3-Satisfiability is complete for the
 class APX under AP reductions, as well as a proof that it is hard to
 approximate.
 
-Copyright 2012 Jeffrey Finkelstein.
+This file was last updated on 25 October 2012.
 
-Both the LaTeX markup and the compiled document itself are licensed under the
-Creative Commons Attribution-ShareAlike License 3.0. Visit
-[https://creativecommons.org/licenses/by-sa/3.0/][1] to view a copy of this
-license.
+Downloading
+-----------
 
-The author can be contacted via email at <jeffreyf@bu.edu>.
+This paper can be found at https://github.com/jfinkels/apxcompleteness.
 
-[1]: https://creativecommons.org/licenses/by-sa/3.0/
+To download the paper using [Git][1], run
 
-## Requirements ##
+    git clone git://github.com/jfinkels/apxcompleteness
 
-Compiling this work requires the following LaTeX packages:
+[1]: http://git-scm.com
+
+A somewhat recent version of this work should be available at
+https://github.com/jfinkels/apxcompleteness/downloads, but I can't guarantee
+that that will always be up to date, since I compile and upload it manually.
+
+Compilation dependencies
+------------------------
+
+Besides `pdflatex`, compile-time dependencies include the following LaTeX
+packages:
 
 * `algorithm`
 * `algpseudocode`
@@ -29,22 +37,42 @@ Compiling this work requires the following LaTeX packages:
 * `hyperref`
 * `thmtools`
 
-The following command will install the necessary system packages on Ubuntu
-12.04:
+On Ubuntu 11.04, 11.10, 12.04, or 12.10, the necessary system packages which
+contain these LaTeX packages are:
+
+* `texlive-base`
+* `texlive-latex-base`
+* `texlive-latex-extra`
+* `texlive-science`
+
+To install them, run
 
     sudo apt-get install texlive-base texlive-latex-base texlive-latex-extra \
         texlive-science
 
-## Getting and compiling this work ##
+Compiling
+---------
 
-To get a copy of the most recent version of this work:
+To compile the document, run
 
-    git clone git@github.com:jfinkels/apxcompleteness.git
-
-To compile this work:
-
-    cd apxcompleteness
     pdflatex apxcompleteness
     bibtex apxcompleteness
     pdflatex apxcompleteness
     pdflatex apxcompleteness
+
+The output is `apxcompleteness.pdf`, and can be viewed with any PDF reader.
+
+Copyright
+---------
+
+Copyright 2012 Jeffrey Finkelstein.
+
+Except where otherwise noted, both the LaTeX markup and the content of both the
+article and the poster are made available under the terms of the Creative
+Commons Attribution-ShareAlike 3.0 license,
+https://creativecommons.org/licenses/by-sa/3.0/.
+
+Contact
+-------
+
+Jeffrey Finkelstein <jeffrey.finkelstein@gmail.com>
