@@ -317,7 +317,7 @@ Define the complexity class $\PCP(r(n), q(n))$ (for \emph{probabilistically chec
 \subsection{Gap-introducing and gap-preserving reductions}\label{ssc:gaps}
 
 \begin{definition}[{{\cite[Section~29.1]{vazirani}}}]\label{def:intro}
-  Let $P$ be a decision problem and $Q$ be maximization problem with $Q = (I, S, m, \max)$.
+  Let $P$ be a decision problem and $Q$ be a maximization problem with $Q = (I, S, m, \max)$.
   There is a \emph{gap-introducing reduction} from $P$ to $Q$ if there exist functions $f \colon \Sigma^* \to I$ and $c \colon \Sigma^* \to \mathbb{N}$ and an $\epsilon \in \mathbb{Q}^+$ such that for any $x \in \Sigma^*$,
   \begin{enumerate}
   \item if $x \in P$ then $m^*(f(x)) \geq c(x)$, and
