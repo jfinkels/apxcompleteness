@@ -122,7 +122,7 @@ The \emph{optimal measure} for any $x \in I$ is denoted $m^*(x)$.
 Observe that for all $x \in I$ and all $y \in \Sigma^*$, if $t = \max$ then $m(x, y) \leq m^*(x)$ and if $t = \min$ then $m(x, y) \geq m^*(x)$.
 The \emph{performance ratio}, $R$, of a solution $y$ for $x$ is
 \begin{displaymath}
-  R(x, y) = \max{\left(\frac{m^*(x)}{m(x, y)}, \frac{m(x, y)}{m^*(x, y)}\right)}.
+  R(x, y) = \max{\left(\frac{m^*(x)}{m(x, y)}, \frac{m(x, y)}{m^*(x)}\right)}.
 \end{displaymath}
 A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^*$.
 If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \emph{$\delta$-approximator}.
