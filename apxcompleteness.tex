@@ -124,7 +124,7 @@ The \emph{performance ratio}, $R$, of a solution $y$ for $x$ is
 \begin{displaymath}
   R(x, y) = \max{\left(\frac{m^*(x)}{m(x, y)}, \frac{m(x, y)}{m^*(x)}\right)}.
 \end{displaymath}
-A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^*$.
+A function $f \colon I \to \Sigma^*$ is an \emph{$r(n)$-approximator} if $R(x, f(x)) \leq r(|x|)$, for some function $r \colon \mathbb{N} \to \mathbb{Q}^+$.
 If $r(n)$ is a constant function with value $\delta$, we simply say $f$ is a \emph{$\delta$-approximator}.
 A function $f \colon I \times \mathbb{N} \to \Sigma^*$ is an \emph{approximation scheme} if $R(x, f(x, k)) \leq 1 + \frac{1}{k}$ for all $x \in I$ and all $k \in \mathbb{N}$.
 
