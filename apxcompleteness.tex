@@ -1,15 +1,62 @@
-\documentclass[]{article}
+%% apxcompleteness.tex - hardness of approximation for MAX 3-SAT
+%%
+%% Copyright 2012, 2014 Jeffrey Finkelstein.
+%%
+%% This LaTeX markup document is made available under the terms of the Creative
+%% Commons Attribution-ShareAlike 4.0 International License,
+%% https://creativecommons.org/licenses/by-sa/4.0/.
+\documentclass{article}
 
-% Package `amsthm` and `thmtools` must come before package `hyperref`.
-\usepackage{amsthm}
-\usepackage{thmtools}
-% Package `hyperref` must come before package `complexity`.
-\usepackage[pdftitle={Revisiting the hardness of approximation of Maximum 3-Satisfiability}, pdfauthor={Jeffrey Finkelstein}]{hyperref}
-\usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
 \usepackage{amsmath}
 \usepackage{amssymb}
+%% This must come before hyperref.
+\usepackage{amsthm}
+%% This is strongly recommended by biblatex.
+\usepackage[english]{babel}
+\usepackage[backend=biber]{biblatex}
+\usepackage[T1]{fontenc}
+%% This must come before csquotes.
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+%% This is strongly recommended by biblatex.
+\usepackage{csquotes}
+%% This must come before hyperref.
+\usepackage{thmtools}
+%% This must come before complexity.
+\usepackage{hyperref}
 \usepackage{complexity}
+\usepackage[firstpage]{draftwatermark}
+\usepackage{microtype}
+\usepackage{textcomp}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\LoadMicrotypeFile{cmr}
+\SetProtrusion
+    [load=lmr-T1]
+    {encoding=T1, family=lmr}
+    {
+      \textquotedblright = {,1000},
+      \textquotedblleft = {1000,},
+      {'} = {,1000},
+      {[} = {1000,},
+      {]} = {,1000},
+      {,} = {,1000},
+      {:} = {,1000},
+      {;} = {,1000},
+      {.} = {,1000}
+    }
+
+%% Set the ``work-in-progress'' watermark for the first page.
+\SetWatermarkLightness{0.9}
+\SetWatermarkText{Work-in-progress}
+\SetWatermarkFontSize{3.5cm}
+
+%% Set the title and author of the PDF file.
+\hypersetup{pdftitle={Revisiting the hardness of approximation of Maximum 3-Satisfiability}, pdfauthor={Jeffrey Finkelstein}}
+
+%% Declare the bibliography file.
+\addbibresource{apxcompleteness.bib}
 
 \declaretheorem[numberwithin=section]{theorem}
 \declaretheorem[numberlike=theorem]{corollary}
@@ -17,36 +64,45 @@
 \declaretheorem[numberlike=theorem, name=TODO]{todo}
 \declaretheorem[style=definition, numberlike=theorem]{definition}
 
+%% Custom commands are declared here.
+\newcommand{\email}[1]{\textlangle\href{mailto:#1}{\nolinkurl{#1}}\textrangle}
 \newenvironment{instance}{\\Instance:}{}
 \newenvironment{measure}{\\Measure:}{}
 \newenvironment{proofidea}{\begin{proof}[Proof idea]}{\end{proof}}
 \newenvironment{solution}{\\Solution:}{}
 \newenvironment{question}{\\Question:}{}
-
 \newcommand{\algorithmautorefname}{Algorithm}
-
 \algrenewcommand\algorithmicrequire{\textbf{Input:}}
-
 \newcommand{\AND}{\textsf{AND}}
 \newcommand{\OR}{\textsf{OR}}
 \newcommand{\NOT}{\textsf{NOT}}
-
 \newcommand{\APr}{\leq_{AP}^{P}}
 \newcommand{\NCAPr}{\leq_{AP}^{NC}}
 \newcommand{\ceil}[1]{\lceil{#1}\rceil}
-\newcommand{\email}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
 \newcommand{\mornt}{\leq_m}
 \newcommand{\mor}{\mornt^P}
 \newcommand{\mornc}{\mornt^{NC}}
 \newcommand{\pair}[2]{{\left\langle{#1}, {#2}\right\rangle}}
 
-\author{Jef{}frey Finkelstein}
-\date{\today}
+%% Redefine the footnote environment so it has no reference and no number.
+\long\def\symbolfootnote#1{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnotetext{#1}\endgroup}
+
+%% Define the author, title, and date for the document.
+\author{Jeffrey~Finkelstein\\ Computer Science Department, Boston University}
 \title{Revisiting the hardness of approximation of \texorpdfstring{\textsc{Maximum 3-Satisfiability}}{Maximum 3-Satisfiability}}
 
 \begin{document}
 
 \maketitle
+
+\symbolfootnote{%
+  Copyright 2012, 2014 Jeffrey~Finkelstein \email{jeffreyf@bu.edu}.
+
+  This document is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License, which is available at \mbox{\url{https://creativecommons.org/licenses/by-sa/4.0/}}.
+  The \LaTeX{} markup that generated this document can be downloaded from its website at \mbox{\url{https://github.com/jfinkels/apxcompleteness}}.
+  The markup is distributed under the same license.
+}
 
 \section{Introduction}
 
@@ -1104,19 +1160,7 @@ Then we will show that there is an \NC{} AP reduction from every minimization pr
   Follows from \autoref{thm:inncx}, \autoref{thm:ncmaxcomplete}, and \autoref{thm:ncminmax}.
 \end{proof}
 
-\section*{About this work}
-
-Copyright 2012 Jef{}frey Finkelstein.
-
-This work is licensed under the Creative Commons Attribution-ShareAlike License 3.0.
-Visit \mbox{\url{https://creativecommons.org/licenses/by-sa/3.0/}} to view a copy of this license.
-
-The \LaTeX{} markup which generated this document is available on the World Wide Web at \mbox{\url{https://github.com/jfinkels/apxcompleteness}}.
-It is also licensed under the Creative Commons Attribution-ShareAlike License.
-
-The author can be contacted via email at \email{jeffreyf@bu.edu}.
-
-\bibliographystyle{plain}
-\bibliography{references}
+%% Print the bibliography section here.
+\printbibliography
 
 \end{document}
