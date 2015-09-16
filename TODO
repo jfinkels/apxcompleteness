@@ -1,3 +1,20 @@
-Limited Nondeterminism in parallel models of computation by marty j wolf 1990
-
-characterizing small depth and small space classes by operators of higher types by agrawal et al 2000
+* Can the input to the logspace Cook-Levin reduction be a nondeterministic
+  polynomial time Turing machine?
+* What is the length of the input to the logspace Cook-Levin reduction?
+* What is the length of the output from the logspace Cook-Levin reduction?
+* Find a reference which explicitly states that the Cook-Levin reduction is
+  computable in logarithmic space.
+* Complete the "enhanced" part of this proof.
+* Why do we have r < 2^{k + 1} (k - 2) instead of something like r < 1 + 1 /
+  (2^{k + 1} (k - 2) - 1)?
+* What does it mean for an optimization problem to be both complete for APX
+  under polynomial time reductions and complete for NCX under polynomial
+  time reductions?
+* Find a reference which states the collapse due to APX = PTAS.
+* Note that the key component which implies both P not in PTAS and P is
+  APX-complete is the gap-introducing reduction.
+* Find an NC approximation for MAX 3SAT.
+* Why can we assume without loss of generality that each formula f_s(C(B(x,
+  i))) has the same number of clauses?
+* Note that the function which outputs $y$ given $\phi_i$ and $\tau_i$ can be
+  computed in logarithmic space.
